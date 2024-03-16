@@ -34,7 +34,7 @@
                                 <table class="table table-bordered table-hover" id="allTable">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th style="width: 1%">No</th>
                                             <th>Nama Departemen</th>
                                             <th>Action</th>
                                         </tr>
@@ -44,12 +44,12 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $departemen->name }}</td>
-                                                <td>
+                                                <td class="project-actions text-right">
                                                     <a href="{{ route('departemen.edit', ['id' => $departemen->id]) }}"
-                                                        class="btn btn-success"><i class="fa fas-pen"></i>
+                                                        class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                         Edit</a>
                                                     <a data-toggle="modal" data-target="#modal-hapus{{ $departemen->id }}"
-                                                        class="btn btn-danger"><i class="fa fas-trash"></i>
+                                                        class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                                         Hapus</a>
                                                 </td>
                                             </tr>
@@ -74,7 +74,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-outline-light"
-                                                                    data-dismiss="modal">Close</button>
+                                                                    data-dismiss="modal">Batal</button>
                                                                 <button type="submit" class="btn btn-outline-light">Ya,
                                                                     Hapus
                                                                 </button>
