@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class Karyawan extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
+        'user_id',
+        'departemen_id',
+        'unit_id',
+        'pendidikan_id',
+        'jabatan_id',
+        'name', //namalengkap
+        'nik',
+        'status_karyawan', //kontrak_atau_tetap
+        'tgl_kontrak1', //tglmasukdinas
+        'akhir_kontrak1',
+        'tgl_kontrak2',
+        'akhir_kontrak2',
+        'status', //active atau resign
+        'tgl_resign',
+        'resign_id', //alasanresign
+        'nomer_ktp',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'gender',
+        'alamat_ktp',
+        'status_ktp',
+        'telepon',
+        'npwp',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class);
+    }
+
+    public function pendidikan()
+    {
+        return $this->hasOne(Pendidikan::class, 'karyawan_id');
+    }
+
+    public function resignreason()
+    {
+        return $this->belongsTo(ResignReason::class);
+    }
+}
