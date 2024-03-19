@@ -26,8 +26,21 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('user.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                <a href="{{ route('cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
                             </div>
+                            <div class="form-group">
+                                <label>Date range:</label>
+              
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                      <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control float-right" id="reservation">
+                                </div>
+                                <!-- /.input group -->
+                              </div>
                             <!-- /.card-header -->
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">
@@ -41,22 +54,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($leaveApps as $item)
+                                        @foreach ($leaveApps as $cuti)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->name }}</td>
-                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $cuti->name }}</td>
+                                                <td>{{ $cuti->email }}</td>
                                                 <td><span class="tag tag-success">Approved</span></td>
                                                 <td>
-                                                    <a href="{{ route('user.edit', ['id' => $item->id]) }}"
+                                                    <a href="{{ route('user.edit', ['id' => $cuti->id]) }}"
                                                         class="btn btn-primary"><i class="fa fas-pen"></i>
                                                         Edit</a>
-                                                    <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}"
+                                                    <a data-toggle="modal" data-target="#modal-hapus{{ $cuti->id }}"
                                                         class="btn btn-danger"><i class="fa fas-trash"></i>
                                                         Hapus</a>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="modal-hapus{{ $item->id }}">
+                                            <div class="modal fade" id="modal-hapus{{ $cuti->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content bg-danger">
                                                         <div class="modal-header">
@@ -68,11 +81,11 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <p>Apakah kamu yakin ingin menghapus data user
-                                                                <b>{{ $item->name }}</b> ?
+                                                                <b>{{ $cuti->name }}</b> ?
                                                             </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <form action="{{ route('user.delete', ['id' => $item->id]) }}"
+                                                            <form action="{{ route('user.delete', ['id' => $cuti->id]) }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')

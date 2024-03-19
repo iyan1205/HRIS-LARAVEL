@@ -18,7 +18,7 @@ class LeaveApplicationController extends Controller
 
     public function create()
     {
-        //
+        return view('cuti.create');
     }
     
     /**
