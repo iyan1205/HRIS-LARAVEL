@@ -28,7 +28,7 @@
                         <!-- left column -->
                         <div class="col-md-6">
                             <!-- general form elements -->
-                            <div class="card card-primary">
+                            <div class="card card-success">
                                 <div class="card-header">
                                     <h3 class="card-title">Form Edit Departemen</h3>
                                 </div>
