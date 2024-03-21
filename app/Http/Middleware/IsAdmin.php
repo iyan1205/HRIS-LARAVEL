@@ -21,7 +21,7 @@ class IsAdmin
         {
             /** @var App\Models\User */
             $users = Auth::user();
-            if ($users->hasRole(['Super-Admin', 'admin', 'karyawan'])) {
+            if ($users->hasRole(['Super-Admin', 'admin', 'karyawan', 'Approver'])) {
                 return $next($request);
             }
             abort(403);

@@ -11,6 +11,7 @@ class Jabatan extends Model
 
     protected $fillable = [
         'name',
+        'manager_id',
     ];
 
     protected $hidden = [
@@ -20,5 +21,15 @@ class Jabatan extends Model
     public function karyawan()
     {
         return $this->hasOne(Karyawan::class);
+    }
+
+    public function atasan()
+    {
+        return $this->belongsTo(Jabatan::class, 'manager_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(Jabatan::class, 'manager_id');
     }
 }

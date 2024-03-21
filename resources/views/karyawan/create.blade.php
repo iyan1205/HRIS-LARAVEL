@@ -59,7 +59,6 @@
                                                     <label for="users" class="form-label">User:</label>
                                                     <select class="form-control select2bs4" id="users" name="user_id"
                                                         style="width: 100%;">
-                                                        <option value="">Pilih Users</option>
                                                         @foreach ($users as $id => $name)
                                                             <option value="{{ $id }}">{{ $name }}</option>
                                                         @endforeach
