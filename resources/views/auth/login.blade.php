@@ -23,6 +23,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{{ asset('lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 </head>
 
 <body>
@@ -42,18 +44,18 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label email">Email</label>
+                        <label for="email" class="form-label">Email</label>
                         <span class="fas fa-envelope"></span>
-                        <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}">
+                        <input type="email" class="form-control" name="email">
                         @error('email')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label password">Password</label>
+                        <label for="password" class="form-label">Password</label>
                         <span class="fas fa-lock"></span>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <input type="password" class="form-control" name="password">
                         @error('password')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
@@ -61,13 +63,13 @@
 
                     <button type="submit" class="btn btn-dark">Log In</button>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            <span class="remember_me">Remember Me</span>
+                    <div class="icheck-primary">
+                        <input type="checkbox" name="remember" id="remember">
+                        <label for="remember">
+                            <span class="remember"> Remember Me</span>
                         </label>
                     </div>
-                    
+
                 </form>
             </div>
 
@@ -106,8 +108,8 @@
     <!-- jQuery -->
     <script src="{{ asset('lte/plugins/jquery/jquery.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Script -->
-    <script src="{{ asset('lte/dist/js/scripts.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('lte/dist/js/adminlte.min.js') }}"></script>
 </body>
 
 </html>
