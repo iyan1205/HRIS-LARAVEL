@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('leave_applications', function (Blueprint $table) {
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->date('start_date');
-            $table->date('end_date');
-            
+            $table->foreignId('leave_type_id')->constrained();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
         });
     }
 
@@ -25,9 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('leave_applications', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
+            $table->dropColumn('leave_type_id');
+            $table->dropColumn('status');
         });
     }
 };

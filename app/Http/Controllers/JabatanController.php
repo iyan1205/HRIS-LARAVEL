@@ -3,15 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
+use App\Providers\ApproverServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class JabatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $ApproverServiceProvider;
+    public function __construct(ApproverServiceProvider $approverService)
+    {
+        $this->ApproverServiceProvider = $approverService;
+    }
+
+    public function getApprover($jabatanId)
+    {
+        $jabatan = Jabatan::findOrFail($jabatanId);
+        $approver = $this->ApproverServiceProvider->getApproverForJabatan($jabatan);
+
+        if ($approver) {
+            return response()->json(['approver' => $approver]);
+        } else {
+            return response()->json(['message' => 'Tidak ada atasan langsung untuk jabatan ini'], 404);
+        }
+    }
+
     public function index()
     {
         $jabatans = Jabatan::get();
