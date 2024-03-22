@@ -58,11 +58,11 @@
                                         <td>{{ $item->jabatan->name }}</td>
                                         <td>{{ $item->departemen->name }}</td>
                                         <td>{{ $item->unit->name }}</td>
-                                        <td>
-                                            <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                Hapus</a>
+                                        <td class="project-actions text-right">
+                                            <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" title="Edit" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                            <a data-toggle="modal" title="Hapus" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                                </a>
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="modal-hapus{{ $item->id }}">

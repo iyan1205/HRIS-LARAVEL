@@ -17,12 +17,7 @@ class Jabatan extends Model
     protected $hidden = [
         'remember_token',
     ];
-
-    public function karyawan()
-    {
-        return $this->hasOne(Karyawan::class);
-    }
-
+    
     public function atasan()
     {
         return $this->belongsTo(Jabatan::class, 'manager_id');
@@ -32,4 +27,10 @@ class Jabatan extends Model
     {
         return $this->hasMany(Jabatan::class, 'manager_id');
     }
+
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class);
+    }
+
 }

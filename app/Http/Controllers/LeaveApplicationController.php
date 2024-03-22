@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jabatan;
 use App\Models\LeaveApplication;
 use App\Models\LeaveType;
 use App\Models\User;
@@ -42,8 +43,9 @@ class LeaveApplicationController extends Controller
     public function create()
     {
         $users = User::pluck('name', 'id');
+        $approver = Jabatan::pluck('name', 'id');
         $leave_types = LeaveType::pluck('name','id');
-        return view('cuti.create', compact('users','leave_types'));
+        return view('cuti.create', compact('users','approver','leave_types'));
     }
     
     /**
@@ -57,6 +59,7 @@ class LeaveApplicationController extends Controller
             'leave_type_id' => 'required|string|max:255',
             'start_date' => 'required',
             'end_date' => 'required',
+            'approver_id' => 'required'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -65,13 +68,13 @@ class LeaveApplicationController extends Controller
             return redirect()->back()->withInput()->withErrors($validator);
         }
    
-        
         // Buat dan simpan jabatan baru
         $leaveapps = LeaveApplication::create([
             'user_id' => $request->input('user_id'),
             'leave_type_id' => $request->input('leave_type_id'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
+            'approver_id' => $request->input('approver_id'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
