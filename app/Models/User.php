@@ -52,4 +52,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Karyawan::class);
     }
+
+    public function leave_applications()
+    {
+        return $this->hasOne(LeaveApplication::class);
+    }
+
+
 }

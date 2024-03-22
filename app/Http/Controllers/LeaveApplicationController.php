@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\LeaveApplication;
+use App\Models\LeaveType;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class LeaveApplicationController extends Controller
 {
@@ -12,13 +17,33 @@ class LeaveApplicationController extends Controller
      */
     public function index()
     {
-        $leaveApps =  LeaveApplication::all();
-        return view('cuti.index', compact('leaveApps'));
+        if(Auth::check()){
+            /** @var App\Models\User */
+            $users = Auth::user();
+
+            if ($users->hasRole(['Super-Admin', 'admin'])) {
+                $leaveApps = LeaveApplication::where('status', 'pending')->paginate(10);
+            } else if ($users->hasRole('Approver')) {
+                // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
+               // Query untuk mendapatkan pengajuan cuti dari bawahan pengguna
+            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+            $leaveApps = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->paginate(10);   
+
+            } else {
+                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
+                $leaveApps = $users->leave_applications()->where('status', 'pending')->paginate(10);
+            }
+    
+            return view('cuti.index', compact('leaveApps'));   
+            }
+            abort(401);
     }
 
     public function create()
     {
-        return view('cuti.create');
+        $users = User::pluck('name', 'id');
+        $leave_types = LeaveType::pluck('name','id');
+        return view('cuti.create', compact('users','leave_types'));
     }
     
     /**
@@ -26,7 +51,37 @@ class LeaveApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         // Validasi input dari form
+         $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'leave_type_id' => 'required|string|max:255',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            // Tambahkan aturan validasi sesuai kebutuhan
+        ]);
+
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+   
+        
+        // Buat dan simpan jabatan baru
+        $leaveapps = LeaveApplication::create([
+            'user_id' => $request->input('user_id'),
+            'leave_type_id' => $request->input('leave_type_id'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            // Tambahkan kolom lain yang perlu disimpan
+        ]);
+
+        // Tambahkan session flash message
+        $message = 'Pengajuan Selesai Dibuat';
+        Session::flash('successAdd', $message);
+
+        // Redirect ke halaman tertentu atau tampilkan pesan sukses
+        return redirect()->route('pengajuan-cuti');
+        
     }
 
     /**

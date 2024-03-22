@@ -35,83 +35,75 @@
                                     </li>
                                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Kontak</a>
                                     </li> --}}
-                                </ul>
-                            </div><!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="karyawan">
-                                        <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">
-                                            @csrf
-                                            <div class="form-group row">
-                                                <div class="col-sm-3">
-                                                    <label for="nama" class="form-label">Nama
-                                                        Lengkap:</label>
-                                                    <input type="text" class="form-control" id="name"
-                                                        placeholder="Nama Lengkap" name="name"
-                                                        value="{{ old('name') }}" required>
-                                                    @error('name')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <label for="users" class="form-label">User:</label>
-                                                    <select class="form-control select2bs4" id="users" name="user_id"
-                                                        style="width: 100%;" required>
-                                                        <option selected disabled required>Pilih Users</option>
-                                                        @foreach ($users as $id => $name)
-                                                            <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('users')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <label for="nik" class="form-label">NIK</label>
-                                                    <input type="number" class="form-control" id="nik"
-                                                        placeholder="NIK" name="nik" value="{{ old('nik') }}"
-                                                        required>
-                                                    @error('nik')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <label for="nomer_ktp" class="form-label">Nomer KTP</label>
-                                                    <input type="number" class="form-control" id="nomer_ktp"
-                                                        placeholder="No KTP" name="nomer_ktp" required>
-                                                    @error('nomer_ktp')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <label for="telepon" class="form-label">Nomer Telepon</label>
-                                                    <input type="number" class="form-control" id="telepon"
-                                                        placeholder="No Telepon" name="telepon" required>
-                                                    @error('telepon')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <label for="npwp" class="form-label">Nomer NPWP</label>
-                                                    <input type="text" class="form-control" id="npwp"
-                                                        placeholder="No NPWP" name="npwp" required>
-                                                    @error('npwp')
-                                                        <small>
-                                                            <p class="text-danger">{{ $message }}</p>
-                                                        </small>
-                                                    @enderror
-                                                </div>
+                            </ul>
+                        </div><!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="karyawan">
+                                    <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">
+                                                <label for="nama" class="form-label">Nama
+                                                    Lengkap:</label>
+                                                <input type="text" class="form-control" id="name" placeholder="Nama Lengkap" name="name" value="{{ old('name') }}" required>
+                                                @error('name')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
                                             </div>
+                                            <div class="col-sm-2">
+                                                <label for="users" class="form-label">User:</label>
+                                                <select class="form-control select2bs4" id="users" name="user_id" style="width: 100%;" required>
+                                                    <option selected disabled required>Pilih Users</option>
+                                                    @foreach ($users as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('users')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <label for="nik" class="form-label">NIK</label>
+                                                <input type="number" class="form-control" id="nik" placeholder="NIK" name="nik" value="{{ old('nik') }}" required>
+                                                @error('nik')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="nomer_ktp" class="form-label">Nomer KTP</label>
+                                                <input type="number" class="form-control" id="nomer_ktp" placeholder="No KTP" name="nomer_ktp" required>
+                                                @error('nomer_ktp')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="telepon" class="form-label">Nomer Telepon</label>
+                                                <input type="number" class="form-control" id="telepon" placeholder="No Telepon" name="telepon" required>
+                                                @error('telepon')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="npwp" class="form-label">Nomer NPWP</label>
+                                                <input type="text" class="form-control" id="npwp" placeholder="No NPWP" name="npwp" required>
+                                                @error('npwp')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                                @enderror
+                                            </div>
+                                        </div>
 
                                             <div class="form-group row">
                                                 <div class="col-sm-3">
