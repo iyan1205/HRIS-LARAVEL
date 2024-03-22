@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $departemen->name }}</td>
-                                        <td class="project-actions text-left">
+                                        <td class="project-actions text-right">
                                             <a href="{{ route('departemen.edit', ['id' => $departemen->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $departemen->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
@@ -70,8 +70,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-outline-light">Ya,
-                                                            Hapus
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
                                                         </button>
                                                     </form>
                                                 </div>
