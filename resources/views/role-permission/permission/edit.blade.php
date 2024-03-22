@@ -20,7 +20,7 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ url('master-users/permissions/'.$permission->uuid) }}" method="POST">
+                <form action="{{ url('master-users/permissions/' . $permission->uuid) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -38,12 +38,13 @@
                                         <div class="form-group">
                                             <label for="name">Nama Permissions</label>
                                             <input type="text" class="form-control" id="name"
-                                                placeholder="Enter Permissions" name="name" value="{{ $permission->name }}">
+                                                placeholder="Enter Permissions" name="name"
+                                                value="{{ $permission->name }}">
                                             @error('name')
                                                 <small>{{ $message }}</small>
                                             @enderror
                                         </div>
-                                        
+
                                     </div>
                                     <!-- /.card-body -->
 
