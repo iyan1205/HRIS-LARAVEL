@@ -47,7 +47,7 @@
                                         <td>{{ $item->user->email }}</td>
                                         <td>{{ $item->departemen->name }}</td>
                                         <td>{{ $item->pendidikan->institusi }}</td>
-                                        <td>
+                                        <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
