@@ -68,7 +68,8 @@
                                             <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
                                             <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" disabled>
                                         </div>
-                                        <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
+                                        {{-- Hidden Approver --}}
+                                        <input type="hidden" class="form-control" id="approver" name="manager_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                         @endif
                                         
                                         

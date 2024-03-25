@@ -57,7 +57,7 @@ class LeaveApplicationController extends Controller
             'leave_type_id' => 'required|string|max:255',
             'start_date' => 'required',
             'end_date' => 'required',
-            'approver_id' => 'required'
+            'manager_id' => 'required'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
     
@@ -72,45 +72,17 @@ class LeaveApplicationController extends Controller
             'leave_type_id' => $request->input('leave_type_id'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'approver_id' => $request->input('approver_id'),
+            'manager_id' => $request->input('manager_id'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
     
-        // Cari pengguna (karyawan) berdasarkan ID yang diberikan dalam request
-        $karyawan = User::find($request->input('user_id'));
-    
-        // Pastikan pengguna (karyawan) ditemukan
-        if (!$karyawan) {
-            // Jika tidak ditemukan, kembali dengan pesan error
-            return redirect()->back()->withInput()->with('error', 'Pengguna (karyawan) tidak ditemukan.');
-        }
-    
-        // Dapatkan jabatan pengguna (karyawan)
-        $jabatan = $karyawan->jabatan;
-    
-        // Pastikan jabatan ditemukan
-        if (!$jabatan) {
-            // Jika tidak ditemukan, kembali dengan pesan error
-            return redirect()->back()->withInput()->with('error', 'Jabatan pengguna (karyawan) tidak ditemukan.');
-        }
-    
-        // Dapatkan approver untuk jabatan
-        $approver = $jabatan->manager_id;
-    
-        // Jika approver ditemukan, atur approver_id pada pengajuan cuti
-        if ($approver) {
-            $leaveApplication->approver_id = $approver->manajer_id;
-        }
-    
-        // Simpan pengajuan cuti
-        $leaveApplication->save();
-    
+          
         // Tambahkan session flash message
         $message = 'Pengajuan cuti berhasil dibuat.';
         Session::flash('success', $message);
     
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
-        return redirect()->route('pengajuan-cuti.index')->with('success', $message);
+        return redirect()->route('pengajuan-cuti');
     }
     
 
