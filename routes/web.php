@@ -113,6 +113,10 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
     Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
 
+    Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('cuti.approve');
+    Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
+    Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
+
 });
 
 Route::middleware('auth')->group(function () {

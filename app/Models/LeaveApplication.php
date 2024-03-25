@@ -15,6 +15,7 @@ class LeaveApplication extends Model
         'end_date',
         'status',
         'manager_id',
+        'updated_by',
 
     ];
 
@@ -28,9 +29,34 @@ class LeaveApplication extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function updated_by() {
+        return $this->belongsToMany(User::class);
+    }
+
     public function LeaveType()
     {
         return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    }
+
+    public function approve($updatedBy)
+    {
+        $this->status = 'approved';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
+    }
+
+    public function cancel($updatedBy)
+    {
+        $this->status = 'canceled';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
+    }
+
+    public function reject($updatedBy)
+    {
+        $this->status = 'rejected';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
     }
 
 }

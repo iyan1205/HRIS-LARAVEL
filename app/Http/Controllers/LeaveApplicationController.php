@@ -21,19 +21,19 @@ class LeaveApplicationController extends Controller
             $users = Auth::user();
 
             if ($users->hasRole(['Super-Admin', 'admin'])) {
-                $leaveApps = LeaveApplication::where('status', 'pending')->paginate(10);
+                $leaveApplication = LeaveApplication::where('status', 'pending')->paginate(10);
             } else if ($users->hasRole('Approver')) {
                 // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
                // Query untuk mendapatkan pengajuan cuti dari bawahan pengguna
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $leaveApps = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->paginate(10);   
+            $leaveApplication = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->paginate(10);   
 
             } else {
                 // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $leaveApps = $users->leave_applications()->where('status', 'pending')->paginate(10);
+                $leaveApplication = $users->leave_applications()->where('status', 'pending')->paginate(10);
             }
     
-            return view('cuti.index', compact('leaveApps'));   
+            return view('cuti.index', compact('leaveApplication'));   
             }
             abort(401);
     }
@@ -79,13 +79,50 @@ class LeaveApplicationController extends Controller
           
         // Tambahkan session flash message
         $message = 'Pengajuan cuti berhasil dibuat.';
-        Session::flash('success', $message);
+        Session::flash('successAdd', $message);
     
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('pengajuan-cuti');
     }
     
+    public function approve(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+        $leaveApplication = LeaveApplication::findOrFail($id);
+        $leaveApplication->approve($updatedBy);
+        $leaveApplication->save();
 
+        $message = 'Pengajuan cuti Approved.';
+        Session::flash('successAdd', $message);
+        return redirect()->route('pengajuan-cuti');
+
+    }
+
+    public function cancel(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+        $leaveApplication = LeaveApplication::findOrFail($id);
+        $leaveApplication->cancel($updatedBy);
+        $leaveApplication->save();
+
+        $message = 'Approved: Canceled.';
+        Session::flash('successAdd', $message);
+        return redirect()->route('pengajuan-cuti');
+
+    }
+
+    public function reject(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+        $leaveApplication = LeaveApplication::findOrFail($id);
+        $leaveApplication->reject($updatedBy);
+        $leaveApplication->save();
+
+        $message = 'Pengajuan cuti rejected.';
+        Session::flash('reject', $message);
+        return redirect()->route('pengajuan-cuti');
+
+    }
     /**
      * Display the specified resource.
      */
