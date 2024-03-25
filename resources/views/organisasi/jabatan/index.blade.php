@@ -36,7 +36,7 @@
                                     <tr>
                                         <th style="width: 10px">No</th>
                                         <th>Nama Jabatan</th>
-                                        <th>Action</th>h
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
