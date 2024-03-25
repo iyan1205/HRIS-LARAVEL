@@ -14,6 +14,7 @@ class LeaveApplication extends Model
         'start_date',
         'end_date',
         'status',
+        'approver_id',
 
     ];
 
