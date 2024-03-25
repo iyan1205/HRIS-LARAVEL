@@ -34,9 +34,9 @@
                             <table class="table table-bordered table-hover" id="allTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 1%">No</th>
+                                        <th style="width: 10px">No</th>
                                         <th>Nama Units</th>
-                                        <th style="width: 16%">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>

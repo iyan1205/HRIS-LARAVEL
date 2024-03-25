@@ -35,7 +35,7 @@
                                     <div class="card-body">
                                         @if(auth()->user()->hasRole('admin|Super-Admin'))
                                         <div class="form-group">
-                                            <label for="user_id" class="form-label">User:</label>
+                                            <label for="user_id" class="form-label">Nama Karyawan:</label>
                                             <select class="form-control select2bs4" id="user_id" name="user_id"
                                                 style="width: 100%;">
                                                 @foreach ($users as $id => $name)
@@ -48,13 +48,29 @@
                                                 </small>
                                             @enderror
                                         </div>
+                                        <div class="form-group">
+                                            <label for="manajer_id" class="form-label">Atasan Langsung:</label>
+                                            <select class="form-control select2bs4" id="manajer_id" name="manajer_id"
+                                                style="width: 100%;">
+                                                @foreach ($approver as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('approver')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                            @enderror
+                                        </div>
                                         @else
                                         <div class="form-group">
                                             <label for="name">Nama</label>
                                             <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
                                             <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" disabled>
                                         </div>
+                                        <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                         @endif
+                                        
                                         
                                         <div class="form-group">
                                             <label for="leave_type" class="form-label">Jenis/Kategori:</label>
@@ -72,7 +88,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group row">
-                                            <div class="col-sm-3">
+                                            <div class="col">
                                                 <label>Tanggal Awal:</label>
                                                     <div class="input-group date" id="start_date" data-target-input="nearest">
                                                         <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date"/>
@@ -81,7 +97,7 @@
                                                         </div>
                                                     </div>
                                             </div>
-                                            <div class="col-sm-3">
+                                            <div class="col">
                                                 <label for="end_date" class="form-label">Tanggal Akhir:</label>
                                                 <div class="input-group date" id="end_date" data-target-input="nearest">
                                                     <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date"/>

@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function leave_applications()
     {
-        return $this->hasOne(LeaveApplication::class);
+        return $this->hasMany(LeaveApplication::class);
     }
 
 

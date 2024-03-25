@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Karyawan;
+use App\Models\Jabatan;
 use App\Models\LeaveApplication;
 use App\Models\LeaveType;
 use App\Models\User;
@@ -41,8 +41,9 @@ class LeaveApplicationController extends Controller
     public function create()
     {
         $users = User::pluck('name', 'id');
+        $approver = Jabatan::pluck('name', 'id');
         $leave_types = LeaveType::pluck('name','id');
-        return view('cuti.create', compact('users','leave_types'));
+        return view('cuti.create', compact('users','approver','leave_types'));
     }
     
     /**
@@ -50,27 +51,29 @@ class LeaveApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input dari form
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required', // ID pengguna yang mengajukan cuti
-            'leave_type_id' => 'required|string|max:255', // Jenis cuti yang diajukan
-            'start_date' => 'required', // Tanggal mulai cuti
-            'end_date' => 'required', // Tanggal selesai cuti
-            // Tambahan aturan validasi sesuai kebutuhan
+         // Validasi input dari form
+         $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'leave_type_id' => 'required|string|max:255',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'approver_id' => 'required'
+            // Tambahkan aturan validasi sesuai kebutuhan
         ]);
     
         // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
-    
-        // Buat dan simpan pengajuan cuti baru
+   
+        // Buat dan simpan jabatan baru
         $leaveApplication = LeaveApplication::create([
             'user_id' => $request->input('user_id'),
             'leave_type_id' => $request->input('leave_type_id'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            // Tambahkan kolom lain yang perlu disimpan pada tabel pengajuan cuti
+            'approver_id' => $request->input('approver_id'),
+            // Tambahkan kolom lain yang perlu disimpan
         ]);
     
         // Cari pengguna (karyawan) berdasarkan ID yang diberikan dalam request
