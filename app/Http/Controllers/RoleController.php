@@ -11,9 +11,11 @@ use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('role:Super-Admin');
+    }
+
     public function index()
     {
         $roles = Role::get();
