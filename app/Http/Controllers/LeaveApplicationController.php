@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Validator;
 
 class LeaveApplicationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view cuti', ['only' => ['index']]);
+        $this->middleware('permission:tambah cuti', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit cuti', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete cuti', ['only' => ['destroy']]);
+        $this->middleware('permission:approve cuti', ['only' => ['approve', 'cancel', 'reject']]);
+    }
     
     public function index()
     {

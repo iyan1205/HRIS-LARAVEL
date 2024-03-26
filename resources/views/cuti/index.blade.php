@@ -67,6 +67,7 @@
                                                 </td>
                                                 <td><span class="tag tag-success">{{ $cuti->status }}</span></td>
                                                 <td class="project-actions text-right">
+                                                    @can('approve cuti')
                                                         <form id="approveForm{{ $cuti->id }}" action="{{ route('leave-application.approve', $cuti->id) }}" method="post" style="display: inline;">
                                                         @csrf
                                                         @method('PUT')
@@ -78,6 +79,7 @@
                                                         @method('PUT')
                                                         <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times"></i> Reject</button>
                                                     </form>
+                                                    @endcan
                                                 </td>
                                             </tr>
                                             

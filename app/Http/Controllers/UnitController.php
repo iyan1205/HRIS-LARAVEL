@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('role:Super-Admin|admin');
+    }
+    
     public function index()
     {
         $units = Unit::get();
