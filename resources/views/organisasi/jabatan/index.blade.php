@@ -70,9 +70,8 @@
                                                     <form action="{{ route('jabatan.delete', ['id' => $jabatan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
-                                                        </button>
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus</button>
                                                     </form>
                                                 </div>
                                             </div>
