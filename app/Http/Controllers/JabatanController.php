@@ -17,7 +17,7 @@ class JabatanController extends Controller
 
     public function index()
     {
-        $jabatans = Jabatan::get();
+        $jabatans = Jabatan::orderBy('name', 'asc')->get();
         return view('organisasi.jabatan.index', compact('jabatans'));
     }
     public function create()
