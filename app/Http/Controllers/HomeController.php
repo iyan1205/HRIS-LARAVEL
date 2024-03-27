@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Karyawan;
+use App\Models\LeaveApplication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -12,15 +15,32 @@ use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
-    public function dashboard()
-    {
-        return view('dashboard');
-    }
 
     public function index()
     {
-        $data = User::get();
-        return view('user.index', compact('data'));
+        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
+        $jumlahKaryawanResign = Karyawan::where('status', 'resign')->count();
+        $pengajuanReject = 0;
+        $pengajuanApproved = 0;
+        if(Auth::check()){
+            /** @var App\Models\User */
+            $users = Auth::user();
+        if ($users->hasRole(['Super-Admin', 'admin'])) {
+            $pengajuanCuti = LeaveApplication::where('status', 'pending')->count();
+        }else{
+            $pengajuanCuti = LeaveApplication::where('status', 'pending')
+            ->where('user_id', auth()->id())
+            ->count();
+            $pengajuanReject = LeaveApplication::where('status', 'rejected')
+            ->where('user_id', auth()->id())
+            ->count();
+            $pengajuanApproved = LeaveApplication::where('status', 'approved')
+            ->where('user_id', auth()->id())
+            ->count();
+        }
+
+    }
+        return view('dashboard', compact('jumlahKaryawanAktif','jumlahKaryawanResign', 'pengajuanCuti','pengajuanReject', 'pengajuanApproved'));
     }
 
     public function create()
