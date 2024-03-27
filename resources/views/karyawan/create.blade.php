@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Karyawan</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('karyawan') }}">Karyawan</a></li>
                             <li class="breadcrumb-item active">Tambah Karyawan</li>
                         </ol>
                     </div><!-- /.col -->
@@ -32,7 +32,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
 
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Karyawan</h3>
                                                         </div>
@@ -136,11 +136,11 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
-                                                    </div> {{-- card-info --}}
+                                                    </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
 
                                                 <div class="col-sm-6">
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
 
                                                         <div class="card-header">
                                                             <h3 class="card-title">Kontak</h3>
@@ -290,10 +290,10 @@
                                                         <div class="form-group">
                                                             <div class="offset-sm-0 col-sm-10">
                                                                 <button type="submit"
-                                                                    class="btn btn-danger">Submit</button>
+                                                                    class="btn btn-danger" style="margin-left: 12px">Submit</button>
                                                             </div>
                                                         </div>
-                                                    </div> {{-- card-info --}}
+                                                    </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
 
                                             </div> {{-- row --}}
@@ -301,7 +301,7 @@
                                             <div class="row" style="margin-top: -365px;"">
                                                 <div class="col-md-6">
 
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
                                                         </div>
@@ -371,7 +371,7 @@
                                                                     placeholder="Sertifikat Profesi" required>
                                                             </div>
                                                         </div> {{-- card-body --}}
-                                                    </div> {{-- card-info --}}
+                                                    </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
                                             </div> {{-- row --}}
 
