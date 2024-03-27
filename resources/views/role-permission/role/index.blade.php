@@ -105,7 +105,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-outline-light"
-                                                                    data-dismiss="modal">Batal</button>
+                                                                    data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                                 <button type="submit" class="btn btn-outline-light">Ya,
                                                                     Hapus
                                                                 </button>

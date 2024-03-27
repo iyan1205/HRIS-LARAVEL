@@ -49,7 +49,7 @@
                                                 <td>
                                                     @if (!empty($user->getRoleNames()))
                                                         @foreach ($user->getRoleNames() as $rolename)
-                                                        <span class="badge badge-primary">{{ $rolename }}</span>
+                                                            <span class="badge badge-primary">{{ $rolename }}</span>
                                                         @endforeach
                                                     @endif
                                                 <td class="project-actions text-right">
@@ -82,9 +82,8 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-outline-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-outline-light">Ya,
-                                                                    Hapus
+                                                                    data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                                <button type="submit" class="btn btn-outline-light">Ya, Hapus
                                                                 </button>
                                                             </form>
                                                         </div>
