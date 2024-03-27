@@ -34,9 +34,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => ['isAdmin']], function() {
+    
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     // Users Routes
     Route::prefix('master-users')->group(function () {
-        
         Route::resource('users', UserController::class);
         Route::get('/user', [UserController::class, 'index'])->name('user');
         Route::get('/create', [UserController::class, 'create'])->name('user.create');
@@ -133,7 +134,7 @@ Route::middleware('auth')->group(function () {
 
 
 // Absen Route
-Route::get('/absen', [HomeController::class, 'index'])->name('absen');
+
 
 // Gallery Route
 Route::get('/gallery', [HomeController::class, 'index'])->name('gallery');

@@ -85,10 +85,12 @@
                         {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        @can('edit user')
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('profile.edit') }}" class="dropdown-item">
                             <i class="fas fa-user mr-2"></i>Profile
                         </a>
+                        @endcan
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
                             <i class="fas fa-arrow-right mr-2"></i>Log Out

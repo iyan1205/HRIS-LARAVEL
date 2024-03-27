@@ -29,7 +29,8 @@ class KaryawanController extends Controller
         $karyawans = Karyawan::where('status', 'active')
         ->orderBy('nik', 'desc')
         ->get();
-        return view('karyawan.index', compact('karyawans'));
+        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
+        return view('karyawan.index', compact('karyawans', 'jumlahKaryawanAktif'));
     }
 
     public function resign()

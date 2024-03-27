@@ -29,16 +29,16 @@ class LeaveApplicationController extends Controller
             $users = Auth::user();
 
             if ($users->hasRole(['Super-Admin', 'admin'])) {
-                $leaveApplication = LeaveApplication::where('status', 'pending')->paginate(10);
+                $leaveApplication = LeaveApplication::where('status', 'pending')->get();
             } else if ($users->hasRole('Approver')) {
                 // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
                
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $leaveApplication = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->paginate(10);   
+            $leaveApplication = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
         
             } else {
                 // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $leaveApplication = $users->leave_applications()->where('status', 'pending')->paginate(10);
+                $leaveApplication = $users->leave_applications()->where('status', 'pending')->get();
             }
     
             return view('cuti.index', compact('leaveApplication'));   
