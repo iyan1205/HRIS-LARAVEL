@@ -32,10 +32,10 @@ class LeaveApplicationController extends Controller
                 $leaveApplication = LeaveApplication::where('status', 'pending')->paginate(10);
             } else if ($users->hasRole('Approver')) {
                 // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
-               // Query untuk mendapatkan pengajuan cuti dari bawahan pengguna
+               
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
             $leaveApplication = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->paginate(10);   
-
+        
             } else {
                 // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
                 $leaveApplication = $users->leave_applications()->where('status', 'pending')->paginate(10);
