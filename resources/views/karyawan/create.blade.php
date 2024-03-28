@@ -35,7 +35,7 @@
                                                     <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Karyawan</h3>
-                                                            
+
                                                         </div>
 
                                                         <div class="card-body">
@@ -288,12 +288,6 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
-                                                        <div class="form-group">
-                                                            <div class="offset-sm-0 col-sm-10">
-                                                                <button type="submit" class="btn btn-danger"
-                                                                    style="margin-left: 12px">Submit</button>
-                                                            </div>
-                                                        </div>
                                                     </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
 
@@ -306,10 +300,11 @@
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
                                                             <div class="card-tools">
-                                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                                                  <i class="fas fa-minus"></i>
+                                                                <button type="button" class="btn btn-tool"
+                                                                    data-card-widget="collapse" title="Collapse">
+                                                                    <i class="fas fa-minus"></i>
                                                                 </button>
-                                                              </div>
+                                                            </div>
                                                         </div>
 
                                                         <div class="card-body">
@@ -401,6 +396,12 @@
                                                     </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
                                             </div> {{-- row --}}
+
+                                            <div class="form-group">
+                                                <div class="offset-sm-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Submit</button>
+                                                </div>
+                                            </div>
 
                                         </form>
                                     </div> {{-- tab-pane --}}
