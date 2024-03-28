@@ -306,9 +306,9 @@
                                         <div class="form-group row">
                                             <label for="jenis_kelamin" class="col-sm-3 col-form-label">Jenis Kelamin</label>
                                             <div class="form-check" style="margin-left: 10px;">
-                                                <input class="form-check-input" type="radio" id="l" name="gender" value="{{ $karyawan->gender }}" required>
+                                                <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $karyawan->gender === 'L' ? 'checked' : '' }} required>
                                                 <label class="form-check-label" for="l">L</label>
-                                                <input class="form-check-input" type="radio" id="p" name="gender" value="{{ $karyawan->gender }}" style="margin-left: 6px;" required>
+                                                <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $karyawan->gender == 'P' ? 'checked' : '' }} style="margin-left: 6px;" required>
                                                 <label class="form-check-label" for="p" style="margin-left: 24px;">P</label>
                                             </div>
                                         </div>

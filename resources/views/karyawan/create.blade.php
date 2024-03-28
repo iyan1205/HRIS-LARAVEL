@@ -230,12 +230,12 @@
                                                                     Kelamin</label>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="l" name="gender" value="l"
+                                                                        id="L" name="gender" value="L"
                                                                         required>
-                                                                    <label class="form-check-label" for="l">Laki -
+                                                                    <label class="form-check-label" for="L">Laki -
                                                                         Laki</label>
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="p" name="gender" value="p"
+                                                                        id="P" name="gender" value="P"
                                                                         style="margin-left: 6px;" required>
                                                                     <label class="form-check-label" for="p"
                                                                         style="margin-left: 24px;">Perempuan</label>
