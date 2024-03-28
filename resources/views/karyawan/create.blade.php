@@ -20,15 +20,13 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
+            <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
                 <div class="row">
-
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="active tab-pane" id="karyawan">
-                                        <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">
-                                            @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
 
