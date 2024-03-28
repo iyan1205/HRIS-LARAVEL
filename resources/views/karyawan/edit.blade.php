@@ -193,10 +193,10 @@
                     <div class="form-group">
                         <label for="npwp">Nomer NPWP</label>
                         <div class="form-check" style="margin-left: 10px;">
-                            <input class="form-check-input" type="radio" id="menikah" name="status_ktp" value="{{ $karyawan->status_ktp }}" >
+                            <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }} >
                             <label class="form-check-label" for="menikah">Menikah</label>
-                            <input class="form-check-input" type="radio" id="belum_menikah" name="status_ktp" value="{{ $karyawan->status_ktp }}" style="margin-left: 6px;" >
-                            <label class="form-check-label" for="belum_menikah" style="margin-left: 24px;">Belum Menikah</label>
+                            <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }} style="margin-left: 6px;" >
+                            <label class="form-check-label" for="Belum Menikah" style="margin-left: 24px;">Belum Menikah</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -291,6 +291,7 @@
                 </div>
                 <!-- /.card -->
               </div>
+
             </div>
             <div class="row">
               <div class="col-12">

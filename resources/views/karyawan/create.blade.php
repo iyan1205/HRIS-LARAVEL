@@ -248,13 +248,13 @@
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="menikah" name="status_ktp" value="menikah"
+                                                                        id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
                                                                     <input class="form-check-input" type="radio"
                                                                         id="belum_menikah" name="status_ktp"
-                                                                        value="belum menikah" style="margin-left: 6px;"
+                                                                        value="Belum Menikah" style="margin-left: 6px;"
                                                                         required>
                                                                     <label class="form-check-label" for="belum_menikah"
                                                                         style="margin-left: 24px;">Belum
