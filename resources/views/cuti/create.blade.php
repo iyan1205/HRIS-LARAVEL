@@ -48,20 +48,7 @@
                                                 </small>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <label for="manajer_id" class="form-label">Atasan Langsung:</label>
-                                            <select class="form-control select2bs4" id="manajer_id" name="manajer_id"
-                                                style="width: 100%;">
-                                                @foreach ($approver as $id => $name)
-                                                    <option value="{{ $id }}">{{ $name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('approver')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
-                                        </div>
+                                        
                                         @else
                                         <div class="form-group">
                                             <label for="name">Nama</label>

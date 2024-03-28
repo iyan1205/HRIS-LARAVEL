@@ -75,12 +75,12 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Apakah kamu yakin ingin menghapus data user
+                                                    <p>Apakah kamu yakin ingin menghapus data Karyawan
                                                         <b>{{ $item->name }}</b> ?
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer justify-content-between">
-                                                    <form action="{{ route('user.delete', ['id' => $item->id]) }}" method="POST">
+                                                    <form action="{{ route('karyawan.delete', ['id' => $item->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>

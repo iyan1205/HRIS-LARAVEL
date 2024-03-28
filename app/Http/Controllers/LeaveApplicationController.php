@@ -54,6 +54,13 @@ class LeaveApplicationController extends Controller
         return view('cuti.create', compact('users','approver','leave_types'));
     }
     
+    public function getManagerForCreate($user_id)
+    {
+        $user = User::findOrFail($user_id);
+        $manager_id = $user->karyawan->jabatan->manager_id;
+    
+        return response()->json(['manager_id' => $manager_id]);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -65,7 +72,7 @@ class LeaveApplicationController extends Controller
             'leave_type_id' => 'required|string|max:255',
             'start_date' => 'required',
             'end_date' => 'required',
-            'manager_id' => 'required'
+            'manager_id' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
     
@@ -73,14 +80,22 @@ class LeaveApplicationController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
-   
+        // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
+        $manager_id = $request->input('manager_id');
+        if ($manager_id === null) {
+            // Ambil user yang dipilih
+            $selectedUser = User::findOrFail($request->input('user_id'));
+            // Ambil manager_id dari user yang dipilih
+            $manager_id = $selectedUser->karyawan->jabatan->manager_id;
+        }
+
         // Buat dan simpan jabatan baru
         $leaveApplication = LeaveApplication::create([
             'user_id' => $request->input('user_id'),
             'leave_type_id' => $request->input('leave_type_id'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
-            'manager_id' => $request->input('manager_id'),
+            'manager_id' => $manager_id,
             // Tambahkan kolom lain yang perlu disimpan
         ]);
     

@@ -74,7 +74,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
         Route::put('/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
         Route::put('/update/{id}/pendidikan', [KaryawanController::class, 'update'])->name('karyawan.update.pendidikan');
-        Route::delete('/delete/{id}', [KaryawanController::class, 'delete'])->name('karyawan.delete');
+        Route::delete('/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
 
         Route::get('/resign', [KaryawanController::class, 'resign'])->name('resign');
     });

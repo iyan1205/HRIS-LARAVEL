@@ -44,7 +44,7 @@
                                                 <small>{{ $message }}</small>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="manager_id" class="form-label">Atasan Langsung:</label>
                                             <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
                                                 @foreach ($jabatans as $jabatan)
@@ -58,9 +58,9 @@
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                             @enderror
-                                        </div>
+                                        </div> --}}
                                         
-                                        {{-- <div class="form-group">
+                                        <div class="form-group">
                                             <label for="manager_id" class="form-label">Membawahi:</label><br>
                                             @foreach($jabatans as $jabatanOption)
                                                 <input type="checkbox" id="manager_{{ $jabatanOption->id }}" name="manager_id[]" value="{{ $jabatanOption->id }}" {{ in_array($jabatanOption->id, $selectedManagerIds) ? 'checked' : '' }}>
@@ -71,7 +71,7 @@
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                             @enderror
-                                        </div> --}}
+                                        </div>
                                     </div>
                                     <!-- /.card-body -->
 

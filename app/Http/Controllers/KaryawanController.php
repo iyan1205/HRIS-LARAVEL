@@ -248,6 +248,15 @@ class KaryawanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = Karyawan::find($id);
+
+        if ($data) {
+            $data->delete();
+        }
+        // Tambahkan session flash message
+        $message = 'Karyawan Berhasil Di Hapus';
+        Session::flash('successAdd', $message);
+        
+        return redirect()->route('karyawan');
     }
 }
