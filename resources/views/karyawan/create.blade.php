@@ -20,13 +20,13 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-            <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="karyawan">
+                <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <div class="active tab-pane" id="karyawan">
                                             <div class="row">
                                                 <div class="col-md-6">
 
@@ -245,7 +245,8 @@
                                                                 <label for="status_ktp" class="form-label">Status
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" id="menikah" name="status_ktp" value="Menikah"
+                                                                    <input class="form-check-input" type="radio"
+                                                                        id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
@@ -290,7 +291,7 @@
 
                                             </div> {{-- row --}}
 
-                                            <div class="row" style="margin-top: -365px;"">
+                                            <div class="row" style="margin-top: -310px;">
                                                 <div class="col-md-6">
 
                                                     <div class="card card-primary">
@@ -343,15 +344,14 @@
                                                                     Ijazah</label>
                                                                 <input type="text" class="form-control"
                                                                     id="nomer_ijazah" placeholder="Nomer Ijazah"
-                                                                    name="nomer_ijazah" >
+                                                                    name="nomer_ijazah">
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="no str" class="form-label">Nomer
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
-
-                                                                    placeholder="Nomer STR" name="nomer_str" >
+                                                                    placeholder="Nomer STR" name="nomer_str">
 
                                                             </div>
 
@@ -360,15 +360,14 @@
                                                                     Berlaku
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
-
-                                                                    name="exp_str" >
+                                                                    name="exp_str">
 
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
-                                                              name="profesi" placeholder="Profesi" >
+                                                                    name="profesi" placeholder="Profesi">
                                                                 @error('profesi')
                                                                     <small>{{ $message }}</small>
                                                                 @enderror
@@ -380,8 +379,7 @@
                                                                     Profesi</label>
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
-
-                                                                    placeholder="Sertifikat Profesi" >
+                                                                    placeholder="Sertifikat Profesi">
 
                                                                 @error('cert_profesi')
                                                                     <small>{{ $message }}</small>
@@ -399,15 +397,10 @@
                                                 </div>
                                             </div>
 
-                                        </form>
-                                    </div> {{-- tab-pane --}}
-                                </div> <!-- /.tab-content -->
-                            </div><!-- /.card-body -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
+                </form>
+            </div> {{-- tab-pane --}}
+    </div> <!-- /.tab-content -->
+    </div><!-- /.card-body -->
     <!-- /.row -->
     </div><!-- /.container-fluid -->
     </section>
