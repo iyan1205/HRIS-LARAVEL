@@ -289,8 +289,8 @@
                                                         </div> {{-- card-body --}}
                                                         <div class="form-group">
                                                             <div class="offset-sm-0 col-sm-10">
-                                                                <button type="submit"
-                                                                    class="btn btn-danger" style="margin-left: 12px">Submit</button>
+                                                                <button type="submit" class="btn btn-danger"
+                                                                    style="margin-left: 12px">Submit</button>
                                                             </div>
                                                         </div>
                                                     </div> {{-- card-primary --}}
@@ -324,6 +324,9 @@
                                                                 <input type="text" class="form-control"
                                                                     id="inputPendidikan" placeholder="Pendidikan Terakhir"
                                                                     name="pendidikan_terakhir" required>
+                                                                @error('pendidikan_terakhir')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -332,6 +335,9 @@
                                                                 <input type="number" class="form-control"
                                                                     id="TahunLulus" placeholder="Tahun Lulus"
                                                                     name="tahun_lulus" required>
+                                                                @error('tahun_lulus')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -340,6 +346,9 @@
                                                                 <input type="text" class="form-control"
                                                                     id="nomer_ijazah" placeholder="Nomer Ijazah"
                                                                     name="nomer_ijazah" required>
+                                                                @error('nomer_ijazah')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -347,6 +356,9 @@
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
                                                                     placeholder="Nomer STR" name="nomer_str" required>
+                                                                @error('nomer_str')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -355,12 +367,18 @@
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
                                                                     name="exp_str" required>
+                                                                @error('exp_str')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
                                                                     name="profesi" placeholder="Profesi" required>
+                                                                @error('profesi')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -369,6 +387,9 @@
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
                                                                     placeholder="Sertifikat Profesi" required>
+                                                                @error('cert_profesi')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
                                                         </div> {{-- card-body --}}
                                                     </div> {{-- card-primary --}}
