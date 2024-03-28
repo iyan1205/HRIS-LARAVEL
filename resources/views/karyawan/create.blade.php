@@ -20,13 +20,13 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-            <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="karyawan">
+                <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <div class="active tab-pane" id="karyawan">
                                             <div class="row">
                                                 <div class="col-md-6">
 
@@ -40,8 +40,7 @@
                                                             <div class="form-group">
                                                                 <label for="nik" class="form-label">NIK</label>
                                                                 <input type="number" class="form-control" id="nik"
-                                                                    placeholder="NIK" name="nik"
-                                                                    value="{{ old('nik') }}" required>
+                                                                    placeholder="NIK" name="nik" required>
                                                                 @error('nik')
                                                                     <small>
                                                                         <p class="text-danger">{{ $message }}</p>
@@ -112,7 +111,7 @@
                                                                     Masuk
                                                                     Dinas</label>
                                                                 <input type="date" class="form-control" id="tgl_kontrak1"
-                                                                    name="tgl_kontrak1" value="{{ old('tgl_kontrak1') }}"
+                                                                    name="tgl_kontrak1"
                                                                     required>
                                                                 @error('tgl_kontrak1')
                                                                     <small>
@@ -125,8 +124,7 @@
                                                                 <label for="akhir_kontrak1" class="form-label">Masa
                                                                     Kontrak</label>
                                                                 <input type="date" class="form-control"
-                                                                    id="akhir_kontrak1" name="akhir_kontrak1"
-                                                                    value="{{ old('akhir_kontrak1') }}" required>
+                                                                    id="akhir_kontrak1" name="akhir_kontrak1" required>
                                                                 @error('akhir_kontrak1')
                                                                     <small>
                                                                         <p class="text-danger">{{ $message }}</p>
@@ -150,8 +148,7 @@
                                                                 <label for="nama" class="form-label">Nama
                                                                     Lengkap:</label>
                                                                 <input type="text" class="form-control" id="name"
-                                                                    placeholder="Nama Lengkap" name="name"
-                                                                    value="{{ old('name') }}" required>
+                                                                    placeholder="Nama Lengkap" name="name" required>
                                                                 @error('name')
                                                                     <small>
                                                                         <p class="text-danger">{{ $message }}</p>
@@ -245,7 +242,8 @@
                                                                 <label for="status_ktp" class="form-label">Status
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" id="menikah" name="status_ktp" value="Menikah"
+                                                                    <input class="form-check-input" type="radio"
+                                                                        id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
@@ -287,21 +285,13 @@
                                                         </div> {{-- card-body --}}
                                                     </div> {{-- card-info --}}
                                                 </div> {{-- col --}}
-
                                             </div> {{-- row --}}
 
-                                            <div class="row" style="margin-top: -365px;"">
+                                            <div class="row" style="margin-top: -310px;"">
                                                 <div class="col-md-6">
-
                                                     <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
-                                                            <div class="card-tools">
-                                                                <button type="button" class="btn btn-tool"
-                                                                    data-card-widget="collapse" title="Collapse">
-                                                                    <i class="fas fa-minus"></i>
-                                                                </button>
-                                                            </div>
                                                         </div>
 
                                                         <div class="card-body">
@@ -343,15 +333,14 @@
                                                                     Ijazah</label>
                                                                 <input type="text" class="form-control"
                                                                     id="nomer_ijazah" placeholder="Nomer Ijazah"
-                                                                    name="nomer_ijazah" >
+                                                                    name="nomer_ijazah">
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="no str" class="form-label">Nomer
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
-
-                                                                    placeholder="Nomer STR" name="nomer_str" >
+                                                                    placeholder="Nomer STR" name="nomer_str">
 
                                                             </div>
 
@@ -360,15 +349,14 @@
                                                                     Berlaku
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
-
-                                                                    name="exp_str" >
+                                                                    name="exp_str">
 
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
-                                                              name="profesi" placeholder="Profesi" >
+                                                                    name="profesi" placeholder="Profesi">
                                                                 @error('profesi')
                                                                     <small>{{ $message }}</small>
                                                                 @enderror
@@ -380,8 +368,7 @@
                                                                     Profesi</label>
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
-
-                                                                    placeholder="Sertifikat Profesi" >
+                                                                    placeholder="Sertifikat Profesi">
 
                                                                 @error('cert_profesi')
                                                                     <small>{{ $message }}</small>
@@ -399,17 +386,14 @@
                                                 </div>
                                             </div>
 
-                                        </form>
-                                    </div> {{-- tab-pane --}}
-                                </div> <!-- /.tab-content -->
-                            </div><!-- /.card-body -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
-    <!-- /.row -->
-    </div><!-- /.container-fluid -->
-    </section>
-    </div>
+                                        </div> {{-- tab-pane --}}
+                                    </div> <!-- /.tab-content -->
+                                </div> <!-- /.card-body -->
+                            </div> <!-- /.card -->
+                        </div> <!-- /.col -->
+                    </div> <!-- /.row -->
+                </form>
+            </div> <!-- /.container-fluid -->
+        </section> <!-- /.content -->
+    </div> <!-- /.content-wrapper -->
 @endsection
