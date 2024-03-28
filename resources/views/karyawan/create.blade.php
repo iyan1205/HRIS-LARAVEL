@@ -20,15 +20,13 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
+            <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
                 <div class="row">
-
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="active tab-pane" id="karyawan">
-                                        <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">
-                                            @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
 
@@ -180,7 +178,7 @@
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label for="nomer_ktp" class="form-label">Nomer
+                                                                <label for="nomer_ktp" class="form-label">NIK
                                                                     KTP</label>
                                                                 <input type="number" class="form-control" id="nomer_ktp"
                                                                     placeholder="No KTP" name="nomer_ktp" required>
@@ -247,8 +245,7 @@
                                                                 <label for="status_ktp" class="form-label">Status
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        id="menikah" name="status_ktp" value="Menikah"
+                                                                    <input class="form-check-input" type="radio" id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
@@ -288,7 +285,14 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
-                                                    </div> {{-- card-primary --}}
+
+                                                        <div class="form-group">
+                                                            <div class="offset-sm-0 col-sm-10">
+                                                                <button type="submit"
+                                                                    class="btn btn-danger">Submit</button>
+                                                            </div>
+                                                        </div>
+                                                    </div> {{-- card-info --}}
                                                 </div> {{-- col --}}
 
                                             </div> {{-- row --}}
@@ -346,20 +350,16 @@
                                                                     Ijazah</label>
                                                                 <input type="text" class="form-control"
                                                                     id="nomer_ijazah" placeholder="Nomer Ijazah"
-                                                                    name="nomer_ijazah" required>
-                                                                @error('nomer_ijazah')
-                                                                    <small>{{ $message }}</small>
-                                                                @enderror
+                                                                    name="nomer_ijazah" >
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="no str" class="form-label">Nomer
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
-                                                                    placeholder="Nomer STR" name="nomer_str" required>
-                                                                @error('nomer_str')
-                                                                    <small>{{ $message }}</small>
-                                                                @enderror
+
+                                                                    placeholder="Nomer STR" name="nomer_str" >
+
                                                             </div>
 
                                                             <div class="form-group">
@@ -367,19 +367,19 @@
                                                                     Berlaku
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
-                                                                    name="exp_str" required>
-                                                                @error('exp_str')
-                                                                    <small>{{ $message }}</small>
-                                                                @enderror
+
+                                                                    name="exp_str" >
+
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
-                                                                    name="profesi" placeholder="Profesi" required>
+                                                              name="profesi" placeholder="Profesi" >
                                                                 @error('profesi')
                                                                     <small>{{ $message }}</small>
                                                                 @enderror
+
                                                             </div>
 
                                                             <div class="form-group">
@@ -387,10 +387,13 @@
                                                                     Profesi</label>
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
-                                                                    placeholder="Sertifikat Profesi" required>
+
+                                                                    placeholder="Sertifikat Profesi" >
+
                                                                 @error('cert_profesi')
                                                                     <small>{{ $message }}</small>
                                                                 @enderror
+
                                                             </div>
                                                         </div> {{-- card-body --}}
                                                     </div> {{-- card-primary --}}
