@@ -35,6 +35,7 @@
                                                     <div class="card card-info">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Karyawan</h3>
+                                                            
                                                         </div>
 
                                                         <div class="card-body">
@@ -230,12 +231,12 @@
                                                                     Kelamin</label>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="l" name="gender" value="l"
+                                                                        id="L" name="gender" value="L"
                                                                         required>
-                                                                    <label class="form-check-label" for="l">Laki -
+                                                                    <label class="form-check-label" for="L">Laki -
                                                                         Laki</label>
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="p" name="gender" value="p"
+                                                                        id="P" name="gender" value="P"
                                                                         style="margin-left: 6px;" required>
                                                                     <label class="form-check-label" for="p"
                                                                         style="margin-left: 24px;">Perempuan</label>
@@ -247,13 +248,13 @@
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
-                                                                        id="menikah" name="status_ktp" value="menikah"
+                                                                        id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
                                                                     <input class="form-check-input" type="radio"
                                                                         id="belum_menikah" name="status_ktp"
-                                                                        value="belum menikah" style="margin-left: 6px;"
+                                                                        value="Belum Menikah" style="margin-left: 6px;"
                                                                         required>
                                                                     <label class="form-check-label" for="belum_menikah"
                                                                         style="margin-left: 24px;">Belum
@@ -304,6 +305,11 @@
                                                     <div class="card card-info">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
+                                                            <div class="card-tools">
+                                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                                  <i class="fas fa-minus"></i>
+                                                                </button>
+                                                              </div>
                                                         </div>
 
                                                         <div class="card-body">

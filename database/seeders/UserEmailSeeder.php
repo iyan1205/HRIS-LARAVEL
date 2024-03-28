@@ -30,7 +30,7 @@ class UserEmailSeeder extends Seeder
       // Iterasi setiap baris dari file Excel
       foreach ($rows as $row) {
           // Menghapus tanda kutip pada kolom "nik" jika ada
-          $nik = $row[5]; // Kolom "nik"
+          $nik = $row[3]; // Kolom "nik"
           if (substr($nik, 0, 1) == "'") {
               $nik = substr($nik, 1);
           }
@@ -54,7 +54,7 @@ class UserEmailSeeder extends Seeder
           // Menambahkan informasi karyawan (termasuk "nik")
         $karyawan = new Karyawan();
         $karyawan->user_id = $user->id; // Set ID pengguna baru
-        $karyawan->name = $row[3]; // Kolom alamat (misalnya)
+        $karyawan->name = $row[2]; // Kolom alamat (misalnya)
         $karyawan->nik = $nik;
         $karyawan->gender = $row[4];
         $karyawan->status_karyawan = $row[5];

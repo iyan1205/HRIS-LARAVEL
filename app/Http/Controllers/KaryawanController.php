@@ -18,7 +18,7 @@ class KaryawanController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view karyawan', ['only' => ['index']]);
+        $this->middleware('permission:view karyawan', ['only' => ['index','resign']]);
         $this->middleware('permission:create karyawan', ['only' => ['create', 'store']]);
         $this->middleware('permission:edit karyawan', ['only' => ['edit','update']]);
         $this->middleware('permission:delete karyawan', ['only' => ['destroy']]);
@@ -26,13 +26,18 @@ class KaryawanController extends Controller
     
     public function index()
     {
-        $karyawans = Karyawan::where('status', 'active')->paginate(10);
-        return view('karyawan.index', compact('karyawans'));
+        $karyawans = Karyawan::where('status', 'active')
+        ->orderBy('nik', 'desc')
+        ->get();
+        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
+        return view('karyawan.index', compact('karyawans', 'jumlahKaryawanAktif'));
     }
 
     public function resign()
     {
-        $resigns = Karyawan::where('status', 'resign')->paginate(10);
+        $resigns = Karyawan::where('status', 'resign')
+        ->orderBy('tgl_resign', 'asc')
+        ->get();
         return \view('karyawan.resign', compact('resigns'));
     }
 
@@ -243,6 +248,15 @@ class KaryawanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = Karyawan::find($id);
+
+        if ($data) {
+            $data->delete();
+        }
+        // Tambahkan session flash message
+        $message = 'Karyawan Berhasil Di Hapus';
+        Session::flash('successAdd', $message);
+        
+        return redirect()->route('karyawan');
     }
 }
