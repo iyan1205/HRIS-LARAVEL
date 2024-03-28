@@ -35,6 +35,7 @@
                                                     <div class="card card-info">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Karyawan</h3>
+                                                            
                                                         </div>
 
                                                         <div class="card-body">
@@ -305,6 +306,11 @@
                                                     <div class="card card-info">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
+                                                            <div class="card-tools">
+                                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                                                  <i class="fas fa-minus"></i>
+                                                                </button>
+                                                              </div>
                                                         </div>
 
                                                         <div class="card-body">
