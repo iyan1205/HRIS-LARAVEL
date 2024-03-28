@@ -286,8 +286,7 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
-                                                        <div
-                                                            class="form-group">
+                                                        <div class="form-group">
                                                             <div class="offset-sm-0 col-sm-10">
                                                                 <button type="submit"
                                                                     class="btn btn-danger">Submit</button>
