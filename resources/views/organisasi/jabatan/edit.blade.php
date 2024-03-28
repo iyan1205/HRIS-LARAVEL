@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Jabatan</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('jabatan') }}">Jabatan</a></li>
                             <li class="breadcrumb-item active">Edit Jabatan</li>
                         </ol>
                     </div><!-- /.col -->

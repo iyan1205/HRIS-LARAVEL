@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Karyawan</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('karyawan') }}">Karyawan</a></li>
                             <li class="breadcrumb-item active">Tambah Karyawan</li>
                         </ol>
                     </div><!-- /.col -->
@@ -30,10 +30,10 @@
                                             <div class="row">
                                                 <div class="col-md-6">
 
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Karyawan</h3>
-                                                            
+
                                                         </div>
 
                                                         <div class="card-body">
@@ -135,11 +135,11 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
-                                                    </div> {{-- card-info --}}
+                                                    </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
 
                                                 <div class="col-sm-6">
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
 
                                                         <div class="card-header">
                                                             <h3 class="card-title">Kontak</h3>
@@ -285,6 +285,7 @@
                                                             </div>
 
                                                         </div> {{-- card-body --}}
+
                                                         <div class="form-group">
                                                             <div class="offset-sm-0 col-sm-10">
                                                                 <button type="submit"
@@ -299,14 +300,15 @@
                                             <div class="row" style="margin-top: -365px;"">
                                                 <div class="col-md-6">
 
-                                                    <div class="card card-info">
+                                                    <div class="card card-primary">
                                                         <div class="card-header">
                                                             <h3 class="card-title">Pendidikan</h3>
                                                             <div class="card-tools">
-                                                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                                                  <i class="fas fa-minus"></i>
+                                                                <button type="button" class="btn btn-tool"
+                                                                    data-card-widget="collapse" title="Collapse">
+                                                                    <i class="fas fa-minus"></i>
                                                                 </button>
-                                                              </div>
+                                                            </div>
                                                         </div>
 
                                                         <div class="card-body">
@@ -327,6 +329,9 @@
                                                                 <input type="text" class="form-control"
                                                                     id="inputPendidikan" placeholder="Pendidikan Terakhir"
                                                                     name="pendidikan_terakhir" required>
+                                                                @error('pendidikan_terakhir')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -335,6 +340,9 @@
                                                                 <input type="number" class="form-control"
                                                                     id="TahunLulus" placeholder="Tahun Lulus"
                                                                     name="tahun_lulus" required>
+                                                                @error('tahun_lulus')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
                                                             </div>
 
                                                             <div class="form-group">
@@ -349,7 +357,9 @@
                                                                 <label for="no str" class="form-label">Nomer
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
+
                                                                     placeholder="Nomer STR" name="nomer_str" >
+
                                                             </div>
 
                                                             <div class="form-group">
@@ -357,13 +367,19 @@
                                                                     Berlaku
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
+
                                                                     name="exp_str" >
+
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
-                                                                    name="profesi" placeholder="Profesi" >
+                                                              name="profesi" placeholder="Profesi" >
+                                                                @error('profesi')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
+
                                                             </div>
 
                                                             <div class="form-group">
@@ -371,12 +387,24 @@
                                                                     Profesi</label>
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
+
                                                                     placeholder="Sertifikat Profesi" >
+
+                                                                @error('cert_profesi')
+                                                                    <small>{{ $message }}</small>
+                                                                @enderror
+
                                                             </div>
                                                         </div> {{-- card-body --}}
-                                                    </div> {{-- card-info --}}
+                                                    </div> {{-- card-primary --}}
                                                 </div> {{-- col --}}
                                             </div> {{-- row --}}
+
+                                            <div class="form-group">
+                                                <div class="offset-sm-0 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Submit</button>
+                                                </div>
+                                            </div>
 
                                         </form>
                                     </div> {{-- tab-pane --}}
