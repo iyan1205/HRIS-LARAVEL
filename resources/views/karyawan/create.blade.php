@@ -178,7 +178,7 @@
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label for="nomer_ktp" class="form-label">Nomer
+                                                                <label for="nomer_ktp" class="form-label">NIK
                                                                     KTP</label>
                                                                 <input type="number" class="form-control" id="nomer_ktp"
                                                                     placeholder="No KTP" name="nomer_ktp" required>
@@ -245,8 +245,7 @@
                                                                 <label for="status_ktp" class="form-label">Status
                                                                     Perkawinan</label>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        id="menikah" name="status_ktp" value="Menikah"
+                                                                    <input class="form-check-input" type="radio" id="menikah" name="status_ktp" value="Menikah"
                                                                         required>
                                                                     <label class="form-check-label"
                                                                         for="menikah">Menikah</label>
@@ -343,14 +342,14 @@
                                                                     Ijazah</label>
                                                                 <input type="text" class="form-control"
                                                                     id="nomer_ijazah" placeholder="Nomer Ijazah"
-                                                                    name="nomer_ijazah" required>
+                                                                    name="nomer_ijazah" >
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="no str" class="form-label">Nomer
                                                                     STR</label>
                                                                 <input type="text" class="form-control" id="nomer_str"
-                                                                    placeholder="Nomer STR" name="nomer_str" required>
+                                                                    placeholder="Nomer STR" name="nomer_str" >
                                                             </div>
 
                                                             <div class="form-group">
@@ -358,13 +357,13 @@
                                                                     Berlaku
                                                                     STR</label>
                                                                 <input type="date" class="form-control" id="exp_str"
-                                                                    name="exp_str" required>
+                                                                    name="exp_str" >
                                                             </div>
 
                                                             <div class="form-group">
                                                                 <label for="profesi" class="form-label">Profesi</label>
                                                                 <input type="text" class="form-control" id="profesi"
-                                                                    name="profesi" placeholder="Profesi" required>
+                                                                    name="profesi" placeholder="Profesi" >
                                                             </div>
 
                                                             <div class="form-group">
@@ -372,7 +371,7 @@
                                                                     Profesi</label>
                                                                 <input type="text" class="form-control"
                                                                     id="cert_profesi" name="cert_profesi"
-                                                                    placeholder="Sertifikat Profesi" required>
+                                                                    placeholder="Sertifikat Profesi" >
                                                             </div>
                                                         </div> {{-- card-body --}}
                                                     </div> {{-- card-info --}}
