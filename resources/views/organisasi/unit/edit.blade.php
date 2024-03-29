@@ -41,7 +41,9 @@
                                             <input type="text" class="form-control" id="name"
                                                 placeholder="Enter name" name="name" value="{{ $units->name }}">
                                             @error('name')
-                                                <small>{{ $message }}</small>
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
                                             @enderror
                                         </div>
 

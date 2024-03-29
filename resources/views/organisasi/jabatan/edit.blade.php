@@ -41,7 +41,9 @@
                                             <input type="text" class="form-control" id="name"
                                                 placeholder="Enter name" name="name" value="{{ $jabatan->name }}">
                                             @error('name')
-                                                <small>{{ $message }}</small>
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
                                             @enderror
                                         </div>
                                         {{-- <div class="form-group">
@@ -76,7 +78,7 @@
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                        <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
                                     </div>
                                 </form>
                             </div>
