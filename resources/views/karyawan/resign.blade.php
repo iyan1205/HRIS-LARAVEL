@@ -33,28 +33,26 @@
                                     <tr>
                                         <th style="width: 1%">No</th>
                                         <th>Nama Lengkap</th>
-                                        <th>Email</th>
                                         <th>Departemen</th>
-                                        <th>Pendidikan</th>
+                                        <th>Jabatan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($resigns as $item)
+                                    @foreach ($resigns as $karyawan)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->user->email }}</td>
-                                        <td>{{ $item->departemen->name }}</td>
-                                        <td>{{ $item->pendidikan->institusi }}</td>
+                                        <td>{{ $karyawan->user->name }}</td>
+                                        <td>{{ $karyawan->departemen->name }}</td>
+                                        <td>{{ $karyawan->jabatan->name }}</td>
                                         <td class="project-actions text-right">
-                                            <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+                                            <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                            <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                                 Hapus</a>
                                         </td>
                                     </tr>
-                                    <div class="modal fade" id="modal-hapus{{ $item->id }}">
+                                    <div class="modal fade" id="modal-hapus{{ $karyawan->id }}">
                                         <div class="modal-dialog">
                                             <div class="modal-content bg-danger">
                                                 <div class="modal-header">
@@ -65,11 +63,11 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <p>Apakah kamu yakin ingin menghapus data user
-                                                        <b>{{ $item->name }}</b> ?
+                                                        <b>{{ $karyawan->name }}</b> ?
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer justify-content-between">
-                                                    <form action="{{ route('user.delete', ['id' => $item->id]) }}" method="POST">
+                                                    <form action="{{ route('user.delete', ['id' => $karyawan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>

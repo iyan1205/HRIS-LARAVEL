@@ -51,7 +51,7 @@
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                        <button type="submit" class="btn btn-success">{{ __('Update') }}</button>
                                     </div>
                                 </form>
                             </div>

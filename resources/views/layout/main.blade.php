@@ -42,6 +42,11 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/toastr/toastr.min.css') }}">
+    <style>
+        .red-star {
+            color: red;
+        }
+    </style>
 </head>
 @php
     $user = Auth::user();
@@ -429,7 +434,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success'))
+    @if (session('success')) //Login
         <script>
             Swal.fire({
                 icon: 'success',
@@ -441,7 +446,7 @@
     @if (session('successAdd'))
         <script>
             Swal.fire({
-                position: "top-end",
+                position: "top",
                 icon: "success",
                 title: "{{ session('successAdd') }}",
                 showConfirmButton: false,
@@ -452,7 +457,7 @@
     @if (session('reject'))
         <script>
             Swal.fire({
-                position: "top-end",
+                position: "top",
                 icon: "error",
                 title: "{{ session('reject') }}",
                 showConfirmButton: false,
