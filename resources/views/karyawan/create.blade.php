@@ -111,8 +111,7 @@
                                                                     Masuk
                                                                     Dinas</label>
                                                                 <input type="date" class="form-control" id="tgl_kontrak1"
-                                                                    name="tgl_kontrak1"
-                                                                    required>
+                                                                    name="tgl_kontrak1" required>
                                                                 @error('tgl_kontrak1')
                                                                     <small>
                                                                         <p class="text-danger">{{ $message }}</p>
@@ -233,7 +232,7 @@
                                                                     <input class="form-check-input" type="radio"
                                                                         id="P" name="gender" value="P"
                                                                         style="margin-left: 6px;" required>
-                                                                    <label class="form-check-label" for="p"
+                                                                    <label class="form-check-label" for="P"
                                                                         style="margin-left: 24px;">Perempuan</label>
                                                                 </div>
                                                             </div>
