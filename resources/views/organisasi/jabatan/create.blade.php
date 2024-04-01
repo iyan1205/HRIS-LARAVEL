@@ -45,36 +45,36 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="kategori" class="form-label">Kategori Jabatan:</label>
-                                            <select class="form-control select2bs4" id="kategori" name="kategori" style="width: 100%;" required>
-                                                <option value="">Pilih Kategori</option>
-                                                <option value="Direktur" {{ old('kategori') == 'Direktur' ? 'selected' : '' }}>Direktur</option>
-                                                <option value="Manajer" {{ old('kategori') == 'Manajer' ? 'selected' : '' }}>Manajer</option>
-                                                <option value="Kanit" {{ old('kategori') == 'Kanit' ? 'selected' : '' }}>Kanit</option>
-                                                <option value="Staff" {{ old('kategori') == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                            <label for="level" class="form-label">Level Jabatan:</label>
+                                            <select class="form-control select2bs4" id="level" name="level" style="width: 100%;" required>
+                                                <option value="" disabled>Pilih Level</option>
+                                                <option value="Direktur" {{ old('level') == 'Direktur' ? 'selected' : '' }}>Direktur</option>
+                                                <option value="Manajer" {{ old('level') == 'Manajer' ? 'selected' : '' }}>Manajer</option>
+                                                <option value="SPV" {{ old('level') == 'SPV' ? 'selected' : '' }}>SPV</option>
+                                                <option value="Kanit" {{ old('level') == 'Kanit' ? 'selected' : '' }}>Kanit</option>
+                                                <option value="Staff" {{ old('level') == 'Staff' ? 'selected' : '' }}>Staff</option>
                                             </select>
-                                            @error('kategori')
+                                            @error('level')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                             @enderror
                                         </div>
-                                        <div id="kategoriSelect" style="display: {{ 'Direktur','Manajer','Kanit' ? 'block' : 'none' }};">
-                                            <div class="form-group">
-                                                <label for="manager_id" class="form-label">Atasan Langsung:</label>
-                                                <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
-                                                    @foreach ($jabatans as $jabatan)
-                                                        <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
-                                                            {{ $jabatan->name }}
-                                                        </option>
-                                                        @endforeach
-                                                </select>
-                                                @error('manager_id')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                                @enderror
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="manager_id" class="form-label">Atasan Langsung:</label>
+                                            <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
+                                                @foreach ($jabatans as $jabatan)
+                                                    <option value="" disabled>Pilih Atasan</option>
+                                                    <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
+                                                        {{ $jabatan->name }}
+                                                    </option>
+                                                    @endforeach
+                                            </select>
+                                            @error('manager_id')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                            @enderror
                                         </div>
                                     </div>
                                     
@@ -94,20 +94,5 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var kategoriSelect = document.getElementById("kategori");
-            var kategoriSelectDiv = document.getElementById("kategoriSelect");
-    
-            kategoriSelect.addEventListener("change", function() {
-                var selectedValue = kategoriSelect.value;
-                if (selectedValue === "Staff") {
-                    kategoriSelectDiv.style.display = "none";
-                } else {
-                    kategoriSelectDiv.style.display = "block";
-                }
-            });
-        });
-    </script>
-    
+  
 @endsection

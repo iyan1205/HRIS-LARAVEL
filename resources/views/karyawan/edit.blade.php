@@ -154,7 +154,29 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="status">Status Karyawan</label>
+                                        <label for="status_karyawan">Status Karyawan</label>
+                                        <select class="form-control" name="status_karyawan" id="">
+                                            <option value="kontrak" {{ $karyawan->status_karyawan == 'kontrak' ? 'selected' : '' }}>
+                                                Kontrak
+                                            </option>
+                                            <option value="kartap" {{ $karyawan->status_karyawan == 'kartap' ? 'selected' : '' }}>
+                                                Karyawan Tetap
+                                            </option>
+                                            <option value="fulltime" {{ $karyawan->status_karyawan == 'fulltime' ? 'selected' : '' }}>
+                                                Fulltime
+                                            </option>
+                                            <option value="parttime" {{ $karyawan->status_karyawan == 'parttime' ? 'selected' : '' }}>
+                                                Parttime
+                                            </option>
+                                        </select>
+                                        @error('status_karyawan')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
                                         <select class="form-control" name="status" id="resignSelect">
                                             <option value="active" {{ $karyawan->status == 'active' ? 'selected' : '' }}>
                                                 Active
@@ -215,6 +237,11 @@
                                             value="{{ $karyawan->nomer_ktp }}" class="form-control">
                                     </div>
                                     <div class="form-group">
+                                        <label for="npwp">Nomer NPWP</label>
+                                        <input type="text" id="npwp" name="npwp"
+                                            value="{{ $karyawan->npwp }}" class="form-control">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="telepon">Nomer Telepon</label>
                                         <input type="text" id="telepon" name="telepon"
                                             value="{{ $karyawan->telepon }}" class="form-control">
@@ -227,28 +254,23 @@
                                     <div class="form-group">
                                         <label for="npwp">Jenis Kelamin</label>
                                         <div class="form-check" style="margin-left: 10px;">
-                                            <input class="form-check-input" type="radio" id="L" name="gender"
-                                                value="L" {{ $karyawan->gender === 'L' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $karyawan->gender === 'L' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="L">L</label>
-                                            <input class="form-check-input" type="radio" id="P" name="gender"
-                                                value="P"   
+                                            <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $karyawan->gender === 'P' ? 'checked' : '' }}  
                                                 style="margin-left: 6px;">
                                             <label class="form-check-label" for="p"
                                                 style="margin-left: 24px;">P</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="npwp">Nomer NPWP</label>
+                                        <label for="status_ktp">Status Perkawinan</label>
                                         <div class="form-check" style="margin-left: 10px;">
-                                            <input class="form-check-input" type="radio" id="Menikah" name="status_ktp"
-                                                value="Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="menikah">Menikah</label>
-                                            <input class="form-check-input" type="radio" id="Belum Menikah"
-                                                name="status_ktp" value="Belum Menikah"
-                                                {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }}
-                                                style="margin-left: 6px;">
-                                            <label class="form-check-label" for="Belum Menikah"
-                                                style="margin-left: 24px;">Belum Menikah</label>
+                                            <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $karyawan->status_ktp == 'Belum Menikah' ? 'checked' : '' }} style="margin-left: 6px;">
+                                            <label class="form-check-label" for="Belum Menikah" style="margin-left: 24px;">Belum Menikah</label>
+                                            <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $karyawan->status_ktp == 'Cerai Hidup' ? 'checked' : '' }} style="margin-left: 6px;">
+                                            <label class="form-check-label" for="Cerai Hidup" style="margin-left: 24px;">Cerai Hidup</label>    
                                         </div>
                                     </div>
                                     <div class="form-group">

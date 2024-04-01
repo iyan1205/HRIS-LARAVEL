@@ -200,22 +200,28 @@ class KaryawanController extends Controller
 
     // Perbarui data karyawan
     $karyawan->update([
+        'user_id' => $request->input('user_id'),
         'name' => $request->input('name'),
         'nik' => $request->input('nik'),
+        'status_karyawan' => $request->input('status_karyawan'),
+        'tgl_kontrak1' => $request->input('tgl_kontrak1'),
+        'akhir_kontrak1' => $request->input('akhir_kontrak1'),
+        'tgl_kontrak2' => $request->input('tgl_kontrak2'),
+        'akhir_kontrak2' => $request->input('akhir_kontrak2'),
+        'status' => $request->input('status'),
+        'tgl_resign' => $request->input('tgl_resign'),
+        'resign_id' => $request->input('resign_id'),
         'nomer_ktp' => $request->input('nomer_ktp'),
-        'user_id' => $request->input('user_id'),
+        'tempat_lahir' => $request->input('tempat_lahir'),
+        'tanggal_lahir' => $request->input('tanggal_lahir'),
+        'alamat_ktp' => $request->input('alamat_ktp'),
+        'gender' => $request->input('gender'),
+        'status_ktp' => $request->input('status_ktp'),
+        'telepon' => $request->input('telepon'),
+        'npwp' => $request->input('npwp'),
         'departemen_id' => $request->input('departemen_id'),
         'jabatan_id' => $request->input('jabatan_id'),
         'unit_id' => $request->input('unit_id'),
-        'alamat_ktp' => $request->input('alamat_ktp'),
-        'tempat_lahir' => $request->input('tempat_lahir'),
-        'tanggal_lahir' => $request->input('tanggal_lahir'),
-        'gender' => $request->input('gender'),
-        'telepon' => $request->input('telepon'),
-        'status_ktp' => $request->input('status_ktp'),
-        'npwp' => $request->input('npwp'),
-        'tgl_kontrak1' => $request->input('tgl_kontrak1'),
-        'akhir_kontrak1' => $request->input('akhir_kontrak1'),
         // Tambahkan kolom lain yang perlu disimpan
     ]);
 

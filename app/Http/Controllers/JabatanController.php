@@ -23,7 +23,7 @@ class JabatanController extends Controller
     public function create()
     {
         $jabatan = Jabatan::all();
-        $jabatans = Jabatan::whereIn('kategori', ['Manajer', 'Kanit', 'Direktur'])->get();
+        $jabatans = Jabatan::whereIn('level', ['Manajer', 'Kanit', 'SPV','Direktur'])->get();
         return view('organisasi.jabatan.create', compact('jabatan','jabatans'));
     }
 
