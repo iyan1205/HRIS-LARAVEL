@@ -28,7 +28,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user.create');
+        $roles = Role::pluck('name','name')->all();
+        return view('user.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -37,22 +38,19 @@ class UserController extends Controller
             'nama' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'photo' => 'required|mimes:jpg,jpeg,png|max:2048',
+            'roles' => 'required|array',
+            'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ]);
         if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
-        $photo = $request->file('photo');
-        $filename = str_replace(' ', '_', $request->nama) . '_' . date('Y-m-d') . '.' . $photo->getClientOriginalExtension();
-
-        $photo->storeAs('public/avatar', $filename);
 
         $data['name'] = $request->nama;
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
-        $data['image'] = $filename;
+        $data['roles'] = $request->roles;
 
         $user = User::create($data);
-        $user->assignRole('karyawan');
+
+        $user->syncRoles($request->roles);
 
         $message = 'User berhasil ditambahkan';
         Session::flash('successAdd', $message);

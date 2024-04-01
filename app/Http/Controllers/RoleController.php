@@ -80,9 +80,28 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        // Validasi input dari form
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|unique:roles'
+            // Tambahkan aturan validasi sesuai kebutuhan
+        ]);
+
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $role->update([
+            'name' => $request->input('name'),
+        ]);
+
+        // Tambahkan session flash message
+        $message = 'Roles berhasil diedit';
+        Session::flash('successAdd', $message);
+
+        return redirect()->route('roles.index');
     }
 
     /**

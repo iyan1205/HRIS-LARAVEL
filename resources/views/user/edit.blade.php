@@ -61,12 +61,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="photo">Roles</label>
-                                            
                                             @foreach ($roles as $role)
-                                            <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input role-checkbox" type="checkbox" id="role_{{ $role }}" name="roles[]" value="{{ $role }}"
+                                            <div class="icheck-primary d-outline">
+                                                <input type="checkbox" id="role_{{ $role }}" name="roles[]" value="{{ $role }}"
                                                 {{ in_array($role, $userRoles) ? 'checked' : '' }}>
-                                                <label for="role_{{ $role }}" class="custom-control-label">{{ $role }}</label>
+                                                <label for="role_{{ $role }}" >{{ $role }}</label>
                                             </div>
                                         @endforeach
                                         </div>

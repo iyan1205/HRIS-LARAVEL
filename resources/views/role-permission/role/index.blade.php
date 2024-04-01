@@ -86,7 +86,7 @@
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $role->uuid }}">
                                                 <div class="modal-dialog">
-                                                    <div class="modal-content bg-danger">
+                                                    <div class="modal-content bg-default">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Konfirmasi Hapus data</h4>
                                                             <button type="button" class="close" data-dismiss="modal"
@@ -104,9 +104,9 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="button" class="btn btn-outline-light"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-dismiss="modal" style="margin-left: -300px">Batal</button>
-                                                                <button type="submit" class="btn btn-outline-light">Ya,
+                                                                <button type="submit" class="btn btn-danger">Ya,
                                                                     Hapus
                                                                 </button>
                                                             </form>

@@ -35,17 +35,36 @@
                                 <form>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="name">Nama</label>
+                                            <label for="name">Nama Jabatan:</label>
                                             <input type="text" class="form-control" id="name"
                                                 placeholder="Enter name" name="name" value="{{ old('name') }}">
                                             @error('name')
-                                                <small>{{ $message }}</small>
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="level" class="form-label">Level Jabatan:</label>
+                                            <select class="form-control select2bs4" id="level" name="level" style="width: 100%;" required>
+                                                <option value="" disabled>Pilih Level</option>
+                                                <option value="Direktur" {{ old('level') == 'Direktur' ? 'selected' : '' }}>Direktur</option>
+                                                <option value="Manajer" {{ old('level') == 'Manajer' ? 'selected' : '' }}>Manajer</option>
+                                                <option value="SPV" {{ old('level') == 'SPV' ? 'selected' : '' }}>SPV</option>
+                                                <option value="Kanit" {{ old('level') == 'Kanit' ? 'selected' : '' }}>Kanit</option>
+                                                <option value="Staff" {{ old('level') == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                            </select>
+                                            @error('level')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
                                             @enderror
                                         </div>
                                         <div class="form-group">
                                             <label for="manager_id" class="form-label">Atasan Langsung:</label>
                                             <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
                                                 @foreach ($jabatans as $jabatan)
+                                                    <option value="" disabled>Pilih Atasan</option>
                                                     <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
                                                         {{ $jabatan->name }}
                                                     </option>
@@ -75,4 +94,5 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
+  
 @endsection
