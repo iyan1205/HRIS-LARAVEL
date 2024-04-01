@@ -15,7 +15,6 @@ class Karyawan extends Authenticatable
         'user_id',
         'departemen_id',
         'unit_id',
-        'pendidikan_id',
         'jabatan_id',
         'name', //namalengkap
         'nik',
@@ -65,6 +64,11 @@ class Karyawan extends Authenticatable
     public function pendidikan()
     {
         return $this->hasOne(Pendidikan::class, 'karyawan_id');
+    }
+
+    public function tambahPendidikan($data)
+    {
+        return $this->pendidikan()->create($data);
     }
 
     public function resignreason()

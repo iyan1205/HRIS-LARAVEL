@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'HRIS') }}</title>
 
+    <!-- Shortcut Icon -->
+    <link rel="shortcut icon" href="{{ asset('lte/dist/img/logo.png') }}"">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -40,6 +42,11 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/toastr/toastr.min.css') }}">
+    <style>
+        .red-star {
+            color: red;
+        }
+    </style>
 </head>
 @php
     $user = Auth::user();
@@ -85,10 +92,12 @@
                         {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        @can('edit user')
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('profile.edit') }}" class="dropdown-item">
                             <i class="fas fa-user mr-2"></i>Profile
                         </a>
+                        @endcan
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
                             <i class="fas fa-arrow-right mr-2"></i>Log Out
@@ -124,7 +133,7 @@
                             class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->name }}</a>
                     </div>
                 </div>
 
@@ -425,7 +434,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success'))
+    @if (session('success')) //Login
         <script>
             Swal.fire({
                 icon: 'success',
@@ -437,7 +446,7 @@
     @if (session('successAdd'))
         <script>
             Swal.fire({
-                position: "top-end",
+                position: "top",
                 icon: "success",
                 title: "{{ session('successAdd') }}",
                 showConfirmButton: false,
@@ -448,7 +457,11 @@
     @if (session('reject'))
         <script>
             Swal.fire({
+<<<<<<< HEAD
                 position: "top-end",
+=======
+                position: "top",
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                 icon: "error",
                 title: "{{ session('reject') }}",
                 showConfirmButton: false,

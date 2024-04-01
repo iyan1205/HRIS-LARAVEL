@@ -48,6 +48,7 @@
                                                 </small>
                                             @enderror
                                         </div>
+<<<<<<< HEAD
                                         <div class="form-group">
                                             <label for="manajer_id" class="form-label">Atasan Langsung:</label>
                                             <select class="form-control select2bs4" id="manajer_id" name="manajer_id"
@@ -62,6 +63,9 @@
                                                 </small>
                                             @enderror
                                         </div>
+=======
+                                        
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                         @else
                                         <div class="form-group">
                                             <label for="name">Nama</label>

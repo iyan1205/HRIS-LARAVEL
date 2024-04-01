@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class DepartemenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('role:Super-Admin|admin');
+    }
+    
     public function index()
     {
         $departemens = Departemen::get();
@@ -81,7 +83,7 @@ class DepartemenController extends Controller
     {
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
-            'name' => 'nullable',
+            'name' => 'nullable|unique:departemens,name,'.$id,
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -94,11 +96,10 @@ class DepartemenController extends Controller
         $departmens = Departemen::findOrFail($id);
 
         // Perbarui atribut departemen sesuai dengan data yang diterima dari request
-        $departmens->name = $request->input('name');
-        // Tambahkan kolom lain yang perlu diperbarui
+        $departmens->update([
+        'name' => $request->input('name'),
 
-        // Simpan perubahan ke dalam database
-        $departmens->save();
+        ]);
 
         // Tambahkan session flash message
         $message = 'Department Berhasil Diedit';

@@ -36,7 +36,11 @@
                                     <tr>
                                         <th style="width: 10px">No</th>
                                         <th>Nama Units</th>
+<<<<<<< HEAD
                                         <th style="width: 150px">Action</th>
+=======
+                                        <th>Action</th>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -53,7 +57,7 @@
                                     </tr>
                                     <div class="modal fade" id="modal-hapus{{ $unit->id }}">
                                         <div class="modal-dialog">
-                                            <div class="modal-content bg-danger">
+                                            <div class="modal-content bg-default">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title">Konfirmasi Hapus data</h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -61,7 +65,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Apakah kamu yakin ingin menghapus data Unit
+                                                    <p>Apakah kamu yakin ingin menghapus Unit
                                                         <b>{{ $unit->name }}</b> ?
                                                     </p>
                                                 </div>
@@ -69,8 +73,13 @@
                                                     <form action="{{ route('unit.delete', ['id' => $unit->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
+<<<<<<< HEAD
                                                         <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-outline-light">Ya, Hapus
+=======
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-danger">Ya, Hapus
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                         </button>
                                                     </form>
                                                 </div>

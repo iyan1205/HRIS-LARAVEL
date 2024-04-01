@@ -50,9 +50,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($karyawans as $item)
+                                    @foreach ($karyawans as $karyawan)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+<<<<<<< HEAD
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->nik }}</td>
                                         <td>{{ $item->jabatan->name }}</td>
@@ -60,14 +61,23 @@
                                         <td>{{ $item->unit->name }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+=======
+                                        <td>{{ $karyawan->user->name }}</td>
+                                        <td>{{ $karyawan->nik }}</td>
+                                        <td>{{ $karyawan->jabatan->name }}</td>
+                                        <td>{{ $karyawan->departemen->name }}</td>
+                                        <td>{{ $karyawan->unit->name }}</td>
+                                        <td class="project-actions text-right">
+                                            <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                 Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                            <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                                 Hapus</a>
                                         </td>
                                     </tr>
-                                    <div class="modal fade" id="modal-hapus{{ $item->id }}">
+                                    <div class="modal fade" id="modal-hapus{{ $karyawan->id }}">
                                         <div class="modal-dialog">
-                                            <div class="modal-content bg-danger">
+                                            <div class="modal-content bg-default">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title">Konfirmasi Hapus data</h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -75,16 +85,21 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Apakah kamu yakin ingin menghapus data user
-                                                        <b>{{ $item->name }}</b> ?
+                                                    <p>Apakah kamu yakin ingin menghapus data Karyawan
+                                                        <b>{{ $karyawan->name }}</b> ?
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer justify-content-between">
-                                                    <form action="{{ route('user.delete', ['id' => $item->id]) }}" method="POST">
+                                                    <form action="{{ route('karyawan.delete', ['id' => $karyawan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
+<<<<<<< HEAD
                                                         <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-outline-light">Ya, Hapus
+=======
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-danger">Ya, Hapus
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                         </button>
                                                     </form>
                                                 </div>

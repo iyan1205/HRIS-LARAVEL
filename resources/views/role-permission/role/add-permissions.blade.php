@@ -36,15 +36,15 @@
                                 <form>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
+                                            <div class="icheck-primary custom-checkbox">
                                                 <input class="custom-control-input" type="checkbox" id="select-all">
-                                                <label class="custom-control-label" for="select-all">Select All</label>
+                                                <label  for="select-all">Select All</label>
                                             </div>
                                             @foreach ($permissions as $permission)
-                                            <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input permission-checkbox" type="checkbox" id="permission_{{ $permission->uuid }}" name="permission[]" value="{{ $permission->uuid }}"
+                                            <div class="icheck-primary custom-checkbox">
+                                                <input class="permission-checkbox" type="checkbox" id="permission_{{ $permission->uuid }}" name="permission[]" value="{{ $permission->uuid }}"
                                                 {{ in_array($permission->uuid, $rolePermissions) ? 'checked':'' }}>
-                                                <label for="permission_{{ $permission->uuid }}" class="custom-control-label">{{ $permission->name }}</label>
+                                                <label for="permission_{{ $permission->uuid }}" >{{ $permission->name }}</label>
                                             </div>
                                         @endforeach
                                         </div>
@@ -53,6 +53,7 @@
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
+                                        <a href="{{ url('master-users/roles') }}" class="btn btn-secondary">kembali</a>
                                         <button type="submit" class="btn btn-info">Update</button>
                                     </div>
                                 </form>
@@ -63,23 +64,30 @@
                 </form>
             </div>
             <!-- /.row -->
-    </div><!-- /.container-fluid -->
-    </section>
+        </section>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#select-all').click(function() {
-            $('.permission-checkbox').prop('checked', $(this).prop('checked'));
+        $(document).ready(function() {
+            $('#select-all').on('change', function() {
+                $('.permission-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            $('.permission-checkbox').on('change', function() {
+                if (!$(this).prop('checked')) {
+                    $('#select-all').prop('checked', false);
+                } else {
+                    var allChecked = true;
+                    $('.permission-checkbox').each(function() {
+                        if (!$(this).prop('checked')) {
+                            allChecked = false;
+                            return false;
+                        }
+                    });
+                    $('#select-all').prop('checked', allChecked);
+                }
+            });
         });
 
-        $('.permission-checkbox').change(function() {
-            if(false === $(this).prop('checked')) {
-                $('#select-all').prop('checked', false);
-            }
-            if ($('.permission-checkbox:checked').length === $('.permission-checkbox').length) {
-                $('#select-all').prop('checked', true);
-            }
-        });
-    });
-</script>
+    </script>
 @endsection

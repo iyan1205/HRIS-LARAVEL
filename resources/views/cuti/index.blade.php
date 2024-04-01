@@ -97,4 +97,31 @@
         </section>
         <!-- /.content -->
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mendaftarkan event click pada semua tombol rejectBtn
+            const rejectButtons = document.querySelectorAll('.rejectBtn');
+            rejectButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const cutiId = this.getAttribute('data-cuti-id');
+    
+                    Swal.fire({
+                        title: 'Konfirmasi',
+                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Tolak',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
+                            document.getElementById('rejectForm' + cutiId).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection
