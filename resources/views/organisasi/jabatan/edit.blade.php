@@ -20,7 +20,7 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('jabatan.update', ['id' => $jabatans->id]) }}" method="POST"
+                <form action="{{ route('jabatan.update', ['id' => $jabatan->id]) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -39,12 +39,23 @@
                                         <div class="form-group">
                                             <label for="name">Nama</label>
                                             <input type="text" class="form-control" id="name"
-                                                placeholder="Enter name" name="name" value="{{ $jabatans->name }}">
+                                                placeholder="Enter name" name="name" value="{{ $jabatan->name }}">
                                             @error('name')
                                                 <small>{{ $message }}</small>
                                             @enderror
                                         </div>
-
+                                        <div class="form-group">
+                                            <label for="manager_id" class="form-label">Membawahi:</label><br>
+                                            @foreach($jabatans as $jabatanOption)
+                                                <input type="checkbox" id="manager_{{ $jabatanOption->id }}" name="manager_id[]" value="{{ $jabatanOption->id }}" {{ in_array($jabatanOption->id, $selectedManagerIds) ? 'checked' : '' }}>
+                                                <label for="manager_{{ $jabatanOption->id }}">{{ $jabatanOption->name }}</label><br>
+                                            @endforeach
+                                            @error('manager_id')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                            @enderror
+                                        </div>
                                     </div>
                                     <!-- /.card-body -->
 

@@ -34,9 +34,9 @@
                             <table class="table table-bordered table-hover" id="allTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 1%">No</th>
+                                        <th style="width: 10px">No</th>
                                         <th>Nama Jabatan</th>
-                                        <th style="width: 16%">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,6 +45,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $jabatan->name }}</td>
                                         <td class="project-actions text-right">
+                                            
                                             <a href="{{ route('jabatan.edit', ['id' => $jabatan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $jabatan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
@@ -69,9 +70,8 @@
                                                     <form action="{{ route('jabatan.delete', ['id' => $jabatan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
-                                                        </button>
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus</button>
                                                     </form>
                                                 </div>
                                             </div>

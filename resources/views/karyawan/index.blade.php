@@ -58,7 +58,7 @@
                                         <td>{{ $item->jabatan->name }}</td>
                                         <td>{{ $item->departemen->name }}</td>
                                         <td>{{ $item->unit->name }}</td>
-                                        <td>
+                                        <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $item->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
@@ -83,9 +83,8 @@
                                                     <form action="{{ route('user.delete', ['id' => $item->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-outline-light">Ya,
-                                                            Hapus
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
                                                         </button>
                                                     </form>
                                                 </div>

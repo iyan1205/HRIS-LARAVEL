@@ -34,9 +34,9 @@
                             <table class="table table-bordered table-hover" id="allTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 1%">No</th>
+                                        <th style="width: 10px">No</th>
                                         <th>Nama Units</th>
-                                        <th style="width: 16%">Action</th>
+                                        <th style="width: 150px">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,7 +69,7 @@
                                                     <form action="{{ route('unit.delete', ['id' => $unit->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-outline-light">Ya, Hapus
                                                         </button>
                                                     </form>

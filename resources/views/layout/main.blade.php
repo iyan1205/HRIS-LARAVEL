@@ -243,6 +243,51 @@
     </script>
     <!-- Page Select script -->
     <script>
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_date"
+        $('#start_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            }
+        });
+    
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
+        $('#end_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+        });
+    
+        // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
+        $("#start_date").on("change.datetimepicker", function (e) {
+            $('#end_date').datetimepicker('minDate', e.date);
+        });
+    
+        // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
+        $("#end_date").on("change.datetimepicker", function (e) {
+            $('#start_date').datetimepicker('maxDate', e.date);
+        });
+    </script>
+    
+    <script>
         $(function () {
           //Initialize Select2 Elements
           $('.select2').select2()
@@ -261,7 +306,8 @@
       
           //Date picker
           $('#reservationdate').datetimepicker({
-              format: 'L'
+              format: 'L',
+              locale: 'id'
           });
       
           //Date and time picker
@@ -399,7 +445,44 @@
             });
         </script>
     @endif
-
+    @if (session('reject'))
+        <script>
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "{{ session('reject') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mendaftarkan event click pada semua tombol tolak
+            const rejectButtons = document.querySelectorAll('.rejectBtn');
+            rejectButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const cutiId = this.getAttribute('data-cuti-id');
+    
+                    Swal.fire({
+                        title: 'Konfirmasi',
+                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Tolak',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
+                            document.getElementById('rejectForm' + cutiId).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
