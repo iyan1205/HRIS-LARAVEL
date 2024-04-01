@@ -46,28 +46,31 @@
                                             </small>
                                             @enderror
                                         </div>
-                                        {{-- <div class="form-group">
-                                            <label for="manager_id" class="form-label">Atasan Langsung:</label>
-                                            <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
-                                                @foreach ($jabatans as $jabatan)
-                                                    <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
-                                                        {{ $jabatan->name }}
-                                                    </option>
-                                                    @endforeach
+                                        <div class="form-group">
+                                            <label for="kategori" class="form-label">Kategori Jabatan:</label>
+                                            <select class="form-control select2bs4" id="kategoriSecelt" name="kategori" style="width: 100%;" required>
+                                                <option value="">Pilih Kategori</option>
+                                                <option value="Direktur" {{ $jabatan->kategori == 'Direktur' ? 'selected' : '' }}>Direktur</option>
+                                                <option value="Manajer" {{ $jabatan->kategori == 'Manajer' ? 'selected' : '' }}>Manajer</option>
+                                                <option value="Kanit" {{ $jabatan->kategori == 'Kanit' ? 'selected' : '' }}>Kanit</option>
+                                                <option value="Staff" {{ old('kategori') == 'Staff' ? 'selected' : '' }}>Staff</option>
                                             </select>
-                                            @error('manager_id')
+                                            @error('kategori')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                             @enderror
-                                        </div> --}}
+                                        </div>
+                                        
                                         
                                         <div class="form-group">
                                             <label for="manager_id" class="form-label">Membawahi:</label><br>
                                             @foreach($jabatans as $jabatanOption)
+                                                <div class="icheck-primary d-inline">
                                                 <input type="checkbox" id="manager_{{ $jabatanOption->id }}" name="manager_id[]" value="{{ $jabatanOption->id }}" {{ in_array($jabatanOption->id, $selectedManagerIds) ? 'checked' : '' }}>
                                                 <label for="manager_{{ $jabatanOption->id }}">{{ $jabatanOption->name }}</label><br>
-                                            @endforeach
+                                                </div>
+                                                @endforeach
                                             @error('manager_id')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>

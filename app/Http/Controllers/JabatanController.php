@@ -22,8 +22,9 @@ class JabatanController extends Controller
     }
     public function create()
     {
-        $jabatans = Jabatan::all();
-        return view('organisasi.jabatan.create', compact('jabatans'));
+        $jabatan = Jabatan::all();
+        $jabatans = Jabatan::whereIn('kategori', ['Manajer', 'Kanit', 'Direktur'])->get();
+        return view('organisasi.jabatan.create', compact('jabatan','jabatans'));
     }
 
     /**
@@ -35,7 +36,8 @@ class JabatanController extends Controller
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:jabatans',
-            'manager_id' => 'required'
+            'manager_id' => 'required',
+            'kategori' => 'required'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -48,6 +50,7 @@ class JabatanController extends Controller
         $jabatans = Jabatan::create([
             'name' => $request->input('name'),
             'manager_id' => $request->input('manager_id'),
+            'kategori' => $request->input('kategori'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
@@ -73,7 +76,7 @@ class JabatanController extends Controller
     public function edit($id)
     {
         $jabatan = Jabatan::findOrFail($id);
-        $jabatans = Jabatan::all();
+        $jabatans = Jabatan::orderBy('name')->get();
         $selectedManagerIds = $jabatan->subordinates->pluck('id')->toArray(); // Mengambil id atasan yang sudah dipilih sebelumnya
         return view('organisasi.jabatan.edit', compact('jabatan', 'jabatans', 'selectedManagerIds'));
     }
@@ -84,24 +87,36 @@ class JabatanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $jabatan = Jabatan::findOrFail($id);
-    $jabatan->update([
-        'name' => $request->name,
-    ]);
+        // Validasi input dari form
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|unique:jabatans,name,'.$id,
+            // Tambahkan aturan validasi sesuai kebutuhan
+        ]);
 
-    // Update subordinates
-    $selectedManagerIds = $request->input('manager_id', []);
-    $jabatan->subordinates()->update(['manager_id' => null]); // Hapus atasan sebelumnya
-    foreach ($selectedManagerIds as $managerId) {
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatan->update([
+            'name' => $request->name,
+        ]);
+
+        // Update subordinates
+        $selectedManagerIds = $request->input('manager_id', []);
+        $jabatan->subordinates()->update(['manager_id' => null]); // Hapus atasan sebelumnya
+        foreach ($selectedManagerIds as $managerId) {
         $subordinate = Jabatan::findOrFail($managerId);
         $subordinate->update(['manager_id' => $jabatan->id]); // Set atasan baru
-    }    // Tambahkan session flash message
-            $message = 'Jabatan Berhasil Di Edit';
-            Session::flash('successAdd', $message);
+        }    
+        // Tambahkan session flash message
+        $message = 'Jabatan Berhasil Di Edit';
+        Session::flash('successAdd', $message);
 
             // Redirect ke halaman tertentu atau tampilkan pesan sukses
-            return redirect()->route('jabatan');
-        }
+        return redirect()->route('jabatan');
+    }
 
     /**
      * Remove the specified resource from storage.

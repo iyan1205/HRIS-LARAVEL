@@ -169,8 +169,7 @@
                                             </small>
                                         @enderror
                                     </div>
-                                    <div id="resignForm"
-                                        style="display: {{ $karyawan->status == 'resign' ? 'block' : 'none' }};">
+                                    <div id="resignForm" style="display: {{ $karyawan->status == 'resign' ? 'block' : 'none' }};">
                                         <div class="form-group">
                                             <label for="resign" class="col-sm-3 col-form-label">Alasan
                                                 Resign:</label>

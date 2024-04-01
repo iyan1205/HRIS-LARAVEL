@@ -79,7 +79,7 @@ class UnitController extends Controller
     {
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
-            'name' => 'nullable',
+            'name' => 'nullable|string|max:255|unique:units,name,'. $id,
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
