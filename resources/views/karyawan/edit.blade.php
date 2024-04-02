@@ -255,18 +255,18 @@
                                         <label for="npwp">Jenis Kelamin</label>
                                         <div class="form-check" style="margin-left: 10px;">
                                             <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $karyawan->gender === 'L' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="L">L</label>
+                                            <label class="form-check-label" for="L">Laki - Laki</label>
                                             <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $karyawan->gender === 'P' ? 'checked' : '' }}  
                                                 style="margin-left: 6px;">
-                                            <label class="form-check-label" for="p"
-                                                style="margin-left: 24px;">P</label>
+                                            <label class="form-check-label" for="P"
+                                                style="margin-left: 24px;">Perempuan</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="status_ktp">Status Perkawinan</label>
                                         <div class="form-check" style="margin-left: 10px;">
                                             <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="menikah">Menikah</label>
+                                            <label class="form-check-label" for="Menikah">Menikah</label>
                                             <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $karyawan->status_ktp == 'Belum Menikah' ? 'checked' : '' }} style="margin-left: 6px;">
                                             <label class="form-check-label" for="Belum Menikah" style="margin-left: 24px;">Belum Menikah</label>
                                             <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $karyawan->status_ktp == 'Cerai Hidup' ? 'checked' : '' }} style="margin-left: 6px;">

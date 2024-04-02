@@ -70,8 +70,13 @@
                                                     <form action="{{ route('jabatan.delete', ['id' => $jabatan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
+<<<<<<< HEAD
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus</button>
+=======
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                     </form>
                                                 </div>
                                             </div>

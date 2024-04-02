@@ -457,7 +457,11 @@
     @if (session('reject'))
         <script>
             Swal.fire({
+<<<<<<< HEAD
+                position: "top-end",
+=======
                 position: "top",
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                 icon: "error",
                 title: "{{ session('reject') }}",
                 showConfirmButton: false,

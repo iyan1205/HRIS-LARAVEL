@@ -42,11 +42,20 @@
                                     @foreach ($resigns as $karyawan)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+<<<<<<< HEAD
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->user->email }}</td>
+                                        <td>{{ $item->departemen->name }}</td>
+                                        <td>{{ $item->pendidikan->institusi }}</td>
+                                        <td class="project-actions text-right">
+                                            <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+=======
                                         <td>{{ $karyawan->user->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                                 Hapus</a>

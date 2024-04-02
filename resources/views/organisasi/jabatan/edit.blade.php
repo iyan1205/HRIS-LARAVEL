@@ -47,6 +47,14 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
+<<<<<<< HEAD
+                                            <label for="manager_id" class="form-label">Membawahi:</label><br>
+                                            @foreach($jabatans as $jabatanOption)
+                                                <input type="checkbox" id="manager_{{ $jabatanOption->id }}" name="manager_id[]" value="{{ $jabatanOption->id }}" {{ in_array($jabatanOption->id, $selectedManagerIds) ? 'checked' : '' }}>
+                                                <label for="manager_{{ $jabatanOption->id }}">{{ $jabatanOption->name }}</label><br>
+                                            @endforeach
+                                            @error('manager_id')
+=======
                                             <label for="level" class="form-label">Level Jabatan:</label>
                                             <select class="form-control" id="level" name="level" style="width: 100%;" required>
                                                 <option value="" selected>Pilih level</option>
@@ -57,11 +65,14 @@
                                                 <option value="Staff" {{ $jabatan->level == 'Staff' ? 'selected' : '' }}>Staff</option>
                                             </select>
                                             @error('level')
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                             @enderror
                                         </div>
+<<<<<<< HEAD
+=======
                                         <div id="levelForm" style="display: {{ $jabatan->level == 'Staff' ? 'none' : 'block' }};">
                                             <div class="form-group">
                                                 <label for="manager_id" class="form-label">Membawahi:</label><br>
@@ -78,6 +89,7 @@
                                                 @enderror
                                             </div>
                                         </div>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                     </div>
                                     <!-- /.card-body -->
 

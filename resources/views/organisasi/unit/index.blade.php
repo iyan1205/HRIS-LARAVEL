@@ -36,7 +36,11 @@
                                     <tr>
                                         <th style="width: 10px">No</th>
                                         <th>Nama Units</th>
+<<<<<<< HEAD
+                                        <th style="width: 150px">Action</th>
+=======
                                         <th>Action</th>
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,8 +73,13 @@
                                                     <form action="{{ route('unit.delete', ['id' => $unit->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
+<<<<<<< HEAD
+                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
+=======
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-danger">Ya, Hapus
+>>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                         </button>
                                                     </form>
                                                 </div>
