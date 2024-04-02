@@ -53,15 +53,6 @@
                                     @foreach ($karyawans as $karyawan)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-<<<<<<< HEAD
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->jabatan->name }}</td>
-                                        <td>{{ $item->departemen->name }}</td>
-                                        <td>{{ $item->unit->name }}</td>
-                                        <td class="project-actions text-right">
-                                            <a href="{{ route('karyawan.edit', ['id' => $item->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-=======
                                         <td>{{ $karyawan->user->name }}</td>
                                         <td>{{ $karyawan->nik }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
@@ -69,7 +60,6 @@
                                         <td>{{ $karyawan->unit->name }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
->>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                 Edit</a>
                                             <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
                                                 Hapus</a>
@@ -93,13 +83,8 @@
                                                     <form action="{{ route('karyawan.delete', ['id' => $karyawan->id]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-<<<<<<< HEAD
-                                                        <button type="button" class="btn btn-outline-light" data-dismiss="modal" style="margin-left: -300px">Batal</button>
-                                                        <button type="submit" class="btn btn-outline-light">Ya, Hapus
-=======
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                         <button type="submit" class="btn btn-danger">Ya, Hapus
->>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                         </button>
                                                     </form>
                                                 </div>
