@@ -119,6 +119,9 @@ class DepartemenController extends Controller
         if ($data) {
             $data->delete();
         }
+
+        $message = 'Department Berhasil Dihapus';
+        Session::flash('successAdd', $message);
         return redirect()->route('departemen');
     }
 }

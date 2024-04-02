@@ -20,13 +20,20 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('karyawan.store') }}" method="POST" class="form-horizontal">@csrf
+                <form action="{{ route('karyawan.store') }}" method="POST">
+                    @csrf
                     <div class="row">
                         <!-- /.Karyawan -->
                         <div class="col-md-6">
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Karyawan <span class="red-star">*</span></h3>
+                                    <h3 class="card-title">Karyawan <span class="red-star">*</span>
+                                        @error('nik')
+                                        <span  class="red-star">
+                                            <small>{{ $message }}</small>
+                                        </span>
+                                        @enderror
+                                    </h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                             title="Collapse">
@@ -35,8 +42,19 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                   
                                     <div class="form-group">
-                                        <label for="user_id" class="form-label">Nama Karyawan:</label>
+                                        <label for="name" class="form-label">Nama Karyawan</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Nama Lengkap"
+                                            name="name" value="{{ old('name') }}" required>
+                                        @error('name')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_id" class="form-label">User:</label>
                                         <select class="form-control select2bs4" id="user_id" name="user_id"
                                             style="width: 100%;" required>
                                             <option selected disabled>Pilih Users</option>
@@ -56,7 +74,7 @@
 
                                     <div class="form-group">
                                         <label for="nik" class="form-label">NIK</label>
-                                        <input type="number" class="form-control" id="nik" placeholder="NIK"
+                                        <input type="number" class="form-control" id="nik" placeholder="NIK" minlength="4"
                                             name="nik" value="{{ old('nik') }}" required>
                                         @error('nik')
                                             <small>
@@ -125,10 +143,32 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="tgl_kontrak1" class="form-label">Tanggal
-                                            Masuk
-                                            Dinas</label>
-                                        <input type="date" class="form-control" id="tgl_kontrak1" name="tgl_kontrak1"
+                                        <label for="status_karyawan">Status Karyawan</label>
+                                        <select class="form-control" name="status_karyawan" id="">
+                                            <option selected value="">Pilih Status Karyawan </option>
+                                            <option value="kontrak" {{ old('status_karyawan') == 'kontrak' ? 'selected' : '' }}>
+                                                Kontrak
+                                            </option>
+                                            <option value="kartap" {{ old('status_karyawan') == 'kartap' ? 'selected' : '' }}>
+                                                Karyawan Tetap
+                                            </option>
+                                            <option value="fulltime" {{ old('status_karyawan') == 'fulltime' ? 'selected' : '' }}>
+                                                Fulltime
+                                            </option>
+                                            <option value="parttime" {{ old('status_karyawan') == 'parttime' ? 'selected' : '' }}>
+                                                Parttime
+                                            </option>
+                                        </select>
+                                        @error('status_karyawan')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tgl_kontrak1" class="form-label">Tanggal Masuk Dinas</label>
+                                        <input type="date" class="form-control" id="tgl_kontrak1" name="tgl_kontrak1" value="{{ old('tgl_kontrak1') }}"
                                             required>
                                         @error('tgl_kontrak1')
                                             <small>
@@ -138,8 +178,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="akhir_kontrak1" class="form-label">Masa
-                                            Kontrak</label>
+                                        <label for="akhir_kontrak1" class="form-label">Masa Kontrak</label>
                                         <input type="date" class="form-control" id="akhir_kontrak1" name="akhir_kontrak1"
                                             value="{{ old('akhir_kontrak1') }}" required>
                                         @error('akhir_kontrak1')
@@ -156,7 +195,13 @@
                         <div class="col-sm-6">
                             <div class="card card-primary collapsed-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Kontak <span class="red-star">*</span></h3>
+                                    <h3 class="card-title">Kontak <span class="red-star">*</span> <br>
+                                        @error('nomer_ktp','telepon','npwp','alamat_ktp','gender','status_ktp')
+                                        <span  class="red-star">
+                                                <small>{{ $message }}</small>
+                                        </span>
+                                        @enderror
+                                    </h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                             title="Collapse">

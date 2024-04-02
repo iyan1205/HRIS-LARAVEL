@@ -55,13 +55,13 @@ class KaryawanController extends Controller
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'nik' => 'required|numeric|unique:karyawans|digits:4',
+            'nik' => 'required|numeric|unique:karyawans,nik|digits:4|min:4',
             'user_id' => 'nullable',
             'departemen_id' => 'required',
             'jabatan_id' => 'required',
             'unit_id' => 'required',
             'nomer_ktp' => 'nullable',
-            'tempat_lahir' => 'nullable',
+            'tempat_lahir' => 'required',
             'tanggal_lahir' => 'nullable',
             'alamat_ktp' => 'nullable',
             'gender' => 'nullable',
@@ -74,33 +74,22 @@ class KaryawanController extends Controller
             'status_karyawan' => 'required', //kontrak_atau_tetap
             'tgl_kontrak1' => 'required', //tglmasukdinas
             'akhir_kontrak1' => 'required',
-            'status' => 'required', //active atau resign
-            'tgl_resign' => 'required',
-            'resign_id' => 'required',
+            
 
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
-        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        
         if ($validator->fails()) {
-            // Mengecek tab yang aktif dan mengarahkan kembali sesuai dengan tab yang aktif
-            if ($request->input('active_tab') == 'karyawan') {
-                return redirect()->back()->withInput()->withErrors($validator)->with('active_tab', 'karyawan');
-            } elseif ($request->input('active_tab') == 'pendidikan') {
-                return redirect()->back()->withInput()->withErrors($validator)->with('active_tab', 'pendidikan');
-            }
+            return redirect()->back()->withInput()->withErrors($validator);
         }
-         // Pastikan NIK tidak ada dalam database sebelumnya
-         $existingKaryawan = Karyawan::where('nik', $request->input('nik'))->first();
-         if ($existingKaryawan) {
-             $validator->errors()->add('nik', 'NIK sudah ada dalam database.');
-             return redirect()->back()->withInput()->withErrors($validator);
-         }
+    
 
         // Buat dan simpan karyawan baru
         $karyawan = Karyawan::create([
             'name' => $request->input('name'),
             'nik' => $request->input('nik'),
+            'status_karyawan' => $request->input('status_karyawan'),
             'nomer_ktp' => $request->input('nomer_ktp'),
             'user_id' => $request->input('user_id'),
             'departemen_id' => $request->input('departemen_id'),
@@ -137,7 +126,7 @@ class KaryawanController extends Controller
         Session::flash('successAdd', $message);
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
-        return redirect()->route('karyawan', $karyawan->id);
+        return redirect()->route('karyawan');
     }
 
     /**

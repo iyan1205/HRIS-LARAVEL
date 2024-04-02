@@ -12,6 +12,7 @@ class Jabatan extends Model
     protected $fillable = [
         'name',
         'manager_id',
+        'level',
     ];
 
     protected $hidden = [
