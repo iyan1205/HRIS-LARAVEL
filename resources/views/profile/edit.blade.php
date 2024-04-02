@@ -113,14 +113,14 @@
                         <!-- /.tab-pane -->
       
                         <div class="tab-pane" id="settings">
-                          <form class="form-horizontal" action="{{ route('profile.update') }}" method="POST">
+                          <form class="form-horizontal" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('patch')
                                 <form id="send-verification" method="post" action="{{ route('verification.send') }}">
                                     @csrf
                                 </form>
 
-                                <form method="post" action="{{ route('profile.update') }}">
+                                <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('patch')
                             <div class="form-group row">
@@ -136,6 +136,22 @@
                               </div>
                             </div>
                             
+                            <div class="form-group">
+                              <label for="image">Photo Profile</label>
+                              <div class="input-group">
+                                  <div class="custom-file">
+                                      <input type="file"
+                                          class="custom-file-input @error('image') is-invalid @enderror"
+                                          id="image" name="image">
+                                      <label class="custom-file-label" for="exampleInputFile">Choose
+                                          file</label>
+                                  </div>
+                              </div>
+                              @error('image')
+                                  <small>{{ $message }}</small>
+                              @enderror
+                          </div>
+
                             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                             <div>
                                 <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">

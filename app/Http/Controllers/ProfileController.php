@@ -25,18 +25,57 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
+
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+        
+    //     $request->user()->save();
+
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
+
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Update user fields from validated request data
+        $user->fill($request->validated());
+
+        // Check if image is uploaded
+        if ($request->hasFile('image')) {
+            // Get the uploaded image file
+            $image = $request->file('image');
+
+            // Define the storage path for the image
+            $imagePath = 'avatar/';
+
+            // Generate a unique filename for the image
+            $imageName = $user->id.'_'.time().'.'.$image->getClientOriginalExtension();
+
+            // Move the uploaded image to the storage path
+            $image->move(public_path($imagePath), $imageName);
+
+            // Update the user's image path in the database
+            $user->image = $imagePath . $imageName;
         }
 
-        $request->user()->save();
+        // Check if email is updated
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Save the updated user data
+        $user->save();
+
+        // Redirect back to profile edit page with a status message
+        return redirect()->route('profile.edit')->with('status', 'Profile updated successfully');
     }
+
 
     /**
      * Delete the user's account.
