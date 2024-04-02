@@ -93,13 +93,13 @@
                           <div class="form-group row">
                             <label for="inputName" class="col-sm-2 col-form-label">NIK</label>
                             <div class="col-sm-5">
-                              <input type="text" class="form-control" name="name" value="{{ $user->karyawan->nik}}" readonly>
+                              <input type="text" class="form-control" name="name" value="{{ $user->karyawan->nik }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
                             <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ old('email', $user->email) }}" readonly>
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
                             </div>
                           </div>
                           <!-- /.post -->
