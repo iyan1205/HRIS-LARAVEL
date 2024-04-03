@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -48,20 +49,22 @@ class ProfileController extends Controller
 
         // Check if image is uploaded
         if ($request->hasFile('image')) {
-            // Get the uploaded image file
+             // Get the uploaded image file
             $image = $request->file('image');
 
-            // Define the storage path for the image
-            $imagePath = 'avatar/';
+            // Generate a unique filename for the image using 
+            $imageName = $user->name . '.' . $image->getClientOriginalExtension();
 
-            // Generate a unique filename for the image
-            $imageName = $user->id.'_'.time().'.'.$image->getClientOriginalExtension();
+            // Store only the name and extension of the image in the database
+            $user->image = $imageName;
 
-            // Move the uploaded image to the storage path
-            $image->move(public_path($imagePath), $imageName);
+            // Delete old image if exists
+            if ($user->image) {
+                Storage::delete('public/avatar/' . $user->image);
+            }
 
-            // Update the user's image path in the database
-            $user->image = $imagePath . $imageName;
+            // Save the image to the public/avatar directory
+            $image->storeAs('public/avatar', $imageName);
         }
 
         // Check if email is updated
@@ -75,6 +78,8 @@ class ProfileController extends Controller
         // Redirect back to profile edit page with a status message
         return redirect()->route('profile.edit')->with('status', 'Profile updated successfully');
     }
+
+
 
 
     /**

@@ -129,8 +129,12 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
+                        @if(Auth::user()->image)
                         <img src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
                             class="img-circle elevation-2" alt="User Image">
+                        @else
+                        <p>No image available</p>
+                        @endif
                     </div>
                     <div class="info">
                         <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->name }}</a>
