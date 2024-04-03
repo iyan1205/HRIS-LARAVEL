@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\IgnoreFunctionForCodeCoverage;
 
 class LeaveApplicationController extends Controller
 {
@@ -24,6 +25,18 @@ class LeaveApplicationController extends Controller
     
     public function index()
     {
+       // Ambil pengguna yang sedang login
+        $user = Auth::user();
+
+        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        $leaveApplications = LeaveApplication::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->get();
+
+        return view('cuti.index', compact('leaveApplications'));
+    }
+
+    public function approval(){
         if(Auth::check()){
             /** @var App\Models\User */
             $users = Auth::user();
@@ -41,7 +54,7 @@ class LeaveApplicationController extends Controller
                 $leaveApplication = $users->leave_applications()->where('status', 'pending')->get();
             }
     
-            return view('cuti.index', compact('leaveApplication'));   
+            return view('cuti.approval-cuti', compact('leaveApplication'));   
             }
             abort(401);
     }

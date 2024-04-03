@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -74,9 +75,10 @@ class ProfileController extends Controller
 
         // Save the updated user data
         $user->save();
-
+        $message = 'User berhasil diedit';
+        Session::flash('successAdd', $message);
         // Redirect back to profile edit page with a status message
-        return redirect()->route('profile.edit')->with('status', 'Profile updated successfully');
+        return redirect()->route('profile.edit');
     }
 
 

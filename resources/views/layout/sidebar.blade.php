@@ -123,5 +123,15 @@
             </a>
         </li>
         @endcan
+        @can('approve cuti')
+        <li class="nav-item {{ request()->is('approval-cuti') ? 'menu-open' : '' }}">
+            <a href="{{ route('approval-cuti') }}" class="nav-link {{ request()->is('approval-cuti') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>
+                    Approval Cuti
+                </p>
+            </a>
+        </li>
+        @endcan
     </ul>
 </nav>

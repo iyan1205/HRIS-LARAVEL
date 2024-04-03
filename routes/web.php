@@ -111,6 +111,8 @@ Route::group(['middleware' => ['isAdmin']], function() {
     
     // Pengajuan Cuti Route
     Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
+    Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
+
     Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
     Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
 

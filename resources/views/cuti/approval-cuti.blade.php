@@ -25,9 +25,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <a href="{{ route('cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
-                            </div>
                             {{-- <div class="form-group">
                                 <label>Date range:</label>
               
@@ -52,10 +49,11 @@
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($leaveApplications as $cuti)
+                                        @foreach ($leaveApplication as $cuti)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $cuti->user->karyawan->name }}</td>
@@ -65,7 +63,21 @@
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
                                                 <td><span class="tag tag-success">{{ $cuti->status }}</span></td>
-
+                                                <td class="project-actions text-right">
+                                                    @can('approve cuti')
+                                                        <form id="approveForm{{ $cuti->id }}" action="{{ route('leave-application.approve', $cuti->id) }}" method="post" style="display: inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-danger btn-sm rejectBtn" data-cuti-id="{{ $cuti->id }}"><i class="fas fa-times"></i> Reject</button>
+                                                    <form id="rejectForm{{ $cuti->id }}" action="{{ route('leave-application.reject', $cuti->id) }}" method="post" style="display: none;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times"></i> Reject</button>
+                                                    </form>
+                                                    @endcan
+                                                </td>
                                             </tr>
                                             
                                         @endforeach

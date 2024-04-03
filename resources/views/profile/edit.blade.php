@@ -289,14 +289,14 @@
                                     @method('patch')
                                     <div class="form-group row">
                                       <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                                      <div class="col-sm-10">
+                                      <div class="col-sm-5">
                                           <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}">
                                       </div>
                                   </div>
                                   
                                   <div class="form-group row">
                                       <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                                      <div class="col-sm-10">
+                                      <div class="col-sm-5">
                                           <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
                                       </div>
                                   </div>
@@ -337,10 +337,7 @@
                             <div class="form-group row">
                               <div class="offset-sm-2 col-sm-10">
                                 <button type="submit" class="btn btn-danger">Submit</button>
-                                @if (session('status') === 'profile-updated')
-                                    <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                                        class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
-                                @endif
+                               
                               </div>
                             </div>
                           </form>
