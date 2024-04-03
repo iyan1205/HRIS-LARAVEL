@@ -70,17 +70,17 @@
                                         @endforeach
                                         </div>
                                         <div class="form-group">
-                                            <label for="photo">Photo Profile</label>
+                                            <label for="image">Photo Profile</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input type="file"
-                                                        class="custom-file-input @error('photo') is-invalid @enderror"
-                                                        id="photo" name="photo">
+                                                        class="custom-file-input @error('image') is-invalid @enderror"
+                                                        id="image" name="image" accept="image/jpeg, image/jpg, image/png">
                                                     <label class="custom-file-label" for="exampleInputFile">Choose
                                                         file</label>
                                                 </div>
                                             </div>
-                                            @error('photo')
+                                            @error('image')
                                                 <small>{{ $message }}</small>
                                             @enderror
                                         </div>
@@ -101,4 +101,11 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
+    <script>
+        document.getElementById('image').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    </script>
 @endsection

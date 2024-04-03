@@ -35,12 +35,13 @@
       
                       <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
       
-                      <p class="text-muted text-center">{{ Auth::user()->karyawan->jabatan->name }}</p>
+                      <p class="text-muted text-center">{{ Auth::user()->karyawan->nik }}</p>
       
                       <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
                           <b>Tanggal Masuk :</b> {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }}
                         </li>
+                        
                         
                       </ul>
                     </div>
@@ -79,39 +80,202 @@
                   <div class="card">
                     <div class="card-header p-2">
                       <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Data Karyawan</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Data Kontak</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Data Pendidikan</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Data Pelatihan</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#karyawan" data-toggle="tab">Data Karyawan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#kontak" data-toggle="tab">Data Kontak</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pendidikan" data-toggle="tab">Data Pendidikan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#paramedis" data-toggle="tab">Data Paramedis</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pelatihan" data-toggle="tab">Data Pelatihan</a></li>
                         <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                       </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
                       <div class="tab-content">
-                        <div class="active tab-pane" id="activity">
+                        <div class="active tab-pane" id="karyawan">
                           <!-- Post -->
-                          <div class="form-group row">
-                            <label for="inputName" class="col-sm-2 col-form-label">NIK</label>
-                            <div class="col-sm-5">
-                              <input type="text" class="form-control" name="name" value="{{ $user->karyawan->nik }}" readonly>
-                            </div>
-                          </div>
+                          
                           <div class="form-group row">
                             <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
                             <div class="col-sm-5">
                               <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
                             </div>
                           </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Departemen</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->departemen->name }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Unit</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->unit->name }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Status Karyawan</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->status_karyawan }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 1</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak1)->format('d/m/Y') }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 2</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="
+                              @if(Auth::user()->karyawan->tgl_kontrak2 && Auth::user()->karyawan->akhir_kontrak2)
+                              {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak2)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak2)->format('d/m/Y') }}
+                              @else
+                                  Belum Ada Kontrak Ke 2
+                              @endif
+                              " readonly>
+                            </div>
+                          </div>
+                          
+                          
                           <!-- /.post -->
     
                         </div>
                         <!-- /.tab-pane -->
-                        <div class="tab-pane" id="timeline">
-                          <!-- The timeline -->
+                        <div class="tab-pane" id="kontak">
+                          <!-- The kontak -->
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">NIK KTP</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->nomer_ktp }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer NPWP</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->npwp }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Telepon</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->telepon }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Alamat</label>
+                            <div class="col-sm-5">
+                                <textarea class="form-control" rows="3" readonly>{{ $user->karyawan->alamat_ktp }}</textarea>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Tempat, Tanggal Lahir</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->tempat_lahir }} , {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tanggal_lahir)->format('d/m/Y') }}" readonly>
+                            </div>
+                          </div>
                           
+                        
+                          <div class="form-group row">
+                              <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                              <div class="col-sm-10">
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $user->karyawan->gender === 'L' ? 'checked' : '' }} disabled>
+                                      <label class="form-check-label" for="L">Laki - Laki</label>
+                                  </div>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $user->karyawan->gender === 'P' ? 'checked' : '' }} disabled>
+                                      <label class="form-check-label" for="P">Perempuan</label>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Status Perkawinan</label>
+                            <div class="col-sm-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $user->karyawan->status_ktp === 'Menikah' ? 'checked' : '' }} disabled >
+                                    <label class="form-check-label" for="Menikah">Menikah</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $user->karyawan->gender === 'Belum Menikah' ? 'checked' : '' }}disabled>
+                                    <label class="form-check-label" for="Belum Menikah">Belum Menikah</label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $user->karyawan->gender === 'Cerai Hidup' ? 'checked' : '' }}disabled>
+                                  <label class="form-check-label" for="Cerai Hidup">Cerai Hidup</label>
+                                </div>
+                            </div>
+                          </div>
                         </div>
                         <!-- /.tab-pane -->
-      
+
+                        <div class="tab-pane" id="pendidikan">
+                          <!-- The pendidikan -->
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nama Institusi</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->institusi }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Pendidikan Terakhir</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->pendidikan_terakhir }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Tahun Lulus</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->tahun_lulus }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer Ijazah</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_ijazah }}" readonly>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="paramedis">
+                          <!-- The paramedis -->
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer STR</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_str }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Masa Berlaku STR</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->exp_str }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Profesi</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->profesi }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Sertifikat Profesi</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->cert_profesi }}" readonly>
+                            </div>
+                          </div>
+
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="pelatihan">
+                          <!-- The pelatihan -->
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.tab-pane -->
                         <div class="tab-pane" id="settings">
                           <form class="form-horizontal" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -123,34 +287,33 @@
                                 <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('patch')
-                            <div class="form-group row">
-                              <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                              <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}">
-                              </div>
-                            </div>
-                            <div class="form-group row">
-                              <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                              <div class="col-sm-10">
-                                <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
-                              </div>
-                            </div>
-                            
-                            <div class="form-group">
-                              <label for="image">Photo Profile</label>
-                              <div class="input-group">
-                                  <div class="custom-file">
-                                      <input type="file"
-                                          class="custom-file-input @error('image') is-invalid @enderror"
-                                          id="image" name="image">
-                                      <label class="custom-file-label" for="exampleInputFile">Choose
-                                          file</label>
+                                    <div class="form-group row">
+                                      <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                      <div class="col-sm-10">
+                                          <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}">
+                                      </div>
                                   </div>
-                              </div>
-                              @error('image')
-                                  <small>{{ $message }}</small>
-                              @enderror
-                          </div>
+                                  
+                                  <div class="form-group row">
+                                      <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                      <div class="col-sm-10">
+                                          <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
+                                      </div>
+                                  </div>
+                                  
+                                  <div class="form-group row">
+                                      <label for="image" class="col-sm-2 col-form-label">Photo Profile</label>
+                                      <div class="col-sm-5">
+                                          <div class="custom-file">
+                                              <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image" accept="image/jpeg, image/jpg, image/png">
+                                              <label class="custom-file-label" for="image">Choose file</label>
+                                          </div>
+                                          @error('image')
+                                              <small>{{ $message }}</small>
+                                          @enderror
+                                      </div>
+                                  </div>
+                                  
 
                             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                             <div>
@@ -195,5 +358,12 @@
             </div><!-- /.container-fluid -->
           </section>
     </div><!-- /.container-fluid -->
-    
+    <script>
+      document.getElementById('image').addEventListener('change', function(e) {
+          var fileName = e.target.files[0].name;
+          var nextSibling = e.target.nextElementSibling;
+          nextSibling.innerText = fileName;
+      });
+  </script>
+  
 @endsection

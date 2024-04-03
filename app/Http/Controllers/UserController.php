@@ -72,7 +72,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'nullable',
             'roles' => 'required|array',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Jangan gunakan 'required' untuk photo karena bisa saja user tidak mengganti foto
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Jangan gunakan 'required' untuk photo karena bisa saja user tidak mengganti foto
         ]);
 
         if ($validator->fails()) {
@@ -90,17 +90,17 @@ class UserController extends Controller
         }
 
         // Hapus foto lama jika pengguna mengunggah foto baru
-        if ($request->hasFile('photo')) {
+        if ($request->hasFile('image')) {
             // Hapus foto lama jika ada
             if ($user->image) {
                 Storage::disk('public')->delete('avatar/' . $user->image);
             }
 
             // Unggah dan simpan foto baru
-            $photo = $request->file('photo');
-            $photoName = str_replace(' ', '_', $request->nama) . '_' . date('Y-m-d') . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('avatar/', $photoName, 'public');
-            $data['image'] = $photoName;
+            $image = $request->file('image');
+            $imageName = $user->name . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('avatar/', $imageName, 'public');
+            $data['image'] = $imageName;
         }
 
         $user->update($data);
