@@ -28,7 +28,7 @@
                         <div class="col-md-6">
                             <div class="card card-success collapsed-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Informasi Karyawan
+                                    <h3 class="card-title">Karyawan
                                         @error('nik')
                                         <span  class="red-star">
                                                 <small>{{ $message }}</small>
@@ -228,7 +228,7 @@
                         <div class="col-md-6">
                             <div class="card card-success collapsed-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Informasi Kontak</h3>
+                                    <h3 class="card-title">Kontak</h3>
     
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse"
@@ -239,7 +239,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="nik_ktp">Nomer KTP</label>
+                                        <label for="nik_ktp">NIK KTP</label>
                                         <input type="number" id="nik_ktp" name="nomer_ktp"
                                             value="{{ $karyawan->nomer_ktp }}" class="form-control">
                                     </div>
@@ -300,7 +300,7 @@
                         <div class="col-md-6">
                             <div class="card card-success collapsed-card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Informasi Pendidikan</h3>
+                                    <h3 class="card-title">Pendidikan</h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                             title="Edit">
@@ -347,6 +347,42 @@
                                         @enderror
                                     </div>
     
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.Pelatihan -->
+                        <div class="col-md-6">
+                            <div class="card card-success collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Pelatihan</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="pelatihan">Pelatihan</label>
+                                        <div class="select2-purple">
+                                            <select class="select2" multiple="multiple" data-placeholder="Pilih Pelatihan" name="pelatihan[]" id="pelatihan" data-dropdown-css-class="select2-purple"
+                                                style="width: 100%;">
+                                                @foreach($pelatihans as $pelatihan)
+                                                <option value="{{ $pelatihan->id }}" {{ $karyawan->pelatihans->contains($pelatihan->id) ? 'selected' : '' }}>
+                                                    {{ $pelatihan->name }}
+                                                </option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                        @error('units')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
                                 </div>
                                 <!-- /.card-body -->
                             </div>

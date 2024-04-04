@@ -63,17 +63,17 @@
                                         <div class="form-group">
                                             <label for="manager_id" class="form-label">Atasan Langsung:</label>
                                             <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
+                                                <option value="" selected disabled>Pilih Atasan</option>
                                                 @foreach ($jabatans as $jabatan)
-                                                    <option value="" disabled>Pilih Atasan</option>
                                                     <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
                                                         {{ $jabatan->name }}
                                                     </option>
-                                                    @endforeach
+                                                @endforeach
                                             </select>
                                             @error('manager_id')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
                                             @enderror
                                         </div>
                                         

@@ -75,4 +75,9 @@ class Karyawan extends Authenticatable
     {
         return $this->belongsTo(ResignReason::class);
     }
+
+    public function pelatihans()
+    {
+        return $this->belongsToMany(Pelatihan::class);
+    }
 }

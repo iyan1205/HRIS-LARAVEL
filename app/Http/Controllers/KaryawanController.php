@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departemen;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Pelatihan;
 use App\Models\Pendidikan;
 use App\Models\ResignReason;
 use App\Models\Unit;
@@ -28,6 +29,7 @@ class KaryawanController extends Controller
     {
         $karyawans = Karyawan::where('status', 'active')
         ->orderBy('nik', 'desc')
+        ->with('pelatihans')
         ->get();
         $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
         return view('karyawan.index', compact('karyawans', 'jumlahKaryawanAktif'));
@@ -74,7 +76,6 @@ class KaryawanController extends Controller
             'status_karyawan' => 'required', //kontrak_atau_tetap
             'tgl_kontrak1' => 'required', //tglmasukdinas
             'akhir_kontrak1' => 'required',
-            
 
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
@@ -140,101 +141,109 @@ class KaryawanController extends Controller
     public function edit(Request $request, $id)
     {
         $karyawan = Karyawan::with('pendidikan')->find($id);
+        $pelatihans = Pelatihan::all();
         $users = User::pluck('name', 'id');
         $departemens = Departemen::pluck('name', 'id');
         $units = Unit::pluck('name', 'id');
         $jabatans = Jabatan::pluck('name', 'id');
         $resignReasons = ResignReason::pluck('name', 'id');
-        return view('karyawan.edit', compact('karyawan', 'users', 'departemens', 'units', 'jabatans', 'resignReasons'));
+        return view('karyawan.edit', compact('karyawan','pelatihans', 'users', 'departemens', 'units', 'jabatans', 'resignReasons'));
     }
 
     public function update(Request $request, $id)
-{
-    // Validasi input dari formulir
-    $validator = Validator::make($request->all(), [
-        'name' => 'nullable|string|max:255',
-        'nik' => 'nullable|numeric|digits:4|unique:karyawans,nik,'.$id,
-        'user_id' => 'nullable',
-        'departemen_id' => 'nullable',
-        'jabatan_id' => 'nullable',
-        'unit_id' => 'nullable',
-        'nomer_ktp' => 'nullable',
-        'tempat_lahir' => 'nullable',
-        'tanggal_lahir' => 'nullable',
-        'alamat_ktp' => 'nullable',
-        'gender' => 'nullable',
-        'institusi' => 'nullable',
-        'pendidikan_terakhir' => 'nullable',
-        'tahun_lulus' => 'nullable',
-        'status_ktp' => 'nullable',
-        'telepon' => 'nullable',
-        'npwp' => 'nullable',
-        'status_karyawan' => 'nullable', // kontrak_atau_tetap
-        'tgl_kontrak1' => 'nullable', // tglmasukdinas
-        'akhir_kontrak1' => 'nullable',
-        'status' => 'nullable', // aktif atau resign
-        'tgl_resign' => 'nullable',
-        'resign_id' => 'nullable',
+    {
+        // Validasi input dari formulir
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'nik' => 'nullable|numeric|digits:4|unique:karyawans,nik,'.$id,
+            'user_id' => 'nullable',
+            'departemen_id' => 'nullable',
+            'jabatan_id' => 'nullable',
+            'unit_id' => 'nullable',
+            'nomer_ktp' => 'nullable',
+            'tempat_lahir' => 'nullable',
+            'tanggal_lahir' => 'nullable',
+            'alamat_ktp' => 'nullable',
+            'gender' => 'nullable',
+            'institusi' => 'nullable',
+            'pendidikan_terakhir' => 'nullable',
+            'tahun_lulus' => 'nullable',
+            'status_ktp' => 'nullable',
+            'telepon' => 'nullable',
+            'npwp' => 'nullable',
+            'status_karyawan' => 'nullable', // kontrak_atau_tetap
+            'tgl_kontrak1' => 'nullable', // tglmasukdinas
+            'akhir_kontrak1' => 'nullable',
+            'status' => 'nullable', // aktif atau resign
+            'tgl_resign' => 'nullable',
+            'resign_id' => 'nullable',
 
-        // Tambahkan aturan validasi sesuai kebutuhan
-    ]);
+            // Tambahkan aturan validasi sesuai kebutuhan
+        ]);
 
-    // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
-    if ($validator->fails()) {
-        return redirect()->back()->withInput()->withErrors($validator);
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        // Cari karyawan yang akan diperbarui
+        $karyawan = Karyawan::findOrFail($id);
+
+        // Perbarui data karyawan
+        $karyawan->update([
+            'user_id' => $request->input('user_id'),
+            'name' => $request->input('name'),
+            'nik' => $request->input('nik'),
+            'status_karyawan' => $request->input('status_karyawan'),
+            'tgl_kontrak1' => $request->input('tgl_kontrak1'),
+            'akhir_kontrak1' => $request->input('akhir_kontrak1'),
+            'tgl_kontrak2' => $request->input('tgl_kontrak2'),
+            'akhir_kontrak2' => $request->input('akhir_kontrak2'),
+            'status' => $request->input('status'),
+            'tgl_resign' => $request->input('tgl_resign'),
+            'resign_id' => $request->input('resign_id'),
+            'nomer_ktp' => $request->input('nomer_ktp'),
+            'tempat_lahir' => $request->input('tempat_lahir'),
+            'tanggal_lahir' => $request->input('tanggal_lahir'),
+            'alamat_ktp' => $request->input('alamat_ktp'),
+            'gender' => $request->input('gender'),
+            'status_ktp' => $request->input('status_ktp'),
+            'telepon' => $request->input('telepon'),
+            'npwp' => $request->input('npwp'),
+            'departemen_id' => $request->input('departemen_id'),
+            'jabatan_id' => $request->input('jabatan_id'),
+            'unit_id' => $request->input('unit_id'),
+            // Tambahkan kolom lain yang perlu disimpan
+        ]);
+
+        // Perbarui data pendidikan karyawan
+        $pendidikan = $karyawan->pendidikan;
+        $pendidikan->update([
+            'institusi' => $request->input('institusi'),
+            'pendidikan_terakhir' => $request->input('pendidikan_terakhir'),
+            'tahun_lulus' => $request->input('tahun_lulus'),
+            'nomer_ijazah' => $request->input('nomer_ijazah'),
+            'nomer_str' => $request->input('nomer_str'),
+            'exp_str' => $request->input('exp_str'),
+            'profesi' => $request->input('profesi'),
+            'cert_profesi' => $request->input('cert_profesi'),
+            //Tambahkan kolom lain di sini jika diperlukan
+        ]);
+        
+        if ($request->has('pelatihan')) {
+            $karyawan->pelatihans()->sync($request->pelatihan);
+        } else {
+            // Jika tidak ada pelatihan yang dipilih, bersihkan relasi pelatihan karyawan
+            $karyawan->pelatihans()->detach();
+        }
+
+        // Tambahkan pesan sukses ke session flash
+        $message = 'Data karyawan berhasil diperbarui';
+        Session::flash('successAdd', $message);
+
+        // Redirect ke halaman tertentu atau tampilkan pesan sukses
+        return redirect()->route('karyawan');
     }
-
-    // Cari karyawan yang akan diperbarui
-    $karyawan = Karyawan::findOrFail($id);
-
-    // Perbarui data karyawan
-    $karyawan->update([
-        'user_id' => $request->input('user_id'),
-        'name' => $request->input('name'),
-        'nik' => $request->input('nik'),
-        'status_karyawan' => $request->input('status_karyawan'),
-        'tgl_kontrak1' => $request->input('tgl_kontrak1'),
-        'akhir_kontrak1' => $request->input('akhir_kontrak1'),
-        'tgl_kontrak2' => $request->input('tgl_kontrak2'),
-        'akhir_kontrak2' => $request->input('akhir_kontrak2'),
-        'status' => $request->input('status'),
-        'tgl_resign' => $request->input('tgl_resign'),
-        'resign_id' => $request->input('resign_id'),
-        'nomer_ktp' => $request->input('nomer_ktp'),
-        'tempat_lahir' => $request->input('tempat_lahir'),
-        'tanggal_lahir' => $request->input('tanggal_lahir'),
-        'alamat_ktp' => $request->input('alamat_ktp'),
-        'gender' => $request->input('gender'),
-        'status_ktp' => $request->input('status_ktp'),
-        'telepon' => $request->input('telepon'),
-        'npwp' => $request->input('npwp'),
-        'departemen_id' => $request->input('departemen_id'),
-        'jabatan_id' => $request->input('jabatan_id'),
-        'unit_id' => $request->input('unit_id'),
-        // Tambahkan kolom lain yang perlu disimpan
-    ]);
-
-    // Perbarui data pendidikan karyawan
-    $pendidikan = $karyawan->pendidikan;
-    $pendidikan->update([
-        'institusi' => $request->input('institusi'),
-        'pendidikan_terakhir' => $request->input('pendidikan_terakhir'),
-        'tahun_lulus' => $request->input('tahun_lulus'),
-        'nomer_ijazah' => $request->input('nomer_ijazah'),
-        'nomer_str' => $request->input('nomer_str'),
-        'exp_str' => $request->input('exp_str'),
-        'profesi' => $request->input('profesi'),
-        'cert_profesi' => $request->input('cert_profesi'),
-        //Tambahkan kolom lain di sini jika diperlukan
-    ]);
-
-    // Tambahkan pesan sukses ke session flash
-    $message = 'Data karyawan berhasil diperbarui';
-    Session::flash('successAdd', $message);
-
-    // Redirect ke halaman tertentu atau tampilkan pesan sukses
-    return redirect()->route('karyawan');
-}
 
 
     /**

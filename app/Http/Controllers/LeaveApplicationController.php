@@ -130,7 +130,7 @@ class LeaveApplicationController extends Controller
 
         $message = 'Pengajuan cuti Approved.';
         Session::flash('successAdd', $message);
-        return redirect()->route('pengajuan-cuti');
+        return redirect()->route('approval-cuti');
 
     }
 
@@ -143,7 +143,7 @@ class LeaveApplicationController extends Controller
 
         $message = 'Approved: Canceled.';
         Session::flash('successAdd', $message);
-        return redirect()->route('pengajuan-cuti');
+        return redirect()->route('approval-cuti');
 
     }
 
@@ -156,7 +156,7 @@ class LeaveApplicationController extends Controller
 
         $message = 'Pengajuan cuti rejected.';
         Session::flash('reject', $message);
-        return redirect()->route('pengajuan-cuti');
+        return redirect()->route('approval-cuti');
 
     }
     /**
