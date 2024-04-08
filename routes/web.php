@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
+use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\PermissionController;
@@ -47,7 +48,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
         Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
         Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-
+        
+        Route::post('/users/add-saldo-cuti', [UserController::class, 'addSaldoCutiToExistingUsers'])->name('users.add-saldo-cuti');
+        
         //Permissions
         Route::resource('permissions', PermissionController::class);
         Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
@@ -60,6 +63,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::delete('roles/{roleUuid}/delete', [RoleController::class,'destroy']);
         Route::get('roles/{roleUuid}/give-permissions', [RoleController::class, 'addPermissionToRole']);
         Route::put('roles/{roleUuid}/give-permissions', [RoleController::class, 'givePermissionToRole']);
+
         
     });
   
@@ -81,35 +85,43 @@ Route::group(['middleware' => ['isAdmin']], function() {
 
     // Organisasi Routes
     Route::prefix('organisasi')->group(function () {
-        // Departemen
+    // Departemen
         Route::get('/departemen', [DepartemenController::class, 'index'])->name('departemen');
         Route::get('/departemen/create', [DepartemenController::class, 'create'])->name('departemen.create');
         Route::post('/departemen/store', [DepartemenController::class, 'store'])->name('departemen.store');
-        //Proses Departemen
+    //Proses Departemen
         Route::get('/departemen/edit/{id}', [DepartemenController::class, 'edit'])->name('departemen.edit');
         Route::put('/departemen/update/{id}', [DepartemenController::class, 'update'])->name('departemen.update');
         Route::delete('/departemen/delete/{id}', [DepartemenController::class, 'destroy'])->name('departemen.delete');
 
-        // Unit
+    // Unit
         Route::get('/unit', [UnitController::class, 'index'])->name('unit');
         Route::get('/unit/create', [UnitController::class, 'create'])->name('unit.create');
         Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store');
-        //Proses Unit
+    //Proses Unit
         Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
         Route::put('/unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
         Route::delete('/unit/delete/{id}', [UnitController::class, 'destroy'])->name('unit.delete');
 
-        // Jabatan
+    // Jabatan
         Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan');
         Route::get('/jabatan/create', [JabatanController::class, 'create'])->name('jabatan.create');
         Route::post('/jabatan/store', [JabatanController::class, 'store'])->name('jabatan.store');
-        //Proses Jabatan
+    //Proses Jabatan
         Route::get('/jabatan/edit/{id}', [JabatanController::class, 'edit'])->name('jabatan.edit');
         Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
         Route::delete('/jabatan/update/{id}', [JabatanController::class, 'destroy'])->name('jabatan.delete');
     });
-    
-    // Pengajuan Cuti Route
+// Pelatihan
+    Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan');
+    Route::get('/pelatihan/create', [PelatihanController::class, 'create'])->name('pelatihan.create');
+    Route::post('/pelatihan/store', [PelatihanController::class, 'store'])->name('pelatihan.store');
+//Proses Pelatihan
+    Route::get('/pelatihan/edit/{id}', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
+    Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
+    Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
+
+// Pengajuan Cuti Route
     Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
     Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
 
@@ -120,14 +132,15 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
     Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
 
-    // Pelatihan
-    Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan');
-    Route::get('/pelatihan/create', [PelatihanController::class, 'create'])->name('pelatihan.create');
-    Route::post('/pelatihan/store', [PelatihanController::class, 'store'])->name('pelatihan.store');
-    //Proses Pelatihan
-    Route::get('/pelatihan/edit/{id}', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
-    Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
-    Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
+// Pelatihan
+    Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
+    Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
+    Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
+//Proses Pelatihan
+    Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
+    Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
+    Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+        
 });
 
 Route::middleware('auth')->group(function () {

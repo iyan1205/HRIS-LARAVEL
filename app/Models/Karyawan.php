@@ -78,6 +78,6 @@ class Karyawan extends Authenticatable
 
     public function pelatihans()
     {
-        return $this->belongsToMany(Pelatihan::class);
+        return $this->belongsToMany(Pelatihan::class)->withTimestamps();
     }
 }

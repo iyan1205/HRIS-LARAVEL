@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departemen;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\LeaveBalance;
 use App\Models\Pelatihan;
 use App\Models\Pendidikan;
 use App\Models\ResignReason;
@@ -49,7 +50,8 @@ class KaryawanController extends Controller
         $departemens = Departemen::pluck('name', 'id');
         $units = Unit::pluck('name', 'id');
         $jabatans = Jabatan::pluck('name', 'id');
-        return view('karyawan.create', compact('departemens', 'units', 'jabatans', 'users'));
+        $pelatihans = Pelatihan::all();
+        return view('karyawan.create', compact( 'users', 'departemens', 'units', 'jabatans','pelatihans'));
     }
 
     public function store(Request $request)
@@ -122,6 +124,10 @@ class KaryawanController extends Controller
 
         $karyawan->pendidikan()->save($pendidikan);
 
+        // Menambahkan pelatihan karyawan
+        if ($request->has('pelatihan')) {
+            $karyawan->pelatihans()->attach($request->pelatihan);
+        }
         // Tambahkan session flash message
         $message = 'Karyawan berhasil ditambahkan';
         Session::flash('successAdd', $message);
@@ -229,7 +235,7 @@ class KaryawanController extends Controller
             'cert_profesi' => $request->input('cert_profesi'),
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
-        
+
         if ($request->has('pelatihan')) {
             $karyawan->pelatihans()->sync($request->pelatihan);
         } else {

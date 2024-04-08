@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LeaveBalance;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -51,6 +52,13 @@ class UserController extends Controller
         $user = User::create($data);
 
         $user->syncRoles($request->roles);
+
+        // Buat saldo cuti baru dengan nilai awal 0
+        $leaveBalance = LeaveBalance::create([
+            'user_id' => $user->id,
+            'saldo_cuti' => 0,
+        ]);
+
 
         $message = 'User berhasil ditambahkan';
         Session::flash('successAdd', $message);
@@ -119,6 +127,33 @@ class UserController extends Controller
         if ($data) {
             $data->delete();
         }
+        return redirect()->route('user');
+    }
+    
+    public function addSaldoCutiToExistingUsers()
+    {
+        // Ambil semua pengguna dari tabel users
+        $users = User::all();
+
+        // Iterasi semua pengguna
+        foreach ($users as $user) {
+            // Periksa apakah saldo cuti sudah ada untuk pengguna ini
+            $existingLeaveBalance = LeaveBalance::where('user_id', $user->id)->first();
+
+            // Jika saldo cuti belum ada untuk pengguna ini, tambahkan saldo cuti baru
+            if (!$existingLeaveBalance) {
+                LeaveBalance::create([
+                    'user_id' => $user->id,
+                    'saldo_cuti' => 0, // Saldo awal diatur ke 0
+                ]);
+            }
+        }
+
+        // Tambahkan pesan sukses
+        $message = 'Saldo cuti berhasil ditambahkan kepada pengguna yang sudah ada.';
+        Session::flash('success', $message);
+
+        // Redirect ke halaman tertentu atau tampilkan pesan sukses sesuai kebutuhan
         return redirect()->route('user');
     }
 }

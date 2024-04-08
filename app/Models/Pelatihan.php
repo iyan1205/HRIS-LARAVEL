@@ -12,7 +12,7 @@ class Pelatihan extends Model
     protected $fillable = [
         'name',
     ];
-    
+
     public function karyawans()
     {
         return $this->belongsToMany(Karyawan::class);

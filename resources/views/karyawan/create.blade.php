@@ -375,6 +375,42 @@
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div>
+                        <!-- /.Pelatihan -->
+                        <div class="col-md-6">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Pelatihan</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Edit">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="pelatihan">Pelatihan</label>
+                                        <div class="select2-purple">
+                                            <select class="select2" multiple="multiple" data-placeholder="Pilih Pelatihan" name="pelatihan[]" id="pelatihan" data-dropdown-css-class="select2-purple"
+                                                style="width: 100%;">
+                                                @foreach($pelatihans as $pelatihan)
+                                                    <option value="{{ $pelatihan->id }}" {{ in_array($pelatihan->id, old('pelatihan', [])) ? 'selected' : '' }}>
+                                                        {{ $pelatihan->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('units')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
                         <!-- /.Paramedis -->
                         <div class="col-md-6">
                             <div class="card card-primary collapsed-card">

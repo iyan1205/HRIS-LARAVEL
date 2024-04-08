@@ -27,6 +27,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('user.create') }}" class="btn btn-primary mb-3">Tambah Users</a>
+                                <!-- Tambahkan tombol di dalam view Anda -->
+                                {{-- <form action="{{ route('users.add-saldo-cuti') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Tambah Saldo Cuti untuk Pengguna yang Sudah Ada</button>
+                                </form> --}}
+
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body ">
@@ -81,15 +87,9 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-<<<<<<< HEAD
-                                                                <button type="button" class="btn btn-outline-light"
-                                                                    data-dismiss="modal" style="margin-left: -300px">Batal</button>
-                                                                <button type="submit" class="btn btn-outline-light">Ya, Hapus
-=======
                                                                 <button type="button" class="btn btn-secondary"
                                                                     data-dismiss="modal" style="margin-left: -300px">Batal</button>
                                                                 <button type="submit" class="btn btn-danger">Ya, Hapus
->>>>>>> 87587bc79aa335c181124c666bab6b8967f3a21b
                                                                 </button>
                                                             </form>
                                                         </div>

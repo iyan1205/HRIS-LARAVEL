@@ -58,5 +58,9 @@ class User extends Authenticatable
         return $this->hasMany(LeaveApplication::class);
     }
 
-
+    public function leave_balances()
+    {
+        return $this->hasOne(Karyawan::class);
+    }
+    
 }
