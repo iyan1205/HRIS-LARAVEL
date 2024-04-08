@@ -41,6 +41,9 @@
                         <li class="list-group-item">
                           <b>Tanggal Masuk :</b> {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }}
                         </li>
+                        <li class="list-group-item">
+                          <b>Saldo Cuti :</b> {{ Auth::user()->leave_balances->saldo_cuti }}
+                        </li>
                         
                         
                       </ul>
@@ -114,7 +117,11 @@
                           <div class="form-group row">
                             <label for="inputEmail" class="col-sm-2 col-form-label">Status Karyawan</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->status_karyawan }}" readonly>
+                              <input type="email" class="form-control" name="email" value="@if($user->karyawan->status_karyawan == 'kartap')
+                              Karyawan Tetap
+                          @else
+                              {{ ucwords($user->karyawan->status_karyawan) }}
+                          @endif" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
@@ -177,22 +184,24 @@
                         
                           <div class="form-group row">
                               <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
-                              <div class="col-sm-10">
-                                  <div class="form-check">
+                              <div class="col-sm-5">
+                                <input type="text" class="form-control" name="gender" value="{{ $user->karyawan->gender === 'P' ? 'Perempuan' : ($user->karyawan->gender === 'L' ? 'Laki - Laki' : 'Gender tidak diketahui') }}" readonly>
+                                  {{-- <div class="form-check">
                                       <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $user->karyawan->gender === 'L' ? 'checked' : '' }} disabled>
                                       <label class="form-check-label" for="L">Laki - Laki</label>
                                   </div>
                                   <div class="form-check">
                                       <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $user->karyawan->gender === 'P' ? 'checked' : '' }} disabled>
                                       <label class="form-check-label" for="P">Perempuan</label>
-                                  </div>
+                                  </div> --}}
                               </div>
                           </div>
 
                           <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Status Perkawinan</label>
-                            <div class="col-sm-10">
-                                <div class="form-check">
+                            <div class="col-sm-5">
+                              <input type="text" class="form-control" name="gender" value="{{ $user->karyawan->status_ktp === 'Menikah' ? 'Menikah' : ($user->karyawan->status_ktp === 'Belum Menikah' ? 'Belum Menikah' : 'Cerai Hidup') }}" readonly>
+                                {{-- <div class="form-check">
                                     <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $user->karyawan->status_ktp === 'Menikah' ? 'checked' : '' }} disabled >
                                     <label class="form-check-label" for="Menikah">Menikah</label>
                                 </div>
@@ -203,7 +212,7 @@
                                 <div class="form-check">
                                   <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $user->karyawan->gender === 'Cerai Hidup' ? 'checked' : '' }}disabled>
                                   <label class="form-check-label" for="Cerai Hidup">Cerai Hidup</label>
-                                </div>
+                                </div> --}}
                             </div>
                           </div>
                         </div>
@@ -269,11 +278,16 @@
                         <div class="tab-pane" id="pelatihan">
                           <!-- The pelatihan -->
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nama Pelatihan</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
+                              @php $count = 1; @endphp
+                              @foreach($user->karyawan->pelatihans as $pelatihan)
+                                  <input type="text" class="form-control" value="{{ $count }}. {{ $pelatihan->name }}" readonly> <br>
+                                  @php $count++; @endphp
+                              @endforeach
                             </div>
-                          </div>
+                        </div>
+                        
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="settings">
@@ -288,9 +302,9 @@
                                     @csrf
                                     @method('patch')
                                     <div class="form-group row">
-                                      <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                      <label for="inputName" class="col-sm-2 col-form-label">Nama Lengkap</label>
                                       <div class="col-sm-5">
-                                          <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}">
+                                          <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}" readonly>
                                       </div>
                                   </div>
                                   

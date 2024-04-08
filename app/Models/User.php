@@ -60,7 +60,7 @@ class User extends Authenticatable
 
     public function leave_balances()
     {
-        return $this->hasOne(Karyawan::class);
+        return $this->hasOne(LeaveBalance::class);
     }
     
 }

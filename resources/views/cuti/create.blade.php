@@ -18,6 +18,7 @@
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
+        
         <section class="content">
             <div class="container-fluid">
                 <form action="{{ route('cuti.store') }}" method="POST" enctype="multipart/form-data">@csrf
@@ -25,6 +26,12 @@
                         <!-- left column -->
                         <div class="col-md-6">
                             <!-- general form elements -->
+                            @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                             @endif
+
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title">Form Pengajuan</h3>
@@ -94,7 +101,10 @@
                                                     </div>
                                                     </div>
                                             </div>
-
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="saldo_cuti">Sisa Cuti</label>
+                                            <input type="text" class="form-control" id="saldo_cuti" placeholder="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>
                                         </div>
 
                                         

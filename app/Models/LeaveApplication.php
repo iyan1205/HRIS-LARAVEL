@@ -15,6 +15,8 @@ class LeaveApplication extends Model
         'end_date',
         'status',
         'manager_id',
+        'total_days',
+        'alasan_reject',
         'updated_by',
 
     ];

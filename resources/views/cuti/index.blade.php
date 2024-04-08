@@ -51,6 +51,7 @@
                                             <th>Jenis/Kategori</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
+                                            <th>Total Hari</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -64,6 +65,7 @@
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
+                                                <td>{{ $cuti->total_days }} Hari</td>
                                                 <td><span class="tag tag-success">{{ $cuti->status }}</span></td>
 
                                             </tr>

@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
 use App\Models\LeaveApplication;
+use App\Models\LeaveBalance;
 use App\Models\LeaveType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use PHPUnit\Framework\Attributes\IgnoreFunctionForCodeCoverage;
+use Carbon\Carbon;
 
 class LeaveApplicationController extends Controller
 {
@@ -42,19 +43,19 @@ class LeaveApplicationController extends Controller
             $users = Auth::user();
 
             if ($users->hasRole(['Super-Admin', 'admin'])) {
-                $leaveApplication = LeaveApplication::where('status', 'pending')->get();
+                $leaveApplications = LeaveApplication::where('status', 'pending')->get();
             } else if ($users->hasRole('Approver')) {
                 // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
                
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $leaveApplication = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
+            $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
         
             } else {
                 // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $leaveApplication = $users->leave_applications()->where('status', 'pending')->get();
+                $leaveApplications = $users->leave_applications()->where('status', 'pending')->get();
             }
     
-            return view('cuti.approval-cuti', compact('leaveApplication'));   
+            return view('cuti.approval-cuti', compact('leaveApplications'));   
             }
             abort(401);
     }
@@ -79,8 +80,8 @@ class LeaveApplicationController extends Controller
      */
     public function store(Request $request)
     {
-         // Validasi input dari form
-         $validator = Validator::make($request->all(), [
+        // Validasi input dari form
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'leave_type_id' => 'required|string|max:255',
             'start_date' => 'required',
@@ -88,11 +89,21 @@ class LeaveApplicationController extends Controller
             'manager_id' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
-    
+
         // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
+        // Memeriksa apakah ada pengajuan sebelumnya yang masih dalam status pending
+        $pendingApplications = LeaveApplication::where('user_id', $request->input('user_id'))
+        ->where('status', 'pending')
+        ->count();
+
+        if ($pendingApplications > 0) {
+            $message = 'Pengajuan sebelumnya masih dalam status pending. Silakan tunggu hingga pengajuan sebelumnya disetujui.';
+            return redirect()->back()->withInput()->with('error', $message);
+        }
+        
         // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
         $manager_id = $request->input('manager_id');
         if ($manager_id === null) {
@@ -102,21 +113,26 @@ class LeaveApplicationController extends Controller
             $manager_id = $selectedUser->karyawan->jabatan->manager_id;
         }
 
+        // Menghitung jumlah hari cuti
+        $start_date = Carbon::parse($request->input('start_date'));
+        $end_date = Carbon::parse($request->input('end_date'));
+        $total_days = $start_date->diffInDays($end_date) + 1; // Jumlah hari termasuk tanggal start_date dan end_date
+
         // Buat dan simpan jabatan baru
         $leaveApplication = LeaveApplication::create([
             'user_id' => $request->input('user_id'),
             'leave_type_id' => $request->input('leave_type_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'total_days' => $total_days,
             'manager_id' => $manager_id,
             // Tambahkan kolom lain yang perlu disimpan
         ]);
-    
-          
+
         // Tambahkan session flash message
         $message = 'Pengajuan cuti berhasil dibuat.';
         Session::flash('successAdd', $message);
-    
+
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('pengajuan-cuti');
     }
@@ -125,6 +141,19 @@ class LeaveApplicationController extends Controller
         $user = Auth::user();
         $updatedBy = $user->name;
         $leaveApplication = LeaveApplication::findOrFail($id);
+
+        // Kurangi saldo cuti
+        $total_days = $leaveApplication->total_days;
+
+        // Temukan saldo cuti yang sesuai
+        $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->firstOrFail();
+
+        // Kurangi saldo cuti
+        $leaveBalance->saldo_cuti -= $total_days;
+
+        // Simpan perubahan pada saldo cuti
+        $leaveBalance->save();
+
         $leaveApplication->approve($updatedBy);
         $leaveApplication->save();
 
@@ -150,7 +179,14 @@ class LeaveApplicationController extends Controller
     public function reject(Request $request, $id) {
         $user = Auth::user();
         $updatedBy = $user->name;
+
         $leaveApplication = LeaveApplication::findOrFail($id);
+        // Set nilai alasan reject
+        $alasan_reject = $request->input('alasan_reject');
+
+        // Simpan alasan reject
+        $leaveApplication->alasan_reject = $alasan_reject;
+
         $leaveApplication->reject($updatedBy);
         $leaveApplication->save();
 

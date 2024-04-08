@@ -144,7 +144,8 @@
             </a>
         </li>
         @endcan
-
+        
+        @can('sidebar saldocuti')
         <li class="nav-item {{ request()->is('saldo-cuti/*') ? 'menu-open' : '' }}">
             <a href="{{ route('saldo-cuti') }}" class="nav-link {{ request()->is('saldo-cuti') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-calculator"></i>
@@ -153,5 +154,6 @@
                 </p>
             </a>
         </li>
+        @endcan
     </ul>
 </nav>
