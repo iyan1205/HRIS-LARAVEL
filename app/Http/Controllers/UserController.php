@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LeaveBalance;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -28,7 +29,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user.create');
+        $roles = Role::pluck('name','name')->all();
+        return view('user.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -37,22 +39,26 @@ class UserController extends Controller
             'nama' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'photo' => 'required|mimes:jpg,jpeg,png|max:2048',
+            'roles' => 'required|array',
+            'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ]);
         if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
-        $photo = $request->file('photo');
-        $filename = str_replace(' ', '_', $request->nama) . '_' . date('Y-m-d') . '.' . $photo->getClientOriginalExtension();
-
-        $photo->storeAs('public/avatar', $filename);
 
         $data['name'] = $request->nama;
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
-        $data['image'] = $filename;
+        $data['roles'] = $request->roles;
 
         $user = User::create($data);
-        $user->assignRole('karyawan');
+
+        $user->syncRoles($request->roles);
+
+        // Buat saldo cuti baru dengan nilai awal 0
+        $leaveBalance = LeaveBalance::create([
+            'user_id' => $user->id,
+            'saldo_cuti' => 0,
+        ]);
+
 
         $message = 'User berhasil ditambahkan';
         Session::flash('successAdd', $message);
@@ -74,7 +80,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'nullable',
             'roles' => 'required|array',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Jangan gunakan 'required' untuk photo karena bisa saja user tidak mengganti foto
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Jangan gunakan 'required' untuk photo karena bisa saja user tidak mengganti foto
         ]);
 
         if ($validator->fails()) {
@@ -92,17 +98,17 @@ class UserController extends Controller
         }
 
         // Hapus foto lama jika pengguna mengunggah foto baru
-        if ($request->hasFile('photo')) {
+        if ($request->hasFile('image')) {
             // Hapus foto lama jika ada
             if ($user->image) {
                 Storage::disk('public')->delete('avatar/' . $user->image);
             }
 
             // Unggah dan simpan foto baru
-            $photo = $request->file('photo');
-            $photoName = str_replace(' ', '_', $request->nama) . '_' . date('Y-m-d') . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('avatar/', $photoName, 'public');
-            $data['image'] = $photoName;
+            $image = $request->file('image');
+            $imageName = $user->name . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('avatar/', $imageName, 'public');
+            $data['image'] = $imageName;
         }
 
         $user->update($data);
@@ -121,6 +127,33 @@ class UserController extends Controller
         if ($data) {
             $data->delete();
         }
+        return redirect()->route('user');
+    }
+    
+    public function addSaldoCutiToExistingUsers()
+    {
+        // Ambil semua pengguna dari tabel users
+        $users = User::all();
+
+        // Iterasi semua pengguna
+        foreach ($users as $user) {
+            // Periksa apakah saldo cuti sudah ada untuk pengguna ini
+            $existingLeaveBalance = LeaveBalance::where('user_id', $user->id)->first();
+
+            // Jika saldo cuti belum ada untuk pengguna ini, tambahkan saldo cuti baru
+            if (!$existingLeaveBalance) {
+                LeaveBalance::create([
+                    'user_id' => $user->id,
+                    'saldo_cuti' => 0, // Saldo awal diatur ke 0
+                ]);
+            }
+        }
+
+        // Tambahkan pesan sukses
+        $message = 'Saldo cuti berhasil ditambahkan kepada pengguna yang sudah ada.';
+        Session::flash('success', $message);
+
+        // Redirect ke halaman tertentu atau tampilkan pesan sukses sesuai kebutuhan
         return redirect()->route('user');
     }
 }

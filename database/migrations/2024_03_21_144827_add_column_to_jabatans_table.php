@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('image')->nullable()->after('remember_token');
+        Schema::table('jabatans', function (Blueprint $table) {
+            $table->unsignedBigInteger('manager_id')->nullable();
+            $table->foreign('manager_id')->references('id')->on('jabatans')->onDelete('set null');
         });
     }
 
@@ -21,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('jabatans', function (Blueprint $table) {
             //
         });
     }

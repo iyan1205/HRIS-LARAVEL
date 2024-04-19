@@ -27,6 +27,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('user.create') }}" class="btn btn-primary mb-3">Tambah Users</a>
+                                <!-- Tambahkan tombol di dalam view Anda -->
+                                {{-- <form action="{{ route('users.add-saldo-cuti') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Tambah Saldo Cuti untuk Pengguna yang Sudah Ada</button>
+                                </form> --}}
+
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body ">
@@ -49,7 +55,7 @@
                                                 <td>
                                                     @if (!empty($user->getRoleNames()))
                                                         @foreach ($user->getRoleNames() as $rolename)
-                                                        <span class="badge badge-primary">{{ $rolename }}</span>
+                                                            <span class="badge badge-primary">{{ $rolename }}</span>
                                                         @endforeach
                                                     @endif
                                                 <td class="project-actions text-right">
@@ -63,7 +69,7 @@
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $user->id }}">
                                                 <div class="modal-dialog">
-                                                    <div class="modal-content bg-danger">
+                                                    <div class="modal-content bg-default">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Konfirmasi Hapus data</h4>
                                                             <button type="button" class="close" data-dismiss="modal"
@@ -81,10 +87,9 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="button" class="btn btn-outline-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-outline-light">Ya,
-                                                                    Hapus
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal" style="margin-left: -300px">Batal</button>
+                                                                <button type="submit" class="btn btn-danger">Ya, Hapus
                                                                 </button>
                                                             </form>
                                                         </div>
