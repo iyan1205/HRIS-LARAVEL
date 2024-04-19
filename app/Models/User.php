@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use ReflectionFunctionAbstract;
 use Spatie\Permission\Traits\HasRoles;
 
 //implements MustVerifyEmail
@@ -61,6 +62,10 @@ class User extends Authenticatable
     public function leave_balances()
     {
         return $this->hasOne(LeaveBalance::class);
+    }
+    
+    public function overtime(){
+        return $this->hasMany(Overtime::class);
     }
     
 }

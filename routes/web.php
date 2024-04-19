@@ -7,6 +7,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
@@ -132,15 +133,23 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
     Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
 
-// Pelatihan
+// Saldo
     Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
     Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
     Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
-//Proses Pelatihan
+//Proses Saldo
     Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
     Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
     Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
-        
+ // Saldo
+    Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
+    Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
+    Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
+//Proses Saldo
+    Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
+    Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
+    Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
+
 });
 
 Route::middleware('auth')->group(function () {

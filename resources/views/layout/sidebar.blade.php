@@ -155,5 +155,15 @@
             </a>
         </li>
         @endcan
+
+        <li class="nav-item {{ request()->is('overtime/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('overtime') }}" class="nav-link {{ request()->is('overtime') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-paper-plane"></i>
+                <p>
+                    Form Lembur
+                </p>
+            </a>
+        </li>
+
     </ul>
 </nav>

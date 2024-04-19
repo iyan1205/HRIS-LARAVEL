@@ -88,61 +88,121 @@
                         <li class="nav-item"><a class="nav-link" href="#pendidikan" data-toggle="tab">Data Pendidikan</a></li>
                         <li class="nav-item"><a class="nav-link" href="#paramedis" data-toggle="tab">Data Paramedis</a></li>
                         <li class="nav-item"><a class="nav-link" href="#pelatihan" data-toggle="tab">Data Pelatihan</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                       </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
                       <div class="tab-content">
                         <div class="active tab-pane" id="karyawan">
                           <!-- Post -->
-                          
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Departemen</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->departemen->name }}" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Unit</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->unit->name }}" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Status Karyawan</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="@if($user->karyawan->status_karyawan == 'kartap')
-                              Karyawan Tetap
-                          @else
-                              {{ ucwords($user->karyawan->status_karyawan) }}
-                          @endif" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 1</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak1)->format('d/m/Y') }}" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 2</label>
-                            <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="
-                              @if(Auth::user()->karyawan->tgl_kontrak2 && Auth::user()->karyawan->akhir_kontrak2)
-                              {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak2)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak2)->format('d/m/Y') }}
-                              @else
-                                  Belum Ada Kontrak Ke 2
+                          <form class="form-horizontal" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                              @csrf
+                              @method('patch')
+                              <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+                                  @csrf
+                              </form>
+                              <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                                @csrf
+                                @method('patch')
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Nama Lengkap</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Departemen</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->departemen->name }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Unit</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->unit->name }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Status Karyawan</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="@if($user->karyawan->status_karyawan == 'kartap')
+                                    Karyawan Tetap
+                                @else
+                                    {{ ucwords($user->karyawan->status_karyawan) }}
+                                @endif" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 1</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="{{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak1)->format('d/m/Y') }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 2</label>
+                                  <div class="col-sm-5">
+                                    <input type="email" class="form-control" name="email" value="
+                                    @if(Auth::user()->karyawan->tgl_kontrak2 && Auth::user()->karyawan->akhir_kontrak2)
+                                    {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak2)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak2)->format('d/m/Y') }}
+                                    @else
+                                        Belum Ada Kontrak Ke 2
+                                    @endif
+                                    " readonly>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                  <div class="col-sm-5">
+                                      <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="image" class="col-sm-2 col-form-label">Photo Profile</label>
+                                  <div class="col-sm-5">
+                                      <div class="custom-file">
+                                          <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image" accept="image/jpeg, image/jpg, image/png">
+                                          <label class="custom-file-label" for="image">Ganti Photo </label>
+                                      </div>
+                                      @error('image')
+                                          <small>{{ $message }}</small>
+                                      @enderror
+                                  </div>
+                                </div>
+                                @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
+                              <div>
+                                  <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
+                                      {{ __('Your email address is unverified.') }}
+
+                                      <button form="send-verification"
+                                          class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                                          {{ __('Click here to re-send the verification email.') }}
+                                      </button>
+                                  </p>
+
+                                  @if (session('status') === 'verification-link-sent')
+                                      <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
+                                          {{ __('A new verification link has been sent to your email address.') }}
+                                      </p>
+                                  @endif
+                              </div>
                               @endif
-                              " readonly>
-                            </div>
-                          </div>
-                          
+                            
+                              <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-10">
+                                  <button type="submit" class="btn btn-success">Update</button>
+                                
+                                </div>
+                              </div>
+                              </form>
+
+                          </form> 
                           
                           <!-- /.post -->
     
@@ -290,72 +350,7 @@
                         
                         </div>
                         <!-- /.tab-pane -->
-                        <div class="tab-pane" id="settings">
-                          <form class="form-horizontal" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                @method('patch')
-                                <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-                                    @csrf
-                                </form>
-
-                                <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('patch')
-                                    <div class="form-group row">
-                                      <label for="inputName" class="col-sm-2 col-form-label">Nama Lengkap</label>
-                                      <div class="col-sm-5">
-                                          <input type="text" class="form-control" id="inputName" placeholder="Name" name="name" value="{{ old('name', $user->name) }}" readonly>
-                                      </div>
-                                  </div>
-                                  
-                                  <div class="form-group row">
-                                      <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                                      <div class="col-sm-5">
-                                          <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
-                                      </div>
-                                  </div>
-                                  
-                                  <div class="form-group row">
-                                      <label for="image" class="col-sm-2 col-form-label">Photo Profile</label>
-                                      <div class="col-sm-5">
-                                          <div class="custom-file">
-                                              <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image" accept="image/jpeg, image/jpg, image/png">
-                                              <label class="custom-file-label" for="image">Choose file</label>
-                                          </div>
-                                          @error('image')
-                                              <small>{{ $message }}</small>
-                                          @enderror
-                                      </div>
-                                  </div>
-                                  
-
-                            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
-                            <div>
-                                <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                                    {{ __('Your email address is unverified.') }}
-
-                                    <button form="send-verification"
-                                        class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                        {{ __('Click here to re-send the verification email.') }}
-                                    </button>
-                                </p>
-
-                                @if (session('status') === 'verification-link-sent')
-                                    <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                                        {{ __('A new verification link has been sent to your email address.') }}
-                                    </p>
-                                @endif
-                            </div>
-                            @endif
-                           
-                            <div class="form-group row">
-                              <div class="offset-sm-2 col-sm-10">
-                                <button type="submit" class="btn btn-danger">Submit</button>
-                               
-                              </div>
-                            </div>
-                          </form>
-                        </div>
+                        
                         <!-- /.tab-pane -->
                       </div>
                       <!-- /.tab-content -->
