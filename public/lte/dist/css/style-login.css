@@ -1,0 +1,103 @@
+html {
+  overflow: hidden;
+}
+
+.container {
+  font-family: "Poppins", sans-serif;
+}
+
+.brand {
+  margin-top: 50px;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 60px;
+}
+
+.form-header h3 {
+  font-size: 40px;
+  letter-spacing: 5px;
+  font-weight: 600;
+}
+
+.form-header a {
+  margin-left: 25px;
+}
+
+.form-header a {
+  color: #212529;
+}
+
+.form-header a:hover {
+  color: #55575a;
+}
+
+.form-control {
+  border-radius: 0%;
+  border: none;
+  border-bottom: 2px solid #7f7f7f;
+}
+
+.form-header p,
+.form-header a,
+.form-label {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.form-check {
+    margin-top: -10px;
+}
+
+.remember {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.btn {
+  margin-bottom: 40px;
+}
+
+.warning {
+  margin-right: 20px;
+}
+
+.warning2 {
+  color: #212529;
+}
+
+.warning2:hover {
+  color: #55575a;
+}
+
+.btn {
+  width: 335px;
+  height: 55px;
+}
+
+.banner {
+  position: relative;
+}
+
+.bayangan {
+  position: absolute;
+  top: 0;
+}
+
+.tagline {
+  z-index: 1;
+  position: absolute;
+  color: white;
+  text-shadow: 2px 2px 2px #212529;
+  font-size: 23px;
+  bottom: 120px;
+  left: 240px;
+}
+
+@media (max-width: 992px) {
+  .carousel {
+    display: none;
+  }
+}

@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">User</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('user') }}">User</a></li>
                             <li class="breadcrumb-item active">Tambah User</li>
                         </ol>
                     </div><!-- /.col -->
@@ -58,22 +58,16 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputFile">Photo Profile</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="exampleInputFile"
-                                                        name="photo">
-                                                    <label class="custom-file-label" for="exampleInputFile">Choose
-                                                        file</label>
-                                                </div>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">Upload</span>
-                                                </div>
+                                            <label for="roles">Roles</label>
+                                            @foreach ($roles as $role)
+                                            <div class="icheck-primary d-outline">
+                                                <input type="checkbox" id="role_{{ $role }}" name="roles[]" value="{{ $role }}"
+                                                {{ old('roles') }}>
+                                                <label for="role_{{ $role }}">{{ $role }}</label>
                                             </div>
-                                            @error('photo')
-                                                <small>{{ $message }}</small>
-                                            @enderror
+                                        @endforeach
                                         </div>
+                                        
                                     </div>
                                     <!-- /.card-body -->
 

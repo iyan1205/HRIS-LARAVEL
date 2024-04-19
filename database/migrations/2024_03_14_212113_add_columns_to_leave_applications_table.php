@@ -25,7 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('leave_applications', function (Blueprint $table) {
-            //
+            $table->dropColumn('user_id');
+            $table->dropColumn('start_date');
+            $table->dropColumn('end_date');
         });
     }
 };

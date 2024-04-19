@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Departemen</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('departemen') }}">Departemen</a></li>
                             <li class="breadcrumb-item active">Tambah Departemen</li>
                         </ol>
                     </div><!-- /.col -->
@@ -39,7 +39,9 @@
                                             <input type="text" class="form-control" id="name"
                                                 placeholder="Enter name" name="name" value="{{ old('name') }}">
                                             @error('name')
-                                                <small>{{ $message }}</small>
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
                                             @enderror
                                         </div>
                                     </div>

@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'HRIS') }}</title>
 
+    <!-- Shortcut Icon -->
+    <link rel="shortcut icon" href="{{ asset('lte/dist/img/logo.png') }}"">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -40,6 +42,11 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/toastr/toastr.min.css') }}">
+    <style>
+        .red-star {
+            color: red;
+        }
+    </style>
 </head>
 @php
     $user = Auth::user();
@@ -85,10 +92,12 @@
                         {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        @can('edit user')
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('profile.edit') }}" class="dropdown-item">
                             <i class="fas fa-user mr-2"></i>Profile
                         </a>
+                        @endcan
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
                             <i class="fas fa-arrow-right mr-2"></i>Log Out
@@ -107,11 +116,11 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="#" class="brand-link">
                 <img src="{{ asset('lte/dist/img/LogoRS.png') }}" alt="HR Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                    class="brand-image">
                 <span class="brand-text font-weight-light">HRIS</span>
             </a>
 
@@ -120,11 +129,15 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
+                        @if(Auth::user()->image)
                         <img src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
                             class="img-circle elevation-2" alt="User Image">
+                        @else
+                        <p>No image available</p>
+                        @endif
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->name }}</a>
                     </div>
                 </div>
 
@@ -146,6 +159,14 @@
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
+            <div class="sidebar-custom">
+                <li class="nav-item">
+                    <a href="{{ route('logout') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                            Logout
+                    </a>
+                </li>
+            </div>
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
@@ -242,6 +263,158 @@
         });
     </script>
     <!-- Page Select script -->
+
+<!-- Cuti -->
+    <script>
+        // Mendapatkan tanggal sekarang
+        var currentDate = new Date();
+        // Menambahkan 5 hari ke tanggal sekarang
+        var targetDate = new Date(currentDate);
+        targetDate.setDate(currentDate.getDate() + 5);
+    
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_date"
+        $('#start_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            minDate: targetDate, // Tidak memungkinkan pemilihan tanggal sebelum tanggal sekarang
+            maxDate: targetDate // Tidak memungkinkan pemilihan tanggal lebih dari 5 hari ke depan
+        });
+    
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
+        $('#end_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
+            minDate: targetDate // Mengatur tanggal minimum menjadi targetDate
+        });
+    
+        // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
+        $("#start_date").on("change.datetimepicker", function (e) {
+            $('#end_date').datetimepicker('minDate', e.date);
+        });
+    
+        // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
+        $("#end_date").on("change.datetimepicker", function (e) {
+            $('#start_date').datetimepicker('maxDate', e.date);
+        });
+    </script>
+<!-- Overtime -->
+    <script>
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateover"
+        $('#start_dateover').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            }
+        });
+    
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateover"
+        $('#end_dateover').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+        });
+    
+        // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
+        $("#start_dateover").on("change.datetimepicker", function (e) {
+            $('#end_dateover').datetimepicker('minDate', e.date);
+        });
+    
+        // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
+        $("#end_dateover").on("change.datetimepicker", function (e) {
+            $('#start_dateover').datetimepicker('maxDate', e.date);
+        });
+    </script>
+    
+   <!-- Absen -->
+        <script>
+            // Mendapatkan tanggal sekarang
+            var currentDate = new Date();
+
+            // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
+            $('#start_dateabsen').datetimepicker({
+                format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                icons: {
+                    time: 'fa fa-clock',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-calendar-check-o',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-times'
+                },
+                minDate: currentDate // Mengatur tanggal minimum menjadi tanggal sekarang
+            });
+
+            // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateabsen"
+            $('#end_dateabsen').datetimepicker({
+                format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                icons: {
+                    time: 'fa fa-clock',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-calendar-check-o',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-times'
+                },
+                useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+            });
+
+            // Mengatur bahwa tanggal di end_dateabsen tidak bisa sebelum tanggal di start_dateabsen
+            $("#start_dateabsen").on("change.datetimepicker", function (e) {
+                $('#end_dateabsen').datetimepicker('minDate', e.date);
+            });
+
+            // Mengatur bahwa tanggal di start_dateabsen tidak bisa setelah tanggal di end_dateabsen
+            $("#end_dateabsen").on("change.datetimepicker", function (e) {
+                $('#start_dateabsen').datetimepicker('maxDate', e.date);
+            });
+        </script>
+
+    
     <script>
         $(function () {
           //Initialize Select2 Elements
@@ -261,7 +434,8 @@
       
           //Date picker
           $('#reservationdate').datetimepicker({
-              format: 'L'
+              format: 'L',
+              locale: 'id'
           });
       
           //Date and time picker
@@ -379,7 +553,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success'))
+    @if (session('success')) //Login
         <script>
             Swal.fire({
                 icon: 'success',
@@ -391,7 +565,7 @@
     @if (session('successAdd'))
         <script>
             Swal.fire({
-                position: "top-end",
+                position: "top",
                 icon: "success",
                 title: "{{ session('successAdd') }}",
                 showConfirmButton: false,
@@ -399,7 +573,18 @@
             });
         </script>
     @endif
-
+    @if (session('reject'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('reject') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    @endif
+    
 </body>
 
 </html>

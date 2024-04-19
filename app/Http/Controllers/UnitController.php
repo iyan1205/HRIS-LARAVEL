@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('role:Super-Admin|admin');
+    }
+    
     public function index()
     {
         $units = Unit::get();
@@ -77,7 +79,7 @@ class UnitController extends Controller
     {
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
-            'name' => 'nullable',
+            'name' => 'nullable|string|max:255|unique:units,name,'. $id,
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 

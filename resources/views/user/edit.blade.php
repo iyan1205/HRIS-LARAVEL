@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">User</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('user') }}">User</a></li>
                             <li class="breadcrumb-item active">Edit User</li>
                         </ol>
                     </div><!-- /.col -->
@@ -20,14 +20,14 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('user.update', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-">
+                <form action="{{ route('user.update', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-6">
                             <!-- general form elements -->
-                            <div class="card card-primary">
+                            <div class="card card-success">
                                 <div class="card-header">
                                     <h3 class="card-title">Form Edit User</h3>
                                 </div>
@@ -61,36 +61,28 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="photo">Roles</label>
-                                            
                                             @foreach ($roles as $role)
-                                            <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input role-checkbox" type="checkbox" id="role_{{ $role }}" name="roles[]" value="{{ $role }}"
+                                            <div class="icheck-primary d-outline">
+                                                <input type="checkbox" id="role_{{ $role }}" name="roles[]" value="{{ $role }}"
                                                 {{ in_array($role, $userRoles) ? 'checked' : '' }}>
-                                                <label for="role_{{ $role }}" class="custom-control-label">{{ $role }}</label>
+                                                <label for="role_{{ $role }}" >{{ $role }}</label>
                                             </div>
                                         @endforeach
                                         </div>
                                         <div class="form-group">
-                                            <label for="photo">Photo Profile</label>
+                                            <label for="image">Photo Profile</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input type="file"
-                                                        class="custom-file-input @error('photo') is-invalid @enderror"
-                                                        id="photo" name="photo">
+                                                        class="custom-file-input @error('image') is-invalid @enderror"
+                                                        id="image" name="image" accept="image/jpeg, image/jpg, image/png">
                                                     <label class="custom-file-label" for="exampleInputFile">Choose
                                                         file</label>
                                                 </div>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">Upload</span>
-                                                </div>
                                             </div>
-                                            @error('photo')
+                                            @error('image')
                                                 <small>{{ $message }}</small>
                                             @enderror
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
                                         </div>
                                     </div>
                                     <!-- /.card-body -->
@@ -109,4 +101,11 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
+    <script>
+        document.getElementById('image').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    </script>
 @endsection

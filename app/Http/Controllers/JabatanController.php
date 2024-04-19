@@ -9,17 +9,22 @@ use Illuminate\Support\Facades\Validator;
 
 class JabatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
+    public function __construct()
+    {
+        $this->middleware('role:Super-Admin|admin');
+    }
+
     public function index()
     {
-        $jabatans = Jabatan::get();
+        $jabatans = Jabatan::orderBy('name', 'asc')->get();
         return view('organisasi.jabatan.index', compact('jabatans'));
     }
     public function create()
     {
-        return view('organisasi.jabatan.create');
+        $jabatan = Jabatan::all();
+        $jabatans = Jabatan::whereIn('level', ['Manajer', 'Kanit', 'SPV','Direktur'])->get();
+        return view('organisasi.jabatan.create', compact('jabatan','jabatans'));
     }
 
     /**
@@ -31,6 +36,8 @@ class JabatanController extends Controller
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:jabatans',
+            'manager_id' => 'required',
+            'level' => 'required'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -42,6 +49,8 @@ class JabatanController extends Controller
         // Buat dan simpan jabatan baru
         $jabatans = Jabatan::create([
             'name' => $request->input('name'),
+            'manager_id' => $request->input('manager_id'),
+            'level' => $request->input('level'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
@@ -64,20 +73,24 @@ class JabatanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $jabatans = Jabatan::find($id);
-        return view('organisasi.jabatan.edit', compact('jabatans'));
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatans = Jabatan::orderBy('name')->get();
+        $selectedManagerIds = $jabatan->subordinates->pluck('id')->toArray(); // Mengambil id atasan yang sudah dipilih sebelumnya
+        return view('organisasi.jabatan.edit', compact('jabatan', 'jabatans', 'selectedManagerIds'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
-            'name' => 'nullable',
+            'name' => 'nullable|unique:jabatans,name,'.$id,
+            'level' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -86,21 +99,24 @@ class JabatanController extends Controller
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
-        // Temukan jabatan yang ingin diperbarui
-        $jabatans = Jabatan::findOrFail($id);
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatan->update([
+            'name' => $request->name,
+            'level' => $request->level,
+        ]);
 
-        // Perbarui atribut jabatan sesuai dengan data yang diterima dari request
-        $jabatans->name = $request->input('name');
-        // Tambahkan kolom lain yang perlu diperbarui
-
-        // Simpan perubahan ke dalam database
-        $jabatans->save();
-
+        // Update subordinates
+        $selectedManagerIds = $request->input('manager_id', []);
+        $jabatan->subordinates()->update(['manager_id' => null]); // Hapus atasan sebelumnya
+        foreach ($selectedManagerIds as $managerId) {
+        $subordinate = Jabatan::findOrFail($managerId);
+        $subordinate->update(['manager_id' => $jabatan->id]); // Set atasan baru
+        }    
         // Tambahkan session flash message
         $message = 'Jabatan Berhasil Di Edit';
         Session::flash('successAdd', $message);
 
-        // Redirect ke halaman tertentu atau tampilkan pesan sukses
+            // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('jabatan');
     }
 
