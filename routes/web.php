@@ -125,11 +125,11 @@ Route::group(['middleware' => ['isAdmin']], function() {
 // Pengajuan Cuti Route
     Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
     Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
+    Route::get('/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
 
     Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
     Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
 
-    Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('cuti.approve');
     Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
     Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
 
@@ -141,11 +141,17 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
     Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
     Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
- // Saldo
+ 
+// Overtime
     Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
+    Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
+    
     Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
     Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
-//Proses Saldo
+    
+    Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+
+//Proses Overtime
     Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
     Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
     Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');

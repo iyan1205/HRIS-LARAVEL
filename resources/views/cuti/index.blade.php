@@ -27,6 +27,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                <a href="{{ route('riwayat-cuti') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Cuti</a>
                             </div>
                             {{-- <div class="form-group">
                                 <label>Date range:</label>
@@ -66,7 +67,7 @@
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
                                                 <td>{{ $cuti->total_days }} Hari</td>
-                                                <td><span class="tag tag-success">{{ $cuti->status }}</span></td>
+                                                <td><span class="badge bg-secondary">{{ $cuti->status }}</span></td>
 
                                             </tr>
                                             

@@ -16,6 +16,7 @@ class Overtime extends Model
         'status',
         'keterangan',
         'approver_id',
+        'updated_by',
 
     ];
 
@@ -27,5 +28,12 @@ class Overtime extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approve($updatedBy)
+    {
+        $this->status = 'approved';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
     }
 }

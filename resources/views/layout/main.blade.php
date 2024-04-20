@@ -159,14 +159,7 @@
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
-            <div class="sidebar-custom">
-                <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link">
-                        <i class="nav-icon fas fa-sign-out-alt"></i>
-                            Logout
-                    </a>
-                </li>
-            </div>
+
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
@@ -264,113 +257,16 @@
     </script>
     <!-- Page Select script -->
 
-<!-- Cuti -->
-    <script>
-        // Mendapatkan tanggal sekarang
-        var currentDate = new Date();
-        // Menambahkan 5 hari ke tanggal sekarang
-        var targetDate = new Date(currentDate);
-        targetDate.setDate(currentDate.getDate() + 5);
-    
-        // Inisialisasi datetimepicker untuk elemen input dengan id "start_date"
-        $('#start_date').datetimepicker({
-            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-            icons: {
-                time: 'fa fa-clock',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times'
-            },
-            minDate: targetDate, // Tidak memungkinkan pemilihan tanggal sebelum tanggal sekarang
-            maxDate: targetDate // Tidak memungkinkan pemilihan tanggal lebih dari 5 hari ke depan
-        });
-    
-        // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
-        $('#end_date').datetimepicker({
-            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-            icons: {
-                time: 'fa fa-clock',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times'
-            },
-            useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
-            minDate: targetDate // Mengatur tanggal minimum menjadi targetDate
-        });
-    
-        // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
-        $("#start_date").on("change.datetimepicker", function (e) {
-            $('#end_date').datetimepicker('minDate', e.date);
-        });
-    
-        // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
-        $("#end_date").on("change.datetimepicker", function (e) {
-            $('#start_date').datetimepicker('maxDate', e.date);
-        });
-    </script>
-<!-- Overtime -->
-    <script>
-        // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateover"
-        $('#start_dateover').datetimepicker({
-            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-            icons: {
-                time: 'fa fa-clock',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times'
-            }
-        });
-    
-        // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateover"
-        $('#end_dateover').datetimepicker({
-            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-            icons: {
-                time: 'fa fa-clock',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-calendar-check-o',
-                clear: 'fa fa-trash',
-                close: 'fa fa-times'
-            },
-            useCurrent: false // Tidak menggunakan tanggal saat ini secara default
-        });
-    
-        // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
-        $("#start_dateover").on("change.datetimepicker", function (e) {
-            $('#end_dateover').datetimepicker('minDate', e.date);
-        });
-    
-        // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
-        $("#end_dateover").on("change.datetimepicker", function (e) {
-            $('#start_dateover').datetimepicker('maxDate', e.date);
-        });
-    </script>
-    
-   <!-- Absen -->
+        <!-- Cuti -->
         <script>
             // Mendapatkan tanggal sekarang
             var currentDate = new Date();
-
-            // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
-            $('#start_dateabsen').datetimepicker({
+            // Menambahkan 5 hari ke tanggal sekarang
+            var targetDate = new Date(currentDate);
+            targetDate.setDate(currentDate.getDate() + 5);
+        
+            // Inisialisasi datetimepicker untuk elemen input dengan id "start_date5"
+            $('#start_date5').datetimepicker({
                 format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
                 icons: {
                     time: 'fa fa-clock',
@@ -383,11 +279,12 @@
                     clear: 'fa fa-trash',
                     close: 'fa fa-times'
                 },
-                minDate: currentDate // Mengatur tanggal minimum menjadi tanggal sekarang
+                minDate: targetDate, // Tidak memungkinkan pemilihan tanggal sebelum tanggal sekarang
+                maxDate: targetDate // Tidak memungkinkan pemilihan tanggal lebih dari 5 hari ke depan
             });
-
-            // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateabsen"
-            $('#end_dateabsen').datetimepicker({
+        
+            // Inisialisasi datetimepicker untuk elemen input dengan id "end_date5"
+            $('#end_date5').datetimepicker({
                 format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
                 icons: {
                     time: 'fa fa-clock',
@@ -400,20 +297,185 @@
                     clear: 'fa fa-trash',
                     close: 'fa fa-times'
                 },
-                useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+                useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
+                minDate: targetDate // Mengatur tanggal minimum menjadi targetDate
             });
-
-            // Mengatur bahwa tanggal di end_dateabsen tidak bisa sebelum tanggal di start_dateabsen
-            $("#start_dateabsen").on("change.datetimepicker", function (e) {
-                $('#end_dateabsen').datetimepicker('minDate', e.date);
+        
+            // Mengatur bahwa tanggal di end_date5 tidak bisa sebelum tanggal di start_date5
+            $("#start_date5").on("change.datetimepicker", function (e) {
+                $('#end_date5').datetimepicker('minDate', e.date);
             });
-
-            // Mengatur bahwa tanggal di start_dateabsen tidak bisa setelah tanggal di end_dateabsen
-            $("#end_dateabsen").on("change.datetimepicker", function (e) {
-                $('#start_dateabsen').datetimepicker('maxDate', e.date);
+        
+            // Mengatur bahwa tanggal di start_date5 tidak bisa setelah tanggal di end_date5
+            $("#end_date5").on("change.datetimepicker", function (e) {
+                $('#start_date5').datetimepicker('maxDate', e.date);
             });
         </script>
 
+        <!-- Overtime -->
+        <script>
+            // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateover"
+            $('#start_dateover').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
+                icons: {
+                    time: 'fa fa-clock',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-calendar-check-o',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-check'
+                },
+                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
+                buttons: {
+                    showClose: true, // Menampilkan tombol Close
+                    showToday: true, // Menampilkan tombol Today
+                    showClear: true, // Menampilkan tombol Clear
+                    showApply: true // Menampilkan tombol Apply
+                }
+            });
+        
+            // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateover"
+            $('#end_dateover').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
+                icons: {
+                    time: 'fa fa-clock',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-calendar-check-o',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-check'
+                },
+                useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
+                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
+                buttons: {
+                    showClose: true, // Menampilkan tombol Close
+                    showToday: true, // Menampilkan tombol Today
+                    showClear: true, // Menampilkan tombol Clear
+                    showApply: true // Menampilkan tombol Apply
+                }
+            });
+        
+            // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
+            $("#start_dateover").on("change.datetimepicker", function (e) {
+                $('#end_dateover').datetimepicker('minDate', e.date);
+            });
+        
+            // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
+            $("#end_dateover").on("change.datetimepicker", function (e) {
+                $('#start_dateover').datetimepicker('maxDate', e.date);
+            });
+        </script>
+        
+        
+    
+        <!-- Cuti -->
+            <script>
+                // Mendapatkan tanggal sekarang
+                var currentDate = new Date();
+
+                // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
+                $('#start_date').datetimepicker({
+                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                    icons: {
+                        time: 'fa fa-clock',
+                        date: 'fa fa-calendar',
+                        up: 'fa fa-chevron-up',
+                        down: 'fa fa-chevron-down',
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-calendar-check-o',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-times'
+                    },
+                
+                });
+
+                // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
+                $('#end_date').datetimepicker({
+                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                    icons: {
+                        time: 'fa fa-clock',
+                        date: 'fa fa-calendar',
+                        up: 'fa fa-chevron-up',
+                        down: 'fa fa-chevron-down',
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-calendar-check-o',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-times'
+                    },
+                    useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+                });
+
+                // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
+                $("#start_date").on("change.datetimepicker", function (e) {
+                    $('#end_date').datetimepicker('minDate', e.date);
+                });
+
+                // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
+                $("#end_date").on("change.datetimepicker", function (e) {
+                    $('#start_date').datetimepicker('maxDate', e.date);
+                });
+            </script>
+        <!-- //Cuti -->
+        <!-- Absen -->
+            <script>
+                // Mendapatkan tanggal sekarang
+                var currentDate = new Date();
+
+                // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
+                $('#start_dateabsen').datetimepicker({
+                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                    icons: {
+                        time: 'fa fa-clock',
+                        date: 'fa fa-calendar',
+                        up: 'fa fa-chevron-up',
+                        down: 'fa fa-chevron-down',
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-calendar-check-o',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-times'
+                    },
+                
+                });
+
+                // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateabsen"
+                $('#end_dateabsen').datetimepicker({
+                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                    icons: {
+                        time: 'fa fa-clock',
+                        date: 'fa fa-calendar',
+                        up: 'fa fa-chevron-up',
+                        down: 'fa fa-chevron-down',
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-calendar-check-o',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-times'
+                    },
+                    useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+                });
+
+                // Mengatur bahwa tanggal di end_dateabsen tidak bisa sebelum tanggal di start_dateabsen
+                $("#start_dateabsen").on("change.datetimepicker", function (e) {
+                    $('#end_dateabsen').datetimepicker('minDate', e.date);
+                });
+
+                // Mengatur bahwa tanggal di start_dateabsen tidak bisa setelah tanggal di end_dateabsen
+                $("#end_dateabsen").on("change.datetimepicker", function (e) {
+                    $('#start_dateabsen').datetimepicker('maxDate', e.date);
+                });
+            </script>
+        <!-- Absen -->
     
     <script>
         $(function () {
@@ -585,6 +647,7 @@
         </script>
     @endif
     
+
 </body>
 
 </html>
