@@ -60,6 +60,19 @@ class LeaveApplicationController extends Controller
             abort(401);
     }
 
+    public function riwayat()
+    {
+       // Ambil pengguna yang sedang login
+        $user = Auth::user();
+
+        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        $leaveApplications = LeaveApplication::where('user_id', $user->id)
+            ->where('status', 'rejected')
+            ->get();
+
+        return view('cuti.riwayat', compact('leaveApplications'));
+    }
+
     public function create()
     {
         $users = User::pluck('name', 'id');

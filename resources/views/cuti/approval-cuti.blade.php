@@ -34,7 +34,6 @@
                                         <th>Jenis/Kategori</th>
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -46,18 +45,39 @@
                                         <td>{{ $cuti->leavetype->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}</td>
-                                        <td><span class="tag tag-success">{{ $cuti->status }}</span></td>
                                         <td class="project-actions text-right">
                                             @can('approve cuti')
-                                            <form id="approveForm{{ $cuti->id }}" action="{{ route('leave-application.approve', $cuti->id) }}" method="post" style="display: inline;">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
-                                            </form>
+                                            <button type="button" class="btn btn-success btn-sm approveBtn" data-cuti-id="{{ $cuti->id }}" data-toggle="modal" data-target="#modal-ap{{ $cuti->id }}"><i class="fas fa-check"></i> Approve</button>
                                             <button type="button" class="btn btn-danger btn-sm rejectBtn" data-cuti-id="{{ $cuti->id }}" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}"><i class="fas fa-times"></i> Reject</button>
                                             @endcan
                                         </td>
                                     </tr>
+                                    <div class="modal fade" id="modal-ap{{ $cuti->id }}">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Approve Pengajuan Cuti</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form id="approveForm{{ $cuti->id }}" action="{{ route('leave-application.approve', $cuti->id) }}" method="post">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="modal-body">
+                                                        <p>Apakah Yakin Pengajuan Cuti <b> {{ $cuti->user->karyawan->name }} </b> akan di Approve  ?</p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-success">Ya, Approve</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+
                                     <div class="modal fade" id="modal-lg{{ $cuti->id }}">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -67,7 +87,7 @@
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="{{ route('leave-application.reject', $cuti->id) }}" method="POST">
+                                                <form id="rejectForm{{ $cuti->id }}" action="{{ route('leave-application.reject', $cuti->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-body">
@@ -101,4 +121,12 @@
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
+    $(document).on('click', '.approveBtn', function () {
+        var cutiId = $(this).data('cuti-id');
+        $('#approveForm' + cutiId).submit();
+    });
+</script>
 @endsection
