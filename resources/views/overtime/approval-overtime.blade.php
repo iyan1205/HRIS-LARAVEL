@@ -26,7 +26,6 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
                             </div>
                             {{-- <div class="form-group">
                                 <label>Date range:</label>
@@ -51,7 +50,7 @@
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Selang Waktu</th>
-                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -64,9 +63,15 @@
                                                 <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $overtime->interval }}</td>
-                                                <td><span class="badge bg-secondary">{{ $overtime->status }}</span></td>
-                                                 
-
+                                                <td class="project-actions text-right">
+                                                    @can('approve cuti')
+                                                    <form id="approveForm{{ $overtime->id }}" action="{{ route('overtime.approve', $overtime->id) }}" method="post" style="display: inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
+                                                    </form>
+                                                    @endcan
+                                                </td>
                                             </tr>
                                             
                                         @endforeach
@@ -84,30 +89,10 @@
         <!-- /.content -->
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mendaftarkan event click pada semua tombol rejectBtn
-            const rejectButtons = document.querySelectorAll('.rejectBtn');
-            rejectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const cutiId = this.getAttribute('data-cuti-id');
-    
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Tolak',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
-                            document.getElementById('rejectForm' + cutiId).submit();
-                        }
-                    });
-                });
-            });
+        // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
+        $(document).on('click', '.approveBtn', function () {
+            var cutiId = $(this).data('cuti-id');
+            $('#approveForm' + cutiId).submit();
         });
     </script>
 @endsection

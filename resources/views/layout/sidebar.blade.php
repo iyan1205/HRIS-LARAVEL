@@ -165,5 +165,16 @@
             </a>
         </li>
 
+        @can('approve cuti')
+        <li class="nav-item {{ request()->is('approval-overtime/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('approval-overtime') }}" class="nav-link {{ request()->is('approval-overtime') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>
+                    Approval Lembur
+                </p>
+            </a>
+        </li>
+        @endcan
+
     </ul>
 </nav>

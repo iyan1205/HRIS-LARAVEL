@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Lembur</h1>
+                        <h1 class="m-0">Riwayat Cuti</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Lembur</li>
+                            <li class="breadcrumb-item active">Cuti</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -26,7 +26,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                
                             </div>
                             {{-- <div class="form-group">
                                 <label>Date range:</label>
@@ -48,27 +48,49 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Karyawan</th>
+                                            <th>Jenis/Kategori</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Selang Waktu</th>
+                                            <th>Total Hari</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($overtimes as $overtime)
+                                        @foreach ($leaveApplications as $cuti)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $overtime->user->karyawan->name }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}
+                                                <td>{{ $cuti->user->karyawan->name }}</td>
+                                                <td>{{ $cuti->leavetype->name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
+                                                <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
-                                                <td>{{ $overtime->interval }}</td>
-                                                <td><span class="badge bg-secondary">{{ $overtime->status }}</span></td>
-                                                 
+                                                <td>{{ $cuti->total_days }} Hari</td>
+                                                <td><span class="badge bg-danger"><a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a></span></td>
 
                                             </tr>
-                                            
+                                            <div class="modal fade" id="modal-lg{{ $cuti->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Alasan Reject</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <textarea class="form-control" id="alasan_reject{{ $cuti->id }}" name="alasan_reject" rows="3" disabled> {{ $cuti->alasan_reject }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>

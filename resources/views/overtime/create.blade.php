@@ -70,7 +70,7 @@
                                             <div class="col">
                                                 <label>Tanggal Awal:</label>
                                                     <div class="input-group date" id="start_dateover" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="start_dateover"/>
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="start_date"/>
                                                         <div class="input-group-append" data-target="#start_dateover" data-toggle="datetimepicker">
                                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                         </div>
@@ -79,7 +79,7 @@
                                             <div class="col">
                                                 <label for="end_dateover" class="form-label">Tanggal Akhir:</label>
                                                 <div class="input-group date" id="end_dateover" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="end_dateover"/>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="end_date"/>
                                                     <div class="input-group-append" data-target="#end_dateover" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
@@ -87,12 +87,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="saldo_cuti">Sisa Cuti</label>
-                                            <input type="text" class="form-control" id="saldo_cuti" placeholder="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>
+                                            <label>Keterangan</label>
+                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required></textarea>
                                         </div>
-
-                                        
-                                        
 
                                     </div>
                                     <!-- /.card-body -->
