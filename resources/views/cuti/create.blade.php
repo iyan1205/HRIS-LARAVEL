@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="saldo_cuti">Sisa Cuti</label>
-                                            <input type="text" class="form-control" id="saldo_cuti" placeholder="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>
+                                            <input type="text" class="form-control" id="saldo_cuti" name="saldo_cuti" value="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>
                                         </div>
 
                                         
