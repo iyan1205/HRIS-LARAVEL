@@ -75,7 +75,7 @@ class LeaveApplicationController extends Controller
 
     public function create()
     {
-        $users = User::pluck('name', 'id');
+        $users = User::all();
         $approver = Jabatan::pluck('name', 'id');
         $leave_types = LeaveType::pluck('name','id');
         return view('cuti.create', compact('users','approver','leave_types'));
@@ -91,6 +91,7 @@ class LeaveApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         // Validasi input dari form
@@ -117,6 +118,19 @@ class LeaveApplicationController extends Controller
             return redirect()->back()->withInput()->with('error', $message);
         }
         
+         // Memeriksa saldo cuti pengguna
+        $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
+
+        if (!$leaveBalance) {
+            $message = 'Saldo cuti pengguna tidak ditemukan.';
+            return redirect()->back()->withInput()->with('error', $message);
+        }
+
+        if ($leaveBalance->saldo_cuti <= 0) {
+            $message = 'Sisa Cuti Sudah Habis.';
+            return redirect()->back()->withInput()->with('error', $message);
+        }
+
         // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
         $manager_id = $request->input('manager_id');
         if ($manager_id === null) {

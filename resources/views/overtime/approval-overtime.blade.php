@@ -65,15 +65,34 @@
                                                 <td>{{ $overtime->interval }}</td>
                                                 <td class="project-actions text-right">
                                                     @can('approve cuti')
-                                                    <form id="approveForm{{ $overtime->id }}" action="{{ route('overtime.approve', $overtime->id) }}" method="post" style="display: inline;">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
-                                                    </form>
+                                                        <button type="button" class="btn btn-success btn-sm approveBtn" data-overtime-id="{{ $overtime->id }}" data-toggle="modal" data-target="#modal-ap{{ $overtime->id }}"><i class="fas fa-check"></i> Approve</button>
                                                     @endcan
                                                 </td>
                                             </tr>
-                                            
+                                            <div class="modal fade" id="modal-ap{{ $overtime->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Approve Pengajuan Lembur</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form id="approveForm{{ $overtime->id }}" action="{{ route('overtime.approve', $overtime->id) }}" method="post">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-body">
+                                                                <p>Apakah Yakin Pengajuan overtime <b> {{ $overtime->user->karyawan->name }} </b> akan di Approve  ?</p>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-success">Ya, Approve</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -91,8 +110,8 @@
     <script>
         // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
         $(document).on('click', '.approveBtn', function () {
-            var cutiId = $(this).data('cuti-id');
-            $('#approveForm' + cutiId).submit();
+            var overtimeId = $(this).data('cuti-id');
+            $('#approveForm' + overtimeId).submit();
         });
     </script>
 @endsection
