@@ -31,7 +31,7 @@
                            
                             <div class="card-body ">
                             @if(isset($results) && count($results) > 0)
-                                <table class="table table-bordered table-hover" id="allTable">
+                                <table class="table table-bordered table-hover" id="laporan">
                                     <thead>
                                         <tr>
                                             <th>No</th>
