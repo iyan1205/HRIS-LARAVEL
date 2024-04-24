@@ -35,8 +35,8 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Users</th>
-                                            <th>Leave Type ID</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Kategori Cuti</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Status</th>
@@ -69,7 +69,7 @@
                                         <div class="col-2">
                                             <label>Tanggal Awal:</label>
                                                 <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date"/>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" required/>
                                                     <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
@@ -78,7 +78,7 @@
                                         <div class="col-2">
                                             <label for="end_date" class="form-label">Tanggal Akhir:</label>
                                             <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date"/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" required/>
                                                 <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>

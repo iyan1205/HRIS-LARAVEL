@@ -648,21 +648,38 @@
     @endif
     <script>
         $(function () {
-          $("#laporan").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["excel"]
-          }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
-          $('#laporan2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-          });
+            var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+    
+            $("#laporan").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Cuti_' + today; // Menetapkan nama file sebagai "Laporan_Cuti_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
+    
+            $("#laporan_lembur").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Lembur_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
         });
-      </script>
+    </script>
+    
 
 </body>
 
