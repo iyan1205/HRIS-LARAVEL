@@ -46,19 +46,7 @@
         .red-star {
             color: red;
         }
-        .photo-container {
-        width: 4in; /* Atau sesuaikan dengan lebar foto yang diinginkan */
-        height: 6in; /* Atau sesuaikan dengan tinggi foto yang diinginkan */
-        border: 1px solid #ccc;
-        overflow: hidden; /* Memastikan gambar tidak keluar dari kontainer */
-        }
-
-        .photo-container img {
-        width: 100%; /* Memastikan gambar mencakup seluruh lebar kontainer */
-        height: auto; /* Mengikuti proporsi asli gambar */
-        display: block; /* Membuat gambar menjadi elemen blok agar bisa menggunakan width: 100% */
-        }
-
+        
     </style>
 </head>
 @php
