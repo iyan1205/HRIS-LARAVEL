@@ -247,21 +247,29 @@ class LeaveApplicationController extends Controller
     }
 
     public function search(Request $request)
-    {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+{
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    $status = $request->input('status');
 
-        $results = LeaveApplication::select(
-                'leave_applications.*',
-                'leave_types.name as leave_type',
-                'users.name as user_name'
-            )
-            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
-            ->join('users', 'leave_applications.user_id', '=', 'users.id')
-            ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
-            ->orWhereBetween('leave_applications.end_date', [$startDate, $endDate])
-            ->get();
+    $query = LeaveApplication::select(
+            'leave_applications.*',
+            'leave_types.name as leave_type',
+            'users.name as user_name'
+        )
+        ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+        ->join('users', 'leave_applications.user_id', '=', 'users.id')
+        ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
+        ->whereBetween('leave_applications.end_date', [$startDate, $endDate]);
 
-        return view('cuti.search_results', compact('results'));
+    if ($status) {
+        $query->where('leave_applications.status', $status);
     }
+
+    $results = $query->get();
+
+    return view('cuti.search_results', compact('results'));
+}
+
+
 }
