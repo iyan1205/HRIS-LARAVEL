@@ -43,7 +43,6 @@
                                             <th>Approved</th>
                                             <th>Total Days</th>
                                             <th>Alasan Reject</th>
-                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -58,7 +57,6 @@
                                             <td>{{ $result->updated_by }}</td>
                                             <td>{{ $result->total_days }}</td>
                                             <td>{{ $result->alasan_reject }}</td>
-                                            
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -82,9 +80,20 @@
                                                 <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
-                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <label for="status" class="form-label">Status:</label>
+                                        <select class="form-control select2bs4" id="status" name="status"
+                                            style="width: 100%;">
+                                            <option value="">All</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="pending">Pending</option>
+                                        </select>
                                         </div>
                                     </div>
+                                    
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </form>
                             @endif
