@@ -23,7 +23,7 @@ class LeaveApplicationController extends Controller
         $this->middleware('permission:delete cuti', ['only' => ['destroy']]);
         $this->middleware('permission:approve cuti', ['only' => ['approve', 'cancel', 'reject']]);
     }
-    
+ 
     public function index()
     {
        // Ambil pengguna yang sedang login
@@ -230,5 +230,24 @@ class LeaveApplicationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $results = LeaveApplication::select(
+                'leave_applications.*',
+                'leave_types.name as leave_type',
+                'users.name as user_name'
+            )
+            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+            ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
+            ->orWhereBetween('leave_applications.end_date', [$startDate, $endDate])
+            ->get();
+
+        return view('cuti.search_results', compact('results'));
     }
 }

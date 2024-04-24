@@ -176,5 +176,16 @@
         </li>
         @endcan
 
+        @can('approve cuti')
+        <li class="nav-item {{ request()->is('laporan-cuti/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('laporan-cuti') }}" class="nav-link {{ request()->is('laporan-cuti') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>
+                    Laporan Cuti
+                </p>
+            </a>
+        </li>
+        @endcan
+
     </ul>
 </nav>

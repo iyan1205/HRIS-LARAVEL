@@ -28,6 +28,7 @@
                             <div class="card-header">
                                 <a href="{{ route('cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
                                 <a href="{{ route('riwayat-cuti') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Cuti</a>
+                                
                             </div>
                             {{-- <div class="form-group">
                                 <label>Date range:</label>
