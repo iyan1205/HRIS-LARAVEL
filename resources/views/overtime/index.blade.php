@@ -28,20 +28,6 @@
                             <div class="card-header">
                                 <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
                             </div>
-                            {{-- <div class="form-group">
-                                <label>Date range:</label>
-              
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="far fa-calendar-alt"></i>
-                                    </span>
-                                  </div>
-                                  <input type="text" class="form-control float-right" id="reservation">
-                                </div>
-                                <!-- /.input group -->
-                              </div> --}}
-                            <!-- /.card-header -->
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">
                                     <thead>

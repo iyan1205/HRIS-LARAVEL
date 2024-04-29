@@ -113,6 +113,8 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
         Route::delete('/jabatan/update/{id}', [JabatanController::class, 'destroy'])->name('jabatan.delete');
     });
+
+
 // Pelatihan
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan');
     Route::get('/pelatihan/create', [PelatihanController::class, 'create'])->name('pelatihan.create');
@@ -122,40 +124,45 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
 
-// Pengajuan Cuti Route
-    Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
-    Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
-    Route::get('/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
-    Route::get('/laporan-cuti', [LeaveApplicationController::class, 'search'])->name('laporan-cuti');
+    Route::prefix('Cuti')->group(function () {
+        // Pengajuan Cuti Route
+        Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
+        Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
+        Route::get('/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
+        Route::get('/laporan-cuti', [LeaveApplicationController::class, 'search'])->name('laporan-cuti');
+        
+        Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
+        Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
+        
+        Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
+        Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
+        // Saldo
+        Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
+        Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
+        Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
+        //Proses Saldo
+        Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
+        Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
+        Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+    });
 
-    Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
-    Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
-
-    Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
-    Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
-
-// Saldo
-    Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
-    Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
-    Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
-//Proses Saldo
-    Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
-    Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
-    Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+    Route::prefix('Lembur')->group( function() {
+        // Overtime
+        Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
+        Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
+        Route::get('/laporan-overtime', [OvertimeController::class, 'search'])->name('laporan-lembur');
+        
+        Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
+        Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
+        
+        Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+    
+        //Proses Overtime
+        Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
+        Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
+        Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
+    });
  
-// Overtime
-    Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
-    Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
-    
-    Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
-    Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
-    
-    Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
-
-//Proses Overtime
-    Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
-    Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
-    Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
 
 });
 

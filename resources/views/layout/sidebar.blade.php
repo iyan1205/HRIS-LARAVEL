@@ -70,38 +70,35 @@
         </li>
             @endcan        
         @can('sidebar masteruser')
-            <li class="nav-item {{ request()->is('master-users/*') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ request()->is('master-users/*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-users-cog"></i>
-                    <p>Master Users
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('user') }}"
-                            class="nav-link {{ request()->is('master-users/user') ? 'active' : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>User</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('permissions.index') }}"
-                            class="nav-link {{ request()->is('master-users/permissions') ? 'active' : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Permissions</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('roles.index') }}"
-                            class="nav-link {{ request()->is('master-users/roles') ? 'active' : '' }}">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Roles</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            @endcan
+        <li class="nav-item {{ request()->is('master-users/*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('master-users/*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-users-cog"></i>
+                <p>Master Users
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('user') }}" class="nav-link {{ request()->is('master-users/user*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>User</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('permissions.index') }}" class="nav-link {{ request()->is('master-users/permissions*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Permissions</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('roles.index') }}" class="nav-link {{ request()->is('master-users/roles*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Roles</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        @endcan
 
         @can('pelatihan')
         <li class="nav-item {{ request()->is('pelatihan/*') ? 'menu-open' : '' }}">
@@ -114,78 +111,92 @@
         </li>
         @endcan
 
-        <li class="nav-header">Kehadiran</li>
-        {{-- <li class="nav-item {{ request()->is('absen') ? 'menu-open' : '' }}">
-            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('absen') ? 'active' : '' }}">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                    Absen
-                    <span class="badge badge-info right">2</span>
-                </p>
-            </a>
-        </li> --}}
-        @can('sidebar pengajuancuti')
-        <li class="nav-item {{ request()->is('pengajuan-cuti/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('pengajuan-cuti') }}" class="nav-link {{ request()->is('pengajuan-cuti') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('Cuti/*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('Cuti/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-paper-plane"></i>
-                <p>
-                    Pengajuan Cuti
+                <p>Cuti
+                    <i class="fas fa-angle-left right"></i>
                 </p>
             </a>
-        </li>
-        @endcan
-        @can('approve cuti')
-        <li class="nav-item {{ request()->is('approval-cuti/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('approval-cuti') }}" class="nav-link {{ request()->is('approval-cuti') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-file"></i>
-                <p>
-                    Approval Cuti
-                </p>
-            </a>
-        </li>
-        @endcan
-        
-        @can('sidebar saldocuti')
-        <li class="nav-item {{ request()->is('saldo-cuti/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('saldo-cuti') }}" class="nav-link {{ request()->is('saldo-cuti') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-calculator"></i>
-                <p>
-                    Saldo Cuti
-                </p>
-            </a>
-        </li>
-        @endcan
+            <ul class="nav nav-treeview">
+                @can('sidebar pengajuancuti')
+                <li class="nav-item">
+                    <a href="{{ route('pengajuan-cuti') }}"
+                        class="nav-link {{ request()->is('Cuti/pengajuan-cuti') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan Cuti</p>
+                    </a>
+                </li>
+                @endcan
+                @can('approve cuti')
+                <li class="nav-item">
+                    <a href="{{ route('approval-cuti') }}"
+                        class="nav-link {{ request()->is('Cuti/approval-cuti') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Approval Cuti</p>
+                    </a>
+                </li>
+                @endcan
 
-        <li class="nav-item {{ request()->is('overtime/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('overtime') }}" class="nav-link {{ request()->is('overtime') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-paper-plane"></i>
-                <p>
-                    Form Lembur
-                </p>
-            </a>
+                @can('sidebar laporan cuti')
+                <li class="nav-item">
+                    <a href="{{ route('laporan-cuti') }}"
+                        class="nav-link {{ request()->is('Cuti/laporan-cuti') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Laporan Cuti</p>
+                    </a>
+                </li>
+                @endcan
+
+                @can('sidebar saldocuti')
+                <li class="nav-item">
+                    <a href="{{ route('saldo-cuti') }}"
+                        class="nav-link {{ request()->is('Cuti/saldo-cuti') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Saldo Cuti</p>
+                    </a>
+                </li>
+                @endcan
+            </ul>
         </li>
 
-        @can('approve cuti')
-        <li class="nav-item {{ request()->is('approval-overtime/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('approval-overtime') }}" class="nav-link {{ request()->is('approval-overtime') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-file"></i>
-                <p>
-                    Approval Lembur
+        <li class="nav-item {{ request()->is('Lembur/*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('Lembur/*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-calendar-plus"></i>
+                <p>Lembur
+                    <i class="fas fa-angle-left right"></i>
                 </p>
             </a>
-        </li>
-        @endcan
+            <ul class="nav nav-treeview">
+                @can('view overtime')
+                <li class="nav-item">
+                    <a href="{{ route('overtime') }}"
+                        class="nav-link {{ request()->is('Lembur/overtime') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan Lembur</p>
+                    </a>
+                </li>
+                @endcan
+                @can('approve overtime')
+                <li class="nav-item">
+                    <a href="{{ route('approval-overtime') }}"
+                        class="nav-link {{ request()->is('Lembur/approval-overtime') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Approval Lembur</p>
+                    </a>
+                </li>
+                @endcan
 
-        @can('approve cuti')
-        <li class="nav-item {{ request()->is('laporan-cuti/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('laporan-cuti') }}" class="nav-link {{ request()->is('laporan-cuti') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-file"></i>
-                <p>
-                    Laporan Cuti
-                </p>
-            </a>
+                @can('sidebar laporan lembur')
+                <li class="nav-item">
+                    <a href="{{ route('laporan-lembur') }}"
+                        class="nav-link {{ request()->is('Lembur/laporan-overtime') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Laporan Lembur</p>
+                    </a>
+                </li>
+                @endcan
+            </ul>
         </li>
-        @endcan
-
     </ul>
 </nav>
