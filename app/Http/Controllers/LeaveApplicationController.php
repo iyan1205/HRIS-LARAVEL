@@ -62,16 +62,18 @@ class LeaveApplicationController extends Controller
 
     public function riwayat()
     {
-       // Ambil pengguna yang sedang login
+        // Ambil pengguna yang sedang login
         $user = Auth::user();
-
+    
         // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
         $leaveApplications = LeaveApplication::where('user_id', $user->id)
-            ->where('status', 'rejected')
+            ->whereIn('status', ['rejected', 'approved'])
+            ->orderBy('created_at', 'desc')
             ->get();
-
+    
         return view('cuti.riwayat', compact('leaveApplications'));
     }
+    
 
     public function create()
     {

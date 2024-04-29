@@ -66,8 +66,14 @@
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
                                                 <td>{{ $cuti->total_days }} Hari</td>
-                                                <td><span class="badge bg-danger"><a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a></span></td>
-
+                                                <td>
+                                                @if($cuti->status == 'rejected')
+                                                    <span class="badge bg-danger">
+                                                @elseif($cuti->status == 'approved')
+                                                    <span class="badge bg-success">
+                                                @endif
+                                                <a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a>
+                                                </span></td>
                                             </tr>
                                             <div class="modal fade" id="modal-lg{{ $cuti->id }}">
                                                 <div class="modal-dialog modal-lg">
