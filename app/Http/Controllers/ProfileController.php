@@ -78,7 +78,7 @@ class ProfileController extends Controller
         $message = 'User berhasil diedit';
         Session::flash('successAdd', $message);
         // Redirect back to profile edit page with a status message
-        return redirect()->route('profile.edit');
+        return back();
     }
 
 
