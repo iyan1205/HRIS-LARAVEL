@@ -67,13 +67,15 @@
                                                 </td>
                                                 <td>{{ $cuti->total_days }} Hari</td>
                                                 <td>
-                                                @if($cuti->status == 'rejected')
-                                                    <span class="badge bg-danger">
-                                                @elseif($cuti->status == 'approved')
-                                                    <span class="badge bg-success">
-                                                @endif
-                                                <a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a>
-                                                </span></td>
+                                                    @if($cuti->status == 'rejected')
+                                                        <span class="badge bg-danger">
+                                                            <a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a>
+                                                        </span>
+                                                    @elseif($cuti->status == 'approved')
+                                                        <span class="badge bg-success">{{ $cuti->status }}</span>
+                                                    @endif
+                                                </td>
+                                                
                                             </tr>
                                             <div class="modal fade" id="modal-lg{{ $cuti->id }}">
                                                 <div class="modal-dialog modal-lg">

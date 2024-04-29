@@ -132,7 +132,7 @@
                     <div class="image">
                         @if(Auth::user()->image)
                         <img src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
-                            class="img-circle elevation-2" alt="User Image">
+                            class="img" alt="User Image">
                         @else
                         <p>No image available</p>
                         @endif
