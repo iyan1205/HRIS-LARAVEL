@@ -88,6 +88,7 @@
                         <li class="nav-item"><a class="nav-link" href="#pendidikan" data-toggle="tab">Data Pendidikan</a></li>
                         <li class="nav-item"><a class="nav-link" href="#paramedis" data-toggle="tab">Data Paramedis</a></li>
                         <li class="nav-item"><a class="nav-link" href="#pelatihan" data-toggle="tab">Data Pelatihan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#gantipassword" data-toggle="tab">Ganti Password</a></li>
                       </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -196,7 +197,7 @@
                             
                               <div class="form-group row">
                                 <div class="offset-sm-2 col-sm-10">
-                                  <button type="submit" class="btn btn-success">Update</button>
+                                  <button type="submit" class="btn btn-success">Simpan</button>
                                 
                                 </div>
                               </div>
@@ -346,11 +347,14 @@
                                   @php $count++; @endphp
                               @endforeach
                             </div>
-                        </div>
+                          </div>
                         
                         </div>
                         <!-- /.tab-pane -->
-                        
+                        <div class="tab-pane" id="gantipassword">
+                          <!-- The password -->
+                          @include('profile.partials.update-password-form')
+                        </div>
                         <!-- /.tab-pane -->
                       </div>
                       <!-- /.tab-content -->
@@ -371,5 +375,22 @@
           nextSibling.innerText = fileName;
       });
   </script>
+  <script>
+    // Cek jika status 'password-updated' diterima dari redirect
+    @if(session('status') === 'password-updated')
+        // Hilangkan kelas "active" dari tab saat ini
+        document.querySelector('.nav-item .nav-link.active').classList.remove('active');
+
+        // Tambahkan kelas "active" ke tab "gantipassword"
+        document.querySelector('.nav-item a[href="#gantipassword"]').classList.add('active');
+
+        // Cari tab konten saat ini dan sembunyikan
+        document.querySelector('.tab-pane.active').classList.remove('active', 'show');
+
+        // Tampilkan tab konten "gantipassword"
+        document.getElementById('gantipassword').classList.add('active', 'show');
+    @endif
+</script>
+
   
 @endsection
