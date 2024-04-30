@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', [LoginController::class, 'index'])->name('auth.login');
+Route::get('/', [LoginController::class, 'index'])->middleware('forceLogout')->name('auth.login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
