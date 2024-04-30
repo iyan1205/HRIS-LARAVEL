@@ -39,7 +39,7 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Approved</th>
-                                            <th>Total Days</th>
+                                            <th>Total Jam</th>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -41,8 +41,10 @@
                                             <th>End Date</th>
                                             <th>Status</th>
                                             <th>Approved</th>
-                                            <th>Total Days</th>
+                                            <th>Total Hari</th>
+                                            @if($status == '' || $status == 'rejected')
                                             <th>Alasan Reject</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -55,8 +57,10 @@
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->status }}</td>
                                             <td>{{ $result->updated_by }}</td>
-                                            <td>{{ $result->total_days }}</td>
+                                            <td>{{ $result->total_days }} Hari</td>
+                                            @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->alasan_reject }}</td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>

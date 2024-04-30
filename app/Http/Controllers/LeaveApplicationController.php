@@ -269,7 +269,7 @@ class LeaveApplicationController extends Controller
 
         $results = $query->get();
 
-        return view('cuti.search_results', compact('results'));
+        return view('cuti.search_results', compact('results','status'));
     }
 
 
