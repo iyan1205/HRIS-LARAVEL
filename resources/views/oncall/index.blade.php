@@ -36,7 +36,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Selang Waktu</th>
+                                            <th>Interval</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
