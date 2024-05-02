@@ -26,8 +26,7 @@
             @csrf
             <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                
-                <a href="#" class="h1"><b>HRIS</b> RSHAMORI</a>
+                <a href="#" class="h1"><img src="lte/dist/img/logo.png" alt="Logo HRIS"> <b>HRIS</b></a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">
