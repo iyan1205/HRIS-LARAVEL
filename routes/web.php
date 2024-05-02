@@ -95,6 +95,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/departemen/update/{id}', [DepartemenController::class, 'update'])->name('departemen.update');
         Route::delete('/departemen/delete/{id}', [DepartemenController::class, 'destroy'])->name('departemen.delete');
 
+        Route::get('/departemen/datasoft', [DepartemenController::class, 'datasoft'])->name('departemen.datasoft');
+        Route::get('/departemen/restore/{id}', [DepartemenController::class, 'restore'])->name('departemen.restore');
+
     // Unit
         Route::get('/unit', [UnitController::class, 'index'])->name('unit');
         Route::get('/unit/create', [UnitController::class, 'create'])->name('unit.create');

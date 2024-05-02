@@ -26,12 +26,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <a href="{{ route('departemen.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
-                            @can('restore departemen')
-                            <a href="{{ route('departemen.datasoft') }}" class="btn btn-secondary mb-3">Deleted</a>
-                            @endcan
-                        </div>
+                        
                         <!-- /.card-header -->
                         <div class="card-body ">
                             <table class="table table-bordered table-hover" id="allTable">
@@ -48,10 +43,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $departemen->name }}</td>
                                         <td class="project-actions text-right">
-                                            <a href="{{ route('departemen.edit', ['id' => $departemen->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $departemen->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                Hapus</a>
+                                            <a href="{{ route('departemen.restore', ['id' => $departemen->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-trash-restore"></i> Restore</a>
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="modal-hapus{{ $departemen->id }}">
