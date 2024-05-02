@@ -621,7 +621,7 @@
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Sukses!',
+                title: 'Login Berhasil',
                 text: '{{ session('success') }}',
             });
         </script>
