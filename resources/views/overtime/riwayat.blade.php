@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Lembur</h1>
+                        <h1 class="m-0">Riwayat Lembur</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -26,9 +26,10 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
-                                <a href="{{ route('overtime.riwayat') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Lembur</a>
+                                
                             </div>
+                            
+                            <!-- /.card-header -->
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">
                                     <thead>
@@ -37,7 +38,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Selang Waktu</th>
+                                            <th>Interval</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -50,12 +51,40 @@
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
                                                 </td>
-                                                <td>{{ $overtime->interval }}</td>
-                                                <td><span class="badge bg-secondary">{{ $overtime->status }}</span></td>
-                                                 
-
+                                                <td>{{ $overtime->interval }} Hari</td>
+                                                <td>
+                                                    @if($overtime->status == 'rejected')
+                                                        <span class="badge bg-danger">
+                                                            <a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $overtime->id }}">{{ $overtime->status }}</a>
+                                                        </span>
+                                                    @elseif($overtime->status == 'approved')
+                                                        <span class="badge bg-success">{{ $overtime->status }}</span>
+                                                    @endif
+                                                </td>
+                                                
                                             </tr>
-                                            
+                                            <div class="modal fade" id="modal-lg{{ $overtime->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Alasan Reject</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <textarea class="form-control" id="alasan_reject{{ $overtime->id }}" name="alasan_reject" rows="3" disabled> {{ $overtime->alasan_reject }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -219,7 +219,7 @@ class LeaveApplicationController extends Controller
         $leaveApplication->reject($updatedBy);
         $leaveApplication->save();
 
-        $message = 'Pengajuan cuti rejected.';
+        $message = 'Pengajuan cuti Tidak Disetujui.';
         Session::flash('reject', $message);
         return redirect()->route('approval-cuti');
 

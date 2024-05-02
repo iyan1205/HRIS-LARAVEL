@@ -58,6 +58,20 @@ class OvertimeController extends Controller
             abort(401);
     }
 
+    public function riwayat()
+    {
+        // Ambil pengguna yang sedang login
+        $user = Auth::user();
+    
+        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        $overtimes = Overtime::where('user_id', $user->id)
+            ->whereIn('status', ['rejected', 'approved'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return view('overtime.riwayat', compact('overtimes'));
+    }
+
     public function create()
     {
         $users = User::pluck('name', 'id');
@@ -146,9 +160,27 @@ class OvertimeController extends Controller
         return redirect()->route('approval-overtime');
 
     }
-    /**
-     * Display the specified resource.
-     */
+    
+    public function reject(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+
+        $overimes = Overtime::findOrFail($id);
+        // Set nilai alasan reject
+        $alasan_reject = $request->input('alasan_reject');
+
+        // Simpan alasan reject
+        $overimes->alasan_reject = $alasan_reject;
+
+        $overimes->reject($updatedBy);
+        $overimes->save();
+
+        $message = 'Pengajuan Lembur Tidak Di Setujui.';
+        Session::flash('reject', $message);
+        return redirect()->route('approval-overtime');
+
+    }
+
     public function show(string $id)
     {
         //

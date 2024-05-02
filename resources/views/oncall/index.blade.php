@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Lembur</h1>
+                        <h1 class="m-0">On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Lembur</li>
+                            <li class="breadcrumb-item active">On Call</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -27,7 +27,6 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
-                                <a href="{{ route('overtime.riwayat') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Lembur</a>
                             </div>
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">

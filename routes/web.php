@@ -7,6 +7,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OnCallController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\PermissionController;
@@ -153,12 +154,14 @@ Route::group(['middleware' => ['isAdmin']], function() {
         // Overtime
         Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
         Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
+        Route::get('/riwayat-overtime', [OvertimeController::class, 'riwayat'])->name('overtime.riwayat');
         Route::get('/laporan-overtime', [OvertimeController::class, 'search'])->name('laporan-lembur');
         
         Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
         Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
         
         Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+        Route::put('/overtime/{id}/reject', [OvertimeController::class, 'reject'])->name('overtime.reject');
     
         //Proses Overtime
         Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
@@ -166,7 +169,23 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
     });
  
+    Route::prefix('Oncall')->group( function (){
+        //Oncall
+        Route::get('/oncall',[OnCallController::class, 'index'])->name('oncall');
+        Route::get('/approval-oncall', [OnCallController::class, 'approval'])->name('approval-oncall');
+        Route::get('/laporan-oncall', [OnCallController::class, 'search'])->name('laporan-oncall');
 
+        Route::get('/oncall/create', [OnCallController::class, 'create'])->name('oncall.create');
+        Route::post('/oncall/store', [OnCallController::class, 'store'])->name('oncall.store');
+        
+        Route::put('/oncall/{id}/approve', [OnCallController::class, 'approve'])->name('oncall.approve');
+    
+        //Proses Overtime
+        Route::get('/oncall/edit/{id}', [OnCallController::class, 'edit'])->name('oncall.edit');
+        Route::put('/oncall/update/{id}', [OnCallController::class, 'update'])->name('oncall.update');
+        Route::delete('/oncall/delete/{id}', [OnCallController::class, 'destroy'])->name('oncall.delete');
+
+    });
 });
 
 Route::middleware('auth')->group(function () {

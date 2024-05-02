@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Overtime extends Model
+class OnCall extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -14,13 +14,12 @@ class Overtime extends Model
         'end_date',
         'interval',
         'status',
-        'alasan_reject ',
         'keterangan',
         'approver_id',
         'updated_by',
 
     ];
-
+    
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -34,13 +33,6 @@ class Overtime extends Model
     public function approve($updatedBy)
     {
         $this->status = 'approved';
-        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
-        $this->save();
-    }
-
-    public function reject($updatedBy)
-    {
-        $this->status = 'rejected';
         $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
         $this->save();
     }

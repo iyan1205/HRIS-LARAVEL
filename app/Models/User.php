@@ -68,4 +68,7 @@ class User extends Authenticatable
         return $this->hasMany(Overtime::class);
     }
     
+    public function oncall(){
+        return $this->hasMany(OnCall::class);
+    }
 }
