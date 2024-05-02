@@ -36,4 +36,12 @@ class OnCall extends Model
         $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
         $this->save();
     }
+
+    public function reject($updatedBy)
+    {
+        $this->status = 'rejected';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
+    }
+    
 }
