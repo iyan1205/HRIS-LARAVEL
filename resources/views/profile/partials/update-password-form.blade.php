@@ -14,7 +14,7 @@
             <label for="update_password_current_password" class="col-sm-2 col-form-label">Current Password</label>
             <div class="col-sm-5">
                 <input type="password" class="form-control" id="update_password_current_password" name="current_password" autocomplete="current-password">
-                <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+                <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" style="color: red;" />
             </div>
         </div>
 
@@ -22,7 +22,7 @@
             <label for="update_password_password" class="col-sm-2 col-form-label">New Password</label>
             <div class="col-sm-5">
                 <input type="password" class="form-control" id="update_password_password" name="password" autocomplete="new-password">
-                <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+                <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" style="color: red;" />
             </div>
         </div>
 
@@ -30,7 +30,7 @@
             <label for="update_password_password_confirmation" class="col-sm-2 col-form-label">New Password</label>
             <div class="col-sm-5">
                 <input type="password" class="form-control" id="update_password_password_confirmation" name="password_confirmation" autocomplete="new-password">
-                <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+                <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" style="color: red;" />
             </div>
         </div>
 

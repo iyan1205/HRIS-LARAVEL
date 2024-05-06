@@ -390,6 +390,23 @@
         document.getElementById('gantipassword').classList.add('active', 'show');
     @endif
 </script>
+<script>
+  // Cek jika terdapat pesan kesalahan pada bidang 'current_password'
+  @if ($errors->updatePassword->has('current_password'))
+      // Hapus kelas "active" dari tab saat ini
+      document.querySelector('.nav-item .nav-link.active').classList.remove('active');
+      
+      // Tambahkan kelas "active" ke tab "gantipassword"
+      document.querySelector('.nav-item a[href="#gantipassword"]').classList.add('active');
+
+      // Cari tab konten saat ini dan sembunyikan
+      document.querySelector('.tab-pane.active').classList.remove('active', 'show');
+
+      // Tampilkan tab konten "gantipassword"
+      document.getElementById('gantipassword').classList.add('active', 'show');
+  @endif
+</script>
+
 
   
 @endsection
