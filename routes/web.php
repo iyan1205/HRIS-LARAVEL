@@ -132,8 +132,10 @@ Route::group(['middleware' => ['isAdmin']], function() {
         // Pengajuan Cuti Route
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
         Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
-        Route::get('/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
-        Route::get('/laporan-cuti', [LeaveApplicationController::class, 'search'])->name('laporan-cuti');
+        Route::get('/pengajuan-cuti/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
+
+        Route::get('/laporan-cuti', [LeaveApplicationController::class, 'laporan'])->name('laporan-cuti');
+        Route::get('/laporan-cuti/search', [LeaveApplicationController::class, 'search'])->name('laporan-search');
         
         Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
         Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');

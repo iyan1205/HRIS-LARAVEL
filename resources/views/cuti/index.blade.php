@@ -68,10 +68,40 @@
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
                                                 </td>
                                                 <td>{{ $cuti->total_days }} Hari</td>
-                                                <td><span class="badge bg-secondary">{{ $cuti->status }}</span></td>
-
+                                                <td>
+                                                    <span class="badge bg-secondary">
+                                                        <a href="" title="Alasan Reject" data-toggle="modal" data-target="#modal-lg{{ $cuti->id }}">{{ $cuti->status }}</a>
+                                                    </span>
+                                                </td>
                                             </tr>
-                                            
+
+                                            <div class="modal fade" id="modal-lg{{ $cuti->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Riwayat Approve</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="">Approver</label>
+                                                                    <input type="text" class="form-control" value="{{ $cuti->updated_by }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Approved at</label>
+                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($cuti->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                         @endforeach
                                     </tbody>
                                 </table>

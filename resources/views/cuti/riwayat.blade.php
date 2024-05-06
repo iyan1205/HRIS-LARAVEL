@@ -69,15 +69,25 @@
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Alasan Reject</h4>
+                                                            <h4 class="modal-title">Detail Status</h4>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                             <div class="modal-body">
                                                                 <div class="form-group">
+                                                                    <label for="">Updated by</label>
+                                                                    <input type="text" class="form-control" value="{{ $cuti->updated_by }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Updated at</label>
+                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($cuti->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="alasan_reject">Alasan Reject</label>
                                                                     <textarea class="form-control" id="alasan_reject{{ $cuti->id }}" name="alasan_reject" rows="3" disabled> {{ $cuti->alasan_reject }}</textarea>
                                                                 </div>
+
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -101,31 +111,5 @@
         </section>
         <!-- /.content -->
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mendaftarkan event click pada semua tombol rejectBtn
-            const rejectButtons = document.querySelectorAll('.rejectBtn');
-            rejectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const cutiId = this.getAttribute('data-cuti-id');
     
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Tolak',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
-                            document.getElementById('rejectForm' + cutiId).submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 @endsection

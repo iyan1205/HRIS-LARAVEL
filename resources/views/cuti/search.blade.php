@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Laporan Lembur</h1>
+                        <h1 class="m-0">Laporan Cuti</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('laporan-lembur') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Lembur</li>
+                            <li class="breadcrumb-item"><a href="{{ route('laporan-cuti') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Cuti</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -30,33 +30,7 @@
                             </div>
                            
                             <div class="card-body ">
-                            @if(isset($results) && count($results) > 0)
-                                <table class="table table-bordered table-hover" id="laporan_lembur">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Lengkap</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Approved</th>
-                                            <th>Interval</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($results as $result)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $result->user_name }}</td>
-                                            <td>{{ $result->start_date }}</td>
-                                            <td>{{ $result->end_date }}</td>
-                                            <td>{{ $result->updated_by }}</td>
-                                            <td>{{ $result->interval }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <form action="{{ route('laporan-lembur') }}" method="GET">
+                                <form action="{{ route('laporan-search') }}" method="GET">
                                     <div class="form-group row">
                                         <div class="col-2">
                                             <label>Tanggal Awal:</label>
@@ -76,12 +50,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+                                        <div class="col-2">
+                                            <label for="status" class="form-label">Status:</label>
+                                        <select class="form-control select2bs4" id="status" name="status"
+                                            style="width: 100%;">
+                                            <option value="">All</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="pending">Pending</option>
+                                        </select>
+                                        </div>
                                     </div>
                                     
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </form>
-                            @endif
                             </div>
                             <!-- /.card-body -->
                         </div>

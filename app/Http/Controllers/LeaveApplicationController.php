@@ -38,31 +38,18 @@ class LeaveApplicationController extends Controller
     }
 
     public function approval(){
-        if(Auth::check()){
-            /** @var App\Models\User */
-            $users = Auth::user();
 
-            if ($users->hasRole(['Super-Admin', 'admin'])) {
-                $leaveApplications = LeaveApplication::where('status', 'pending')->get();
-            } else if ($users->hasRole('Approver')) {
-                // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
-               
-            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
-        
-            } else {
-                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $leaveApplications = $users->leave_applications()->where('status', 'pending')->get();
-            }
+        $users = Auth::user();
+
+        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+        $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
     
-            return view('cuti.approval-cuti', compact('leaveApplications'));   
-            }
-            abort(401);
+        return view('cuti.approval-cuti', compact('leaveApplications'));   
+        
     }
 
     public function riwayat()
     {
-        // Ambil pengguna yang sedang login
         $user = Auth::user();
     
         // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
@@ -102,7 +89,8 @@ class LeaveApplicationController extends Controller
             'leave_type_id' => 'required|string|max:255',
             'start_date' => 'required',
             'end_date' => 'required',
-            'manager_id' => 'nullable'
+            'manager_id' => 'nullable',
+            'level_approve' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -155,6 +143,8 @@ class LeaveApplicationController extends Controller
             'end_date' => $end_date,
             'total_days' => $total_days,
             'manager_id' => $manager_id,
+            'level_approve' => $request->input('level_approve'),
+            
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
@@ -170,27 +160,38 @@ class LeaveApplicationController extends Controller
         $user = Auth::user();
         $updatedBy = $user->name;
         $leaveApplication = LeaveApplication::findOrFail($id);
-
-        // Kurangi saldo cuti
-        $total_days = $leaveApplication->total_days;
-
-        // Temukan saldo cuti yang sesuai
-        $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->firstOrFail();
-
-        // Kurangi saldo cuti
-        $leaveBalance->saldo_cuti -= $total_days;
-
-        // Simpan perubahan pada saldo cuti
-        $leaveBalance->save();
-
+    
+        // Jika level_approve adalah 1, maka kurangi saldo dan ubah status menjadi approved
+        if ($leaveApplication->level_approve === 1) {
+            // Kurangi saldo cuti
+            $total_days = $leaveApplication->total_days;
+            $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->firstOrFail();
+            $leaveBalance->saldo_cuti -= $total_days;
+            $leaveBalance->save();
+    
+            // Set status menjadi approved
+            $leaveApplication->status = 'approved';
+        }
+    
+        // Jika level_approve adalah 2, maka ubah status menjadi stage 1 dan tidak mengurangi saldo
+        elseif ($leaveApplication->level_approve === 2) {
+            // Update level approve
+            $leaveApplication->level_approve = '1';
+            // Update manager_id
+            $leaveApplication->manager_id = $user->karyawan->jabatan->manager_id;
+        }
+    
+        // Menyetujui aplikasi cuti
         $leaveApplication->approve($updatedBy);
+    
+        // Simpan perubahan pada aplikasi cuti
         $leaveApplication->save();
-
+    
         $message = 'Pengajuan cuti Approved.';
         Session::flash('successAdd', $message);
         return redirect()->route('approval-cuti');
-
     }
+    
 
     public function cancel(Request $request, $id) {
         $user = Auth::user();
@@ -220,7 +221,7 @@ class LeaveApplicationController extends Controller
         $leaveApplication->save();
 
         $message = 'Pengajuan cuti Tidak Disetujui.';
-        Session::flash('reject', $message);
+        Session::flash('successAdd', $message);
         return redirect()->route('approval-cuti');
 
     }
@@ -248,11 +249,15 @@ class LeaveApplicationController extends Controller
         //
     }
 
+    function laporan() {
+        return view('cuti.search');
+    }
+
     public function search(Request $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
-
+    
         $query = LeaveApplication::select(
                 'leave_applications.*',
                 'leave_types.name as leave_type',
@@ -262,15 +267,16 @@ class LeaveApplicationController extends Controller
             ->join('users', 'leave_applications.user_id', '=', 'users.id')
             ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
             ->whereBetween('leave_applications.end_date', [$startDate, $endDate]);
-
+    
         if ($status) {
             $query->where('leave_applications.status', $status);
         }
-
+    
         $results = $query->get();
-
-        return view('cuti.search_results', compact('results','status'));
+        
+        return view('cuti.search_results', compact('results', 'status'));
     }
+    
 
 
 }

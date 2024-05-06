@@ -28,6 +28,6 @@ class PasswordController extends Controller
         $message = 'Password Berhasil Di Ubah';
         Session::flash('successAdd', $message);
         
-        return back();
+        return back()->with('status', 'password-updated');
     }
 }

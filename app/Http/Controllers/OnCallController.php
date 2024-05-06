@@ -167,7 +167,7 @@ class OnCallController extends Controller
         $overimes->save();
 
         $message = 'Pengajuan Lembur Tidak Di Setujui.';
-        Session::flash('reject', $message);
+        Session::flash('successAdd', $message);
         return redirect()->route('approval-oncall');
 
     }

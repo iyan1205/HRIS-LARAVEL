@@ -40,7 +40,9 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Status</th>
+                                            @if($status == '' || $status == 'rejected')
                                             <th>Approved</th>
+                                            @endif
                                             <th>Total Hari</th>
                                             @if($status == '' || $status == 'rejected')
                                             <th>Alasan Reject</th>
@@ -56,7 +58,9 @@
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->status }}</td>
+                                            @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->updated_by }}</td>
+                                            @endif
                                             <td>{{ $result->total_days }} Hari</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->alasan_reject }}</td>
@@ -66,40 +70,12 @@
                                     </tbody>
                                 </table>
                             @else
-                                <form action="{{ route('laporan-cuti') }}" method="GET">
-                                    <div class="form-group row">
-                                        <div class="col-2">
-                                            <label>Tanggal Awal:</label>
-                                                <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" required/>
-                                                    <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <label for="end_date" class="form-label">Tanggal Akhir:</label>
-                                            <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" required/>
-                                                <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <label for="status" class="form-label">Status:</label>
-                                        <select class="form-control select2bs4" id="status" name="status"
-                                            style="width: 100%;">
-                                            <option value="">All</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                            <option value="pending">Pending</option>
-                                        </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </form>
+                            <div class="alert alert-info alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h5><i class="icon fas fa-info"></i> Data Tidak Ada!</h5>
+                                Pilih Tanggal yang sesuai
+                            </div>
+                            <a href="{{ route('laporan-cuti') }}" class=" btn btn-secondary">Kembali</a>
                             @endif
                             </div>
                             <!-- /.card-body -->

@@ -637,17 +637,7 @@
             });
         </script>
     @endif
-    @if (session('reject'))
-        <script>
-            Swal.fire({
-                position: "top",
-                icon: "success",
-                title: "{{ session('reject') }}",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        </script>
-    @endif
+    
     <script>
         $(function () {
             var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD

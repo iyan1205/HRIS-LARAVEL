@@ -15,6 +15,7 @@ class LeaveApplication extends Model
         'end_date',
         'status',
         'manager_id',
+        'level_approve',
         'total_days',
         'alasan_reject',
         'updated_by',
@@ -42,7 +43,6 @@ class LeaveApplication extends Model
 
     public function approve($updatedBy)
     {
-        $this->status = 'approved';
         $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
         $this->save();
     }

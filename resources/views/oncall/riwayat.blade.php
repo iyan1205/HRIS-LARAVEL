@@ -39,6 +39,7 @@
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Interval</th>
+                                            <th>Keterangan</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -52,6 +53,7 @@
                                                 <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $oncall->interval }} Hari</td>
+                                                <td>{{ $oncall->keterangan }} Hari</td>
                                                 <td>
                                                     @if($oncall->status == 'rejected')
                                                         <span class="badge bg-danger">

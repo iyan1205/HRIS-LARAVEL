@@ -32,6 +32,7 @@
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
                                         <th>Interval</th>
+                                        <th>Keterangan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -43,6 +44,7 @@
                                         <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}</td>
                                         <td>{{ $overtime->interval }}</td>
+                                        <td>{{ $overtime->keterangan }}</td>
                                         <td class="project-actions text-right">
                                             @can('approve cuti')
                                             <button type="button" class="btn btn-success btn-sm approveBtn" data-overtime-id="{{ $overtime->id }}" data-toggle="modal" data-target="#modal-ap{{ $overtime->id }}"><i class="fas fa-check"></i> Approve</button>
