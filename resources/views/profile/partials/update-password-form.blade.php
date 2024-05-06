@@ -27,7 +27,7 @@
         </div>
 
         <div class="form-group row">
-            <label for="update_password_password_confirmation" class="col-sm-2 col-form-label">New Password</label>
+            <label for="update_password_password_confirmation" class="col-sm-2 col-form-label">Confirm Password</label>
             <div class="col-sm-5">
                 <input type="password" class="form-control" id="update_password_password_confirmation" name="password_confirmation" autocomplete="new-password">
                 <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" style="color: red;" />
