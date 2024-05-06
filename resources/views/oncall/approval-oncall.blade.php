@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Lembur</h1>
+                    <h1 class="m-0">On Call</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Lembur</li>
+                        <li class="breadcrumb-item active">On Call</li>
                     </ol>
                 </div>
             </div>
@@ -37,18 +37,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($overtimes as $overtime)
+                                    @foreach ($oncalls as $oncall)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $overtime->user->karyawan->name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}</td>
-                                        <td>{{ $overtime->interval }}</td>
-                                        <td>{{ $overtime->keterangan }}</td>
+                                        <td>{{ $oncall->user->karyawan->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($oncall->start_date)->format('d/m/Y H:i') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $oncall->interval }}</td>
+                                        <td>{{ $oncall->keterangan }}</td>
                                         <td class="project-actions text-right">
                                             @can('approve cuti')
-                                            <button type="button" class="btn btn-success btn-sm approveBtn" data-overtime-id="{{ $overtime->id }}" data-toggle="modal" data-target="#modal-ap{{ $overtime->id }}"><i class="fas fa-check"></i> Approve</button>
-                                            <button type="button" class="btn btn-danger btn-sm rejectBtn" data-overtime-id="{{ $overtime->id }}" data-toggle="modal" data-target="#modal-lg{{ $overtime->id }}"><i class="fas fa-times"></i> Reject</button>
+                                            <button type="button" class="btn btn-success btn-sm approveBtn" data-oncall-id="{{ $oncall->id }}" data-toggle="modal" data-target="#modal-ap{{ $oncall->id }}"><i class="fas fa-check"></i> Approve</button>
+                                            <button type="button" class="btn btn-danger btn-sm rejectBtn" data-oncall-id="{{ $oncall->id }}" data-toggle="modal" data-target="#modal-lg{{ $oncall->id }}"><i class="fas fa-times"></i> Reject</button>
                                             @endcan
                                         </td>
                                     </tr>
@@ -66,22 +66,22 @@
     </section><!-- /.content -->
 </div>
 
-@foreach ($overtimes as $overtime)
+@foreach ($oncalls as $oncall)
 <!-- Modal Approve -->
-<div class="modal fade" id="modal-ap{{ $overtime->id }}">
+<div class="modal fade" id="modal-ap{{ $oncall->id }}">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Approve Pengajuan Lembur</h4>
+                <h4 class="modal-title">Approve Pengajuan On Call</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="approveForm{{ $overtime->id }}" action="{{ route('overtime.approve', $overtime->id) }}" method="post">
+            <form id="approveForm{{ $oncall->id }}" action="{{ route('oncall.approve', $oncall->id) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <p>Apakah Yakin Pengajuan overtime <b>{{ $overtime->user->karyawan->name }}</b> akan di Approve  ?</p>
+                    <p>Apakah Yakin Pengajuan oncall <b>{{ $oncall->user->karyawan->name }}</b> akan di Approve  ?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
@@ -93,22 +93,22 @@
 </div>
 
 <!-- Modal Reject -->
-<div class="modal fade" id="modal-lg{{ $overtime->id }}">
+<div class="modal fade" id="modal-lg{{ $oncall->id }}">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Reject Pengajuan Lembur</h4>
+                <h4 class="modal-title">Reject Pengajuan On Call</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="rejectForm{{ $overtime->id }}" action="{{ route('overtime.reject', $overtime->id) }}" method="POST">
+            <form id="rejectForm{{ $oncall->id }}" action="{{ route('oncall.reject', $oncall->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="alasan_reject{{ $overtime->id }}">Alasan Reject:</label>
-                        <textarea class="form-control" id="alasan_reject{{ $overtime->id }}" name="alasan_reject" rows="3" required></textarea>
+                        <label for="alasan_reject{{ $oncall->id }}">Alasan Reject:</label>
+                        <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -124,8 +124,8 @@
 <script>
     // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
     $(document).on('click', '.approveBtn', function() {
-        var overtimeId = $(this).data('overtime-id');
-        $('#approveForm' + overtimeId).submit();
+        var oncallId = $(this).data('oncall-id');
+        $('#approveForm' + oncallId).submit();
     });
 </script>
 @endsection

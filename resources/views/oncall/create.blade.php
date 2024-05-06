@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Cuti/Izin</h1>
+                        <h1 class="m-0">Form On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Cuti / Izin</a></li>
-                            <li class="breadcrumb-item active">Form Pengajuan</li>
+                            <li class="breadcrumb-item"><a href="#">Kehadiran</a></li>
+                            <li class="breadcrumb-item active">Form On Call</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -21,7 +21,7 @@
         
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('cuti.store') }}" method="POST" enctype="multipart/form-data">@csrf
+                <form action="{{ route('oncall.store') }}" method="POST" >@csrf
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-6">
@@ -34,7 +34,7 @@
 
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Form Pengajuan</h3>
+                                    <h3 class="card-title">Form On Call</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
@@ -63,53 +63,33 @@
                                             <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" disabled>
                                         </div>
                                         {{-- Hidden Approver --}}
-                                        <input type="hidden" class="form-control" id="approver" name="manager_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
-                                        <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
+                                        <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                         @endif
                                         
-                                        
-                                        <div class="form-group">
-                                            <label for="leave_type" class="form-label">Jenis/Kategori:</label>
-                                            <select class="form-control select2bs4" id="leave_type" name="leave_type_id"
-                                                style="width: 100%;">
-                                                <option value="">Pilih Kategori</option>
-                                                @foreach ($leave_types as $id => $name)
-                                                    <option value="{{ $id }}">{{ $name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('leave_type_id')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
-                                        </div>
                                         <div class="form-group row">
                                             <div class="col">
                                                 <label>Tanggal Awal:</label>
-                                                    <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date"/>
-                                                        <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
+                                                    <div class="input-group date" id="start_dateover" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="start_date"/>
+                                                        <div class="input-group-append" data-target="#start_dateover" data-toggle="datetimepicker">
                                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                         </div>
                                                     </div>
                                             </div>
                                             <div class="col">
-                                                <label for="end_date" class="form-label">Tanggal Akhir:</label>
-                                                <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date"/>
-                                                    <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
+                                                <label for="end_dateover" class="form-label">Tanggal Akhir:</label>
+                                                <div class="input-group date" id="end_dateover" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="end_date"/>
+                                                    <div class="input-group-append" data-target="#end_dateover" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                     </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="saldo_cuti">Sisa Cuti</label>
-                                            <input type="text" class="form-control" id="saldo_cuti" name="saldo_cuti" value="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>
+                                            <label>Keterangan</label>
+                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required></textarea>
                                         </div>
-
-                                        
-                                        
 
                                     </div>
                                     <!-- /.card-body -->

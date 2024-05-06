@@ -46,6 +46,7 @@
         .red-star {
             color: red;
         }
+        
     </style>
 </head>
 @php
@@ -98,6 +99,7 @@
                             <i class="fas fa-user mr-2"></i>Profile
                         </a>
                         @endcan
+                        
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
                             <i class="fas fa-arrow-right mr-2"></i>Log Out
@@ -131,7 +133,7 @@
                     <div class="image">
                         @if(Auth::user()->image)
                         <img src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
-                            class="img-circle elevation-2" alt="User Image">
+                            class="img" alt="User Image">
                         @else
                         <p>No image available</p>
                         @endif
@@ -619,7 +621,7 @@
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Sukses!',
+                title: 'Login Berhasil',
                 text: '{{ session('success') }}',
             });
         </script>
@@ -635,18 +637,40 @@
             });
         </script>
     @endif
-    @if (session('reject'))
-        <script>
-            Swal.fire({
-                position: "top",
-                icon: "success",
-                title: "{{ session('reject') }}",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        </script>
-    @endif
     
+    <script>
+        $(function () {
+            var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+    
+            $("#laporan").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Cuti_' + today; // Menetapkan nama file sebagai "Laporan_Cuti_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
+    
+            $("#laporan_lembur").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Lembur_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
+        });
+    </script>
 
 </body>
 

@@ -27,6 +27,6 @@ class IsAdmin
             abort(403);
         }
 
-        abort(401);
+        return redirect()->route('login')->with('error', 'Anda harus login untuk mengakses halaman ini.');;
     }
 }

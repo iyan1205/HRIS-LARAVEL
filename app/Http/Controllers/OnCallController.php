@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
-use App\Models\Overtime;
+use App\Models\OnCall;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -11,28 +11,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
-class OvertimeController extends Controller
+class OnCallController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:view overtime', ['only' => ['index']]);
-        $this->middleware('permission:tambah overtime', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit overtime', ['only' => ['edit','update']]);
-        $this->middleware('permission:delete overtime', ['only' => ['destroy']]);
-        $this->middleware('permission:approve overtime', ['only' => ['approve', 'cancel', 'reject']]);
-    }
-    
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        /// Ambil pengguna yang sedang login
         $user = Auth::user();
-
-        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
-        $overtimes = Overtime::where('user_id', $user->id)
+        $oncalls = OnCall::where('user_id', $user->id)
             ->where('status', 'pending')
             ->get();
 
-        return view('overtime.index', compact('overtimes'));
+        return view('oncall.index', compact('oncalls'));
     }
 
     public function approval(){
@@ -40,20 +31,20 @@ class OvertimeController extends Controller
             /** @var App\Models\User */
             $users = Auth::user();
 
-            if ($users->hasRole(['Super-Admin', 'admin'])) {
-                $overtimes = Overtime::where('status', 'pending')->get();
+            if ($users->hasRole(['Super-Admin'])) {
+                $oncalls = OnCall::where('status', 'pending')->get();
             } else if ($users->hasRole('Approver')) {
                 // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
                
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $overtimes = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->get();   
+            $oncalls = OnCall::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->get();   
         
             } else {
                 // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $overtimes = $users->leave_applications()->where('status', 'pending')->get();
+                $oncalls = $users->oncall()->where('status', 'pending')->get();
             }
     
-            return view('overtime.approval-overtime', compact('overtimes'));   
+            return view('oncall.approval-oncall', compact('oncalls'));   
             }
             abort(401);
     }
@@ -64,19 +55,19 @@ class OvertimeController extends Controller
         $user = Auth::user();
     
         // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
-        $overtimes = Overtime::where('user_id', $user->id)
+        $oncalls = OnCall::where('user_id', $user->id)
             ->whereIn('status', ['rejected', 'approved'])
             ->orderBy('created_at', 'desc')
             ->get();
     
-        return view('overtime.riwayat', compact('overtimes'));
+        return view('oncall.riwayat', compact('oncalls'));
     }
 
     public function create()
     {
         $users = User::pluck('name', 'id');
         $approver = Jabatan::pluck('name', 'id');
-        return view('overtime.create', compact('users','approver'));
+        return view('oncall.create', compact('users','approver'));
     }
 
     /**
@@ -132,7 +123,7 @@ class OvertimeController extends Controller
         }
 
         // Buat dan simpan jabatan baru
-        $overtimes = Overtime::create([
+        $oncalls = OnCall::create([
             'user_id' => $request->input('user_id'),
             'start_date' => $start_date,
             'end_date' => $end_date,
@@ -144,20 +135,20 @@ class OvertimeController extends Controller
 
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
-        return redirect()->route('overtime');
+        return redirect()->route('oncall');
     }
 
     public function approve(Request $request, $id) {
         $user = Auth::user();
         $updatedBy = $user->name;
-        $overtimes = Overtime::findOrFail($id);
+        $oncalls = OnCall::findOrFail($id);
 
-        $overtimes->approve($updatedBy);
-        $overtimes->save();
+        $oncalls->approve($updatedBy);
+        $oncalls->save();
 
         $message = 'Lembur Approved.';
         Session::flash('successAdd', $message);
-        return redirect()->route('approval-overtime');
+        return redirect()->route('approval-oncall');
 
     }
     
@@ -165,7 +156,7 @@ class OvertimeController extends Controller
         $user = Auth::user();
         $updatedBy = $user->name;
 
-        $overimes = Overtime::findOrFail($id);
+        $overimes = OnCall::findOrFail($id);
         // Set nilai alasan reject
         $alasan_reject = $request->input('alasan_reject');
 
@@ -177,7 +168,7 @@ class OvertimeController extends Controller
 
         $message = 'Pengajuan Lembur Tidak Di Setujui.';
         Session::flash('successAdd', $message);
-        return redirect()->route('approval-overtime');
+        return redirect()->route('approval-oncall');
 
     }
 
@@ -212,7 +203,7 @@ class OvertimeController extends Controller
 
     public function laporan()
     {
-        return view('overtime.search');
+        return view('oncall.search');
     }
 
     public function search(Request $request){
@@ -220,21 +211,20 @@ class OvertimeController extends Controller
         $endDate = $request->input('end_date');
         $status = $request->input('status');
 
-        $query = Overtime::select(
-                'overtimes.*',
+        $query = OnCall::select(
+                'on_calls.*',
                 'users.name as user_name'
             )
-            ->join('users', 'overtimes.user_id', '=', 'users.id')
-            ->whereBetween('overtimes.start_date', [$startDate, $endDate])
-            ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
+            ->join('users', 'on_calls.user_id', '=', 'users.id')
+            ->whereBetween('on_calls.start_date', [$startDate, $endDate])
+            ->whereBetween('on_calls.end_date', [$startDate, $endDate]);
 
             if ($status) {
-                $query->where('overtimes.status', $status);
+                $query->where('on_calls.status', $status);
             }
         
             $results = $query->get();
 
-        return view('overtime.search_results', compact('results', 'status'));
+        return view('oncall.search_results', compact('results', 'status'));
     }
-
 }

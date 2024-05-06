@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('overtimes', function (Blueprint $table) {
+        Schema::create('on_calls', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->datetime('start_date');
@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'rejected' ,'approved'])->default('pending');
             $table->string('keterangan');
             $table->string('approver_id');
+            $table->string('alasan_reject');
             $table->string('updated_by');
             $table->timestamps();
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('overtimes');
+        Schema::dropIfExists('on_calls');
     }
 };

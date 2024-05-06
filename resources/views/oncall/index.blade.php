@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Lembur</h1>
+                        <h1 class="m-0">On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Lembur</li>
+                            <li class="breadcrumb-item active">On Call</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -26,8 +26,8 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
-                                <a href="{{ route('overtime.riwayat') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Lembur</a>
+                                <a href="{{ route('oncall.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                <a href="{{ route('oncall.riwayat') }}" class="btn btn-warning mb-3">Riwayat Pengajuan On-Call</a>
                             </div>
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">
@@ -42,16 +42,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($overtimes as $overtime)
+                                        @foreach ($oncalls as $oncall)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $overtime->user->karyawan->name }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}
+                                                <td>{{ $oncall->user->karyawan->name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($oncall->start_date)->format('d/m/Y H:i') }}
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
+                                                <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
-                                                <td>{{ $overtime->interval }}</td>
-                                                <td><span class="badge bg-secondary">{{ $overtime->status }}</span></td>
+                                                <td>{{ $oncall->interval }}</td>
+                                                <td><span class="badge bg-secondary">{{ $oncall->status }}</span></td>
                                                  
 
                                             </tr>
