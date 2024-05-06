@@ -201,19 +201,30 @@ class OnCallController extends Controller
         //
     }
 
+    public function laporan()
+    {
+        return view('oncall.search');
+    }
+
     public function search(Request $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $status = $request->input('status');
 
-        $results = OnCall::select(
+        $query = OnCall::select(
                 'on_calls.*',
                 'users.name as user_name'
             )
             ->join('users', 'on_calls.user_id', '=', 'users.id')
             ->whereBetween('on_calls.start_date', [$startDate, $endDate])
-            ->whereBetween('on_calls.end_date', [$startDate, $endDate])
-            ->get();
+            ->whereBetween('on_calls.end_date', [$startDate, $endDate]);
 
-        return view('oncall.search_results', compact('results'));
+            if ($status) {
+                $query->where('on_calls.status', $status);
+            }
+        
+            $results = $query->get();
+
+        return view('oncall.search_results', compact('results', 'status'));
     }
 }

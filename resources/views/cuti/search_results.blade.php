@@ -41,7 +41,7 @@
                                             <th>End Date</th>
                                             <th>Status</th>
                                             @if($status == '' || $status == 'rejected')
-                                            <th>Approved</th>
+                                            <th>updated by</th>
                                             @endif
                                             <th>Total Hari</th>
                                             @if($status == '' || $status == 'rejected')

@@ -210,20 +210,31 @@ class OvertimeController extends Controller
         //
     }
 
+    public function laporan()
+    {
+        return view('overtime.search');
+    }
+
     public function search(Request $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $status = $request->input('status');
 
-        $results = Overtime::select(
+        $query = Overtime::select(
                 'overtimes.*',
                 'users.name as user_name'
             )
             ->join('users', 'overtimes.user_id', '=', 'users.id')
             ->whereBetween('overtimes.start_date', [$startDate, $endDate])
-            ->whereBetween('overtimes.end_date', [$startDate, $endDate])
-            ->get();
+            ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
 
-        return view('overtime.search_results', compact('results'));
+            if ($status) {
+                $query->where('overtimes.status', $status);
+            }
+        
+            $results = $query->get();
+
+        return view('overtime.search_results', compact('results', 'status'));
     }
 
 }

@@ -38,7 +38,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Interval</th>
+                                            <th>Total Jam</th>
                                             <th>Keterangan</th>
                                             <th>Status</th>
                                         </tr>
@@ -69,15 +69,25 @@
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title">Alasan Reject</h4>
+                                                            <h4 class="modal-title">Detail Status</h4>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                             <div class="modal-body">
                                                                 <div class="form-group">
+                                                                    <label for="">Updated by</label>
+                                                                    <input type="text" class="form-control" value="{{ $overtime->updated_by }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Updated at</label>
+                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($overtime->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="alasan_reject">Alasan Reject</label>
                                                                     <textarea class="form-control" id="alasan_reject{{ $overtime->id }}" name="alasan_reject" rows="3" disabled> {{ $overtime->alasan_reject }}</textarea>
                                                                 </div>
+
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

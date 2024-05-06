@@ -157,7 +157,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
         Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
         Route::get('/overtime/riwayat-overtime', [OvertimeController::class, 'riwayat'])->name('overtime.riwayat');
-        Route::get('/laporan-overtime', [OvertimeController::class, 'search'])->name('laporan-lembur');
+
+        Route::get('/laporan-overtime', [OvertimeController::class, 'laporan'])->name('laporan-lembur');
+        Route::get('/laporan-overtime/search', [OvertimeController::class, 'search'])->name('overtime-search');
         
         Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
         Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
@@ -176,7 +178,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/oncall',[OnCallController::class, 'index'])->name('oncall');
         Route::get('/approval-oncall', [OnCallController::class, 'approval'])->name('approval-oncall');
         Route::get('/oncall/riwayat-oncall', [OnCallController::class, 'riwayat'])->name('oncall.riwayat');
-        Route::get('/laporan-oncall', [OnCallController::class, 'search'])->name('laporan-oncall');
+        
+        Route::get('/laporan-oncall', [OnCallController::class, 'laporan'])->name('laporan-oncall');
+        Route::get('/laporan-oncall/search', [OnCallController::class, 'search'])->name('oncall-search');
 
         Route::get('/oncall/create', [OnCallController::class, 'create'])->name('oncall.create');
         Route::post('/oncall/store', [OnCallController::class, 'store'])->name('oncall.store');
