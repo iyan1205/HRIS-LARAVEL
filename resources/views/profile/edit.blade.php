@@ -374,9 +374,10 @@
           nextSibling.innerText = fileName;
       });
   </script>
+
   <script>
-    // Cek jika status 'password-updated' diterima dari redirect
-    @if(session('status') === 'password-updated')
+    // Cek jika status 'password-updated' diterima dari redirect atau terdapat pesan kesalahan pada bidang 'current_password'
+    @if(session('status') === 'password-updated' || $errors->updatePassword->has('current_password') || $errors->updatePassword->has('password'))
         // Hilangkan kelas "active" dari tab saat ini
         document.querySelector('.nav-item .nav-link.active').classList.remove('active');
 
@@ -390,22 +391,7 @@
         document.getElementById('gantipassword').classList.add('active', 'show');
     @endif
 </script>
-<script>
-  // Cek jika terdapat pesan kesalahan pada bidang 'current_password'
-  @if ($errors->updatePassword->has('current_password'))
-      // Hapus kelas "active" dari tab saat ini
-      document.querySelector('.nav-item .nav-link.active').classList.remove('active');
-      
-      // Tambahkan kelas "active" ke tab "gantipassword"
-      document.querySelector('.nav-item a[href="#gantipassword"]').classList.add('active');
 
-      // Cari tab konten saat ini dan sembunyikan
-      document.querySelector('.tab-pane.active').classList.remove('active', 'show');
-
-      // Tampilkan tab konten "gantipassword"
-      document.getElementById('gantipassword').classList.add('active', 'show');
-  @endif
-</script>
 
 
   
