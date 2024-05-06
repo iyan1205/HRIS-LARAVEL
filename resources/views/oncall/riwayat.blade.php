@@ -88,7 +88,7 @@
                                                                     <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" disabled> {{ $oncall->alasan_reject }}</textarea>
                                                                 </div>
 
-                                                            </div>v>
+                                                            </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                             </div>

@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('laporan-lembur') }}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('laporan-oncall') }}">Home</a></li>
                             <li class="breadcrumb-item active">Oncall</li>
                         </ol>
                     </div><!-- /.col -->
@@ -31,7 +31,7 @@
                            
                             <div class="card-body ">
                             @if(isset($results) && count($results) > 0)
-                                <table class="table table-bordered table-hover" id="laporan_lembur">
+                                <table class="table table-bordered table-hover" id="laporan_oncall">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -67,7 +67,7 @@
                                 <h5><i class="icon fas fa-info"></i> Data Tidak Ada!</h5>
                                 Pilih Tanggal yang sesuai
                             </div>
-                            <a href="{{ route('laporan-cuti') }}" class=" btn btn-secondary">Kembali</a>
+                            <a href="{{ route('laporan-oncall') }}" class=" btn btn-secondary">Kembali</a>
                             @endif
                             </div>
                             <!-- /.card-body -->

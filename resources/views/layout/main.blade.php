@@ -669,6 +669,20 @@
                     }
                 ]
             }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
+            
+            $("#laporan_oncall").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Oncall_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
 
