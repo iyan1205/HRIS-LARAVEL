@@ -28,8 +28,7 @@
                   <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                       <div class="text-center">
-                        <img class="profile-user-img"
-                             src="{{ asset('storage/avatar/' . auth()->user()->image) }}" alt="User profile picture">
+                        <img class="profile-user-img" src="{{ asset('storage/avatar/' . auth()->user()->image) }}" alt="User profile picture">
                       </div>
       
                       <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>

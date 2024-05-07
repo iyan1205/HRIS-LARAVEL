@@ -31,7 +31,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Karyawan</th>
-                                        <th>Jenis/Kategori</th>
+                                        <th>Kategori</th>
+                                        <th>Jenis</th>
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
                                         <th>Total Hari</th>
@@ -43,7 +44,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $cuti->user->karyawan->name }}</td>
-                                        <td>{{ $cuti->leavetype->name }}</td>
+                                        <td>{{ $cuti->leavetype->kategori_cuti }}</td>
+                                                <td>{{ $cuti->leavetype->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}</td>
                                         <td>{{ $cuti->total_days }} Hari</td>

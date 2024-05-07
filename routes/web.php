@@ -6,6 +6,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
 use App\Http\Controllers\LeaveBalanceController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OnCallController;
 use App\Http\Controllers\OvertimeController;
@@ -151,6 +152,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
         Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
     });
+
+   
+    Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
 
     Route::prefix('Lembur')->group( function() {
         // Overtime

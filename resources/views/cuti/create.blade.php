@@ -67,22 +67,20 @@
                                         <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
                                         @endif
                                         
-                                        
                                         <div class="form-group">
-                                            <label for="leave_type" class="form-label">Jenis/Kategori:</label>
-                                            <select class="form-control select2bs4" id="leave_type" name="leave_type_id"
-                                                style="width: 100%;">
-                                                <option value="">Pilih Kategori</option>
-                                                @foreach ($leave_types as $id => $name)
-                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                            <label for="kategori_cuti">Kategori Cuti</label>
+                                            <select name="kategori_cuti" id="kategori_cuti" class="form-control">
+                                                <option value="">Pilih Kategori Cuti</option>
+                                                @foreach($leaveTypes as $id => $kategori)
+                                                    <option value="{{ $id }}">{{ $kategori }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('leave_type_id')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
                                         </div>
+                                        <div class="form-group" id="leave_type_id_container" style="display: none;">
+                                            <label for="leave_type_id">Nama Cuti</label>
+                                            <select name="leave_type_id" id="leave_type_id" class="form-control"></select>
+                                        </div>
+                                        
                                         <div class="form-group row">
                                             <div class="col">
                                                 <label>Tanggal Awal:</label>
@@ -127,5 +125,6 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
+
   
 @endsection

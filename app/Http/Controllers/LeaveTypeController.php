@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LeaveType;
 use Illuminate\Http\Request;
 
 class LeaveTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function getLeaveTypeByCategory($kategori_cuti){
+        $leaveTypes = LeaveType::where('kategori_cuti', $kategori_cuti)->pluck('name', 'id');
+        return response()->json($leaveTypes);
+    }
+
     public function index()
     {
         //
