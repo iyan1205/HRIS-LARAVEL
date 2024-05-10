@@ -645,10 +645,32 @@
                             $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#leave_type_id_container').show();
+
+                       // Check if selected leave category is 'CUTI KHUSUS'
+                        if (kategoriCuti === 'CUTI KHUSUS') {
+                            $('#file_upload_container').show();
+                            $('#file_upload').prop('required', true); // Make file input required
+                        } else {
+                            $('#file_upload_container').hide();
+                            $('#file_upload').prop('required', false); // Make file input not required
+                        }
                     }
                 });
             } else {
                 $('#leave_type_id_container').hide();
+                $('#file_upload_container').hide();
+                $('#file_upload').prop('required', false); // Make file input not required
+            }
+        });
+        // Validate file input on form submission
+        $('form').submit(function() {
+            var kategoriCuti = $('#kategori_cuti').val();
+            if (kategoriCuti === 'CUTI KHUSUS') {
+                var fileUpload = $('#file_upload').val();
+                if (fileUpload === '') {
+                    alert('Mohon unggah file PDF, JPG, atau PNG.');
+                    return false; // Prevent form submission
+                }
             }
         });
     </script>

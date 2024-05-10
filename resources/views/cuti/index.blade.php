@@ -95,7 +95,10 @@
                                                                     <label for="">Approved at</label>
                                                                     <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($cuti->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
                                                                 </div>
-                                                                
+                                                                <div>
+                                                                    <label for="file_upload">Dokumen Pendukung</label>
+                                                                    <a href="{{ asset('storage/'. $cuti->file_upload) }}" class="form-control" readonly target="_blank">Lihat Dokumen</a>
+                                                                </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -37,7 +37,9 @@ class JabatanController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:jabatans',
             'manager_id' => 'required',
-            'level' => 'required'
+            'level' => 'required',
+            'level_approve' => 'required',
+
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -51,6 +53,7 @@ class JabatanController extends Controller
             'name' => $request->input('name'),
             'manager_id' => $request->input('manager_id'),
             'level' => $request->input('level'),
+            'level_approve' => $request->input('level_approve'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
@@ -90,6 +93,7 @@ class JabatanController extends Controller
         // Validasi input dari form
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|unique:jabatans,name,'.$id,
+            'level' => 'nullable',
             'level' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
@@ -103,6 +107,7 @@ class JabatanController extends Controller
         $jabatan->update([
             'name' => $request->name,
             'level' => $request->level,
+            'level_approve' => $request->level_approve,
         ]);
 
         // Update subordinates

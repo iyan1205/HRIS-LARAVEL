@@ -36,6 +36,7 @@
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
                                         <th>Total Hari</th>
+                                        <th>Dokumen Pendukung</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -45,10 +46,16 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $cuti->user->karyawan->name }}</td>
                                         <td>{{ $cuti->leavetype->kategori_cuti }}</td>
-                                                <td>{{ $cuti->leavetype->name }}</td>
+                                        <td>{{ $cuti->leavetype->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}</td>
                                         <td>{{ $cuti->total_days }} Hari</td>
+                                        <td>
+                                            @if ( $cuti->file_upload)
+                                            <a href="{{ asset('storage/'. $cuti->file_upload) }}" target="_blank">Lihat Dokumen</a></td>
+                                            @else
+                                            {{ 'File tidak tersedia' }}                                                
+                                            @endif
                                         <td class="project-actions text-right">
                                             @can('approve cuti')
                                             <button type="button" class="btn btn-success btn-sm approveBtn" data-cuti-id="{{ $cuti->id }}" data-toggle="modal" data-target="#modal-ap{{ $cuti->id }}"><i class="fas fa-check"></i> Approve</button>

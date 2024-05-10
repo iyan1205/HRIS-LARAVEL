@@ -101,6 +101,13 @@
                                                     </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group" id="file_upload_container" style="display: none;">
+                                            <input type="file" class="form-control" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
+                                            <label for="file_upload">Upload File</label>
+                                        </div>
+                                        
+
                                         <div class="form-group">
                                             <label for="saldo_cuti">Sisa Cuti</label>
                                             <input type="text" class="form-control" id="saldo_cuti" name="saldo_cuti" value="{{ Auth::user()->leave_balances->saldo_cuti }}" disabled>

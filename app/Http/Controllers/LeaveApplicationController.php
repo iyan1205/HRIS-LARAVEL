@@ -114,7 +114,7 @@ class LeaveApplicationController extends Controller
         ->count();
 
         if ($pendingApplications > 0) {
-            $message = 'Pengajuan sebelumnya masih dalam status pending. Silakan tunggu hingga pengajuan sebelumnya disetujui.';
+            $message = 'Pengajuan Sebelumnya Belum Di Setujui !';
             return redirect()->back()->withInput()->with('error', $message);
         }
         
@@ -145,6 +145,23 @@ class LeaveApplicationController extends Controller
         $end_date = Carbon::parse($request->input('end_date'));
         $total_days = $start_date->diffInDays($end_date) + 1; // Jumlah hari termasuk tanggal start_date dan end_date
 
+        // Jika kategori cuti adalah "CUTI KHUSUS", lakukan validasi file dan simpan file ke dalam folder file_cuti
+        if ($request->kategori_cuti === 'CUTI KHUSUS') {
+            $validator = Validator::make($request->all(), [
+                'file_upload' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // Max size 2MB
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+
+            // Simpan file ke dalam folder file_cuti
+            $file = $request->file('file_upload');
+            $path = $file->store('file_cuti', 'public'); // Folder file_cuti di dalam storage/app/public
+        } else {
+            // Jika kategori cuti bukan "CUTI KHUSUS", set nilai path file menjadi null
+            $path = null;
+        }
         // Buat dan simpan jabatan baru
         $leaveApplication = LeaveApplication::create([
             'user_id' => $request->input('user_id'),
@@ -154,6 +171,7 @@ class LeaveApplicationController extends Controller
             'total_days' => $total_days,
             'manager_id' => $manager_id,
             'level_approve' => $request->input('level_approve'),
+            'file_upload' => $path,
             
             // Tambahkan kolom lain yang perlu disimpan
         ]);
@@ -171,7 +189,7 @@ class LeaveApplicationController extends Controller
         $updatedBy = $user->name;
         $leaveApplication = LeaveApplication::findOrFail($id);
     
-        // 1 Approved
+        // Level 1 Untuk yang tidak memiliki Atasan langsung
         if ($leaveApplication->level_approve === 1) {
             // Jika leave_type_id mempunyai kategori cuti "CUTI KHUSUS", saldo tidak dikurangi
             if ($leaveApplication->leaveType->kategori_cuti === 'CUTI KHUSUS') {
@@ -189,7 +207,7 @@ class LeaveApplicationController extends Controller
             }
         }
     
-        // Jika level_approve adalah 2, maka ubah status menjadi stage 1 dan tidak mengurangi saldo
+        // Level 2 Untuk Yang memiliki Atasan Langsung
         elseif ($leaveApplication->level_approve === 2) {
             // Update level approve
             $leaveApplication->level_approve = '1';

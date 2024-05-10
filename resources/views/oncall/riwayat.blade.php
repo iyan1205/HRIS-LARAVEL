@@ -53,7 +53,7 @@
                                                 <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $oncall->interval }} Hari</td>
-                                                <td>{{ $oncall->keterangan }} Hari</td>
+                                                <td>{{ $oncall->keterangan }} </td>
                                                 <td>
                                                     @if($oncall->status == 'rejected')
                                                         <span class="badge bg-danger">

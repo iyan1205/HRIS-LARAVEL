@@ -63,7 +63,7 @@
                                         <div class="form-group">
                                             <label for="manager_id" class="form-label">Atasan Langsung:</label>
                                             <select class="form-control select2bs4" id="manager_id" name="manager_id" style="width: 100%;" required>
-                                                <option value="" selected disabled>Pilih Atasan</option>
+                                                <option value="" selected disabled>Pilih</option>
                                                 @foreach ($jabatans as $jabatan)
                                                     <option value="{{ $jabatan->id }}" {{ $jabatan->id == $jabatan->manager_id ? 'selected' : '' }}>
                                                         {{ $jabatan->name }}
@@ -74,6 +74,19 @@
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="level_approve" class="form-label">Level Approve Cuti:</label>
+                                            <select class="form-control select2bs4" id="level_approve" name="level_approve" style="width: 100%;" required>
+                                                <option value="" selected disabled>Pilih</option>
+                                                <option value="1" {{ old('level_approve') == '1' ? 'selected' : '' }}>1 Tahap</option>
+                                                <option value="2" {{ old('level_approve') == '2' ? 'selected' : '' }}>2 Tahap</option>
+                                            </select>
+                                            @error('level_approve')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
                                             @enderror
                                         </div>
                                         

@@ -10,6 +10,7 @@ class LeaveType extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'kategori_cuti',
         'max_amount',
     ];
 

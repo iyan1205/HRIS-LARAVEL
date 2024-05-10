@@ -134,7 +134,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
         Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
         Route::get('/pengajuan-cuti/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
-
+        
         Route::get('/laporan-cuti', [LeaveApplicationController::class, 'laporan'])->name('laporan-cuti');
         Route::get('/laporan-cuti/search', [LeaveApplicationController::class, 'search'])->name('laporan-search');
         
@@ -152,8 +152,8 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
         Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
     });
-
-   
+    
+    //Json
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
 
     Route::prefix('Lembur')->group( function() {

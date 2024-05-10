@@ -13,6 +13,7 @@ class Jabatan extends Model
         'name',
         'manager_id',
         'level',
+        'level_approve',
     ];
 
     protected $hidden = [

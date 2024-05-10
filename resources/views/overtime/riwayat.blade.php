@@ -53,7 +53,7 @@
                                                 <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $overtime->interval }} Hari</td>
-                                                <td>{{ $overtime->keterangan }} Hari</td>
+                                                <td>{{ $overtime->keterangan }}</td>
                                                 <td>
                                                     @if($overtime->status == 'rejected')
                                                         <span class="badge bg-danger">
