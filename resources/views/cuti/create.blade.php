@@ -69,7 +69,7 @@
                                         
                                         <div class="form-group">
                                             <label for="kategori_cuti">Kategori Cuti</label>
-                                            <select name="kategori_cuti" id="kategori_cuti" class="form-control">
+                                            <select name="kategori_cuti" id="kategori_cuti" class="form-control select2bst4">
                                                 <option value="">Pilih Kategori Cuti</option>
                                                 @foreach($leaveTypes as $id => $kategori)
                                                     <option value="{{ $id }}">{{ $kategori }}</option>
@@ -78,7 +78,7 @@
                                         </div>
                                         <div class="form-group" id="leave_type_id_container" style="display: none;">
                                             <label for="leave_type_id">Nama Cuti</label>
-                                            <select name="leave_type_id" id="leave_type_id" class="form-control"></select>
+                                            <select name="leave_type_id" id="leave_type_id" class="form-control select2bst4" required></select>
                                         </div>
                                         
                                         <div class="form-group row">
@@ -101,11 +101,17 @@
                                                     </div>
                                             </div>
                                         </div>
-
+                                       
                                         <div class="form-group" id="file_upload_container" style="display: none;">
-                                            <input type="file" class="form-control" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
                                             <label for="file_upload">Upload File</label>
-                                        </div>
+                                            <div class="input-group">
+                                              <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
+                                                <label class="custom-file-label" for="file_upload">Choose file</label>
+                                              </div>
+                                              
+                                            </div>
+                                          </div>
                                         
 
                                         <div class="form-group">
@@ -132,6 +138,12 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
-
+    <script>
+        document.getElementById('file_upload').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    </script>
   
 @endsection

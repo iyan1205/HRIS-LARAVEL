@@ -673,7 +673,13 @@
                 }
             }
         });
+        $(document).ready(function() {
+        $('.select2bst4').select2({
+            theme: 'bootstrap4'
+        });
+    });
     </script>
+
 
 </body>
 

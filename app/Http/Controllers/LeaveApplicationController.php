@@ -157,7 +157,11 @@ class LeaveApplicationController extends Controller
 
             // Simpan file ke dalam folder file_cuti
             $file = $request->file('file_upload');
-            $path = $file->store('file_cuti', 'public'); // Folder file_cuti di dalam storage/app/public
+             // Generate nama file berdasarkan tanggal upload
+            $fileName = Carbon::now()->format('Y-m-d') . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // Simpan file ke dalam folder file_cuti dengan nama yang telah diubah
+            $path = $file->storeAs('file_cuti', $fileName, 'public'); // Folder file_cuti di dalam storage/app/public
         } else {
             // Jika kategori cuti bukan "CUTI KHUSUS", set nilai path file menjadi null
             $path = null;
