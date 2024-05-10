@@ -649,7 +649,7 @@
                         // Hide leave_type_id_container if kategoriCuti is 'CUTI TAHUNAN'
                         if (kategoriCuti === 'CUTI TAHUNAN') {
                             $('#leave_type_id_container').hide();
-                            $('#leave_type_id').val('4'); // Set leave_type_id value to 4
+                            $('#leave_type_id').val('20'); // Set leave_type_id value to 4
                         } else {
                             $('#leave_type_id_container').show();
                         }
