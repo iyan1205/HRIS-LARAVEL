@@ -640,12 +640,19 @@
                     type: 'GET',
                     success: function(data) {
                         $('#leave_type_id').empty();
-                        $('#leave_type_id').append('<option value="">Pilih Cuti</option>');
+                        $('#leave_type_id').append('<option value="" disabled>Pilih Cuti</option>');
                         $.each(data, function(key, value) {
                             $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#leave_type_id_container').show();
-
+                        
+                        // Hide leave_type_id_container if kategoriCuti is 'CUTI TAHUNAN'
+                        if (kategoriCuti === 'CUTI TAHUNAN') {
+                            $('#leave_type_id_container').hide();
+                            $('#leave_type_id').val('4'); // Set leave_type_id value to 4
+                        } else {
+                            $('#leave_type_id_container').show();
+                        }
                        // Check if selected leave category is 'CUTI KHUSUS'
                         if (kategoriCuti === 'CUTI KHUSUS') {
                             $('#file_upload_container').show();
@@ -662,6 +669,19 @@
                 $('#file_upload').prop('required', false); // Make file input not required
             }
         });
+        
+        // Function to handle change event of #leave_type_id
+        $('#leave_type_id').change(function() {
+            var leaveTypeId = $(this).val();
+            if (leaveTypeId === '1') {
+                $('#file_upload_container').show();
+                $('#file_upload').prop('required', true); // Make file input required
+            } else {
+                $('#file_upload_container').hide();
+                $('#file_upload').prop('required', false); // Make file input not required
+            }
+        });
+
         // Validate file input on form submission
         $('form').submit(function() {
             var kategoriCuti = $('#kategori_cuti').val();

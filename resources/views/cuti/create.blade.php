@@ -70,14 +70,15 @@
                                         <div class="form-group">
                                             <label for="kategori_cuti">Kategori Cuti</label>
                                             <select name="kategori_cuti" id="kategori_cuti" class="form-control select2bst4">
-                                                <option value="">Pilih Kategori Cuti</option>
+                                                <option value="" disabled>Pilih Kategori Cuti</option>
                                                 @foreach($leaveTypes as $id => $kategori)
                                                     <option value="{{ $id }}">{{ $kategori }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
+
                                         <div class="form-group" id="leave_type_id_container" style="display: none;">
-                                            <label for="leave_type_id">Nama Cuti</label>
+                                            <label for="leave_type_id">Jenis Cuti</label>
                                             <select name="leave_type_id" id="leave_type_id" class="form-control select2bst4" required></select>
                                         </div>
                                         
@@ -85,7 +86,7 @@
                                             <div class="col">
                                                 <label>Tanggal Awal:</label>
                                                     <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date"/>
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" required/>
                                                         <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
                                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                         </div>
@@ -94,7 +95,7 @@
                                             <div class="col">
                                                 <label for="end_date" class="form-label">Tanggal Akhir:</label>
                                                 <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date"/>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" required/>
                                                     <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
@@ -111,7 +112,7 @@
                                               </div>
                                               
                                             </div>
-                                          </div>
+                                        </div>
                                         
 
                                         <div class="form-group">
@@ -145,5 +146,6 @@
             nextSibling.innerText = fileName;
         });
     </script>
+    
   
 @endsection

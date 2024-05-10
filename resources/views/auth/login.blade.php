@@ -22,8 +22,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <!-- /.login-logo -->
-        <form action="{{ route('login') }}" method="post">
-            @csrf
+        
             <div class="card card-outline card-primary">
             <div class="card-header text-center">
                 <a href="#" class="h1"><img src="lte/dist/img/logo.png" alt="Logo HRIS"> <b>HRIS</b></a>
@@ -78,7 +77,7 @@
             </div>
             <!-- /.card-body -->
             </div>
-        </form>
+        
         <!-- /.card -->
       </div>
       <!-- /.login-box -->

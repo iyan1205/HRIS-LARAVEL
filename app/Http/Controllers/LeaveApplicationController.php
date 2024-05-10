@@ -77,6 +77,7 @@ class LeaveApplicationController extends Controller
 
         // Mendapatkan array berisi kategori cuti dan ID-nya
         $leaveTypes = array_combine($enumOptions, $enumOptions);
+        
         return view('cuti.create', compact('users','approver','leaveTypes'));
     }
     
@@ -146,7 +147,7 @@ class LeaveApplicationController extends Controller
         $total_days = $start_date->diffInDays($end_date) + 1; // Jumlah hari termasuk tanggal start_date dan end_date
 
         // Jika kategori cuti adalah "CUTI KHUSUS", lakukan validasi file dan simpan file ke dalam folder file_cuti
-        if ($request->kategori_cuti === 'CUTI KHUSUS') {
+        if ($request->kategori_cuti === 'CUTI KHUSUS' || $request->leave_type_id === '1') {
             $validator = Validator::make($request->all(), [
                 'file_upload' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // Max size 2MB
             ]);
