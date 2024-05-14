@@ -1,7 +1,7 @@
 <section>
     <header>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Kata Sandi Minimal 8 karakter, menggunakan 1 huruf kapital, dan menggunakan 1 simbol.') }}
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400" style="color: red;">
+            {{ __('Kata Sandi minimal 8 Karakter, Kombinasi Huruf, Angka, dan Simbol.') }}
         </p>
     </header>
 
@@ -55,23 +55,27 @@
         // Setelah input berubah, cek apakah password memenuhi aturan
         var uppercaseRegex = /[A-Z]/;
         var symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+        var numberRegex = /[0-9]/;
 
         var uppercaseValid = uppercaseRegex.test(password);
         var symbolValid = symbolRegex.test(password);
         var lengthValid = password.length >= 8;
+        var numberValid = numberRegex.test(password);
 
         // Membuat ikon ceklis untuk setiap aturan
         var uppercaseIcon = uppercaseValid ? '&#10003;' : '';
         var symbolIcon = symbolValid ? '&#10003;' : '';
         var lengthIcon = lengthValid ? '&#10003;' : '';
+        var numberIcon = numberValid ? '&#10003;' : '';
 
         // Tampilkan ikon ceklis dalam elemen password-requirements
         document.getElementById('password-requirements').innerHTML = uppercaseIcon + ' Huruf Kapital ' +
             symbolIcon + ' Simbol ' +
-            lengthIcon + ' 8 karakter ';
+            lengthIcon + ' 8 karakter ' +
+            numberIcon + ' Number';
 
         // Setel warna teks menjadi hijau jika semua aturan terpenuhi, dan merah jika tidak
-        var color = (uppercaseValid && symbolValid && lengthValid) ? 'green' : 'red';
+        var color = (uppercaseValid && symbolValid && lengthValid && numberValid) ? 'green' : 'red';
         document.getElementById('password-requirements').style.color = color;
     });
 </script>
