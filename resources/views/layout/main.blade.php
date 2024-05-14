@@ -631,7 +631,7 @@
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
- <script>
+<script>
     $('#kategori_cuti').change(function() {
         var kategoriCuti = $(this).val();
         if (kategoriCuti !== '') {
@@ -648,7 +648,7 @@
                     
                     if (kategoriCuti === 'CUTI TAHUNAN') {
                         $('#leave_type_id_container').hide();
-                        $('#leave_type_id').val('20'); // Set leave_type_id value to 4
+                        $('#leave_type_id').val('20'); // Set leave_type_id value to 20
                     } else {
                         $('#leave_type_id_container').show();
                     }
@@ -683,7 +683,7 @@
                         $('#max_amount_display').hide();
                     }
 
-                    if (leaveTypeId === '1') {
+                    if (data.file_upload === 'yes') {
                         $('#file_upload_container').show();
                         $('#file_upload').prop('required', true); // Make file input required
                     } else {
@@ -715,7 +715,7 @@
             theme: 'bootstrap4'
         });
     });
-</script>   
+</script>  
 
 
 </body>
