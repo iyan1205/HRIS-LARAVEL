@@ -640,7 +640,7 @@
                     type: 'GET',
                     success: function(data) {
                         $('#leave_type_id').empty();
-                        $('#leave_type_id').append('<option value="" disabled>Pilih Cuti</option>');
+                        $('#leave_type_id').append('<option value="" selected disabled>Pilih Cuti</option>');
                         $.each(data, function(key, value) {
                             $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
                         });

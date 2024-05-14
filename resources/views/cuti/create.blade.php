@@ -70,7 +70,7 @@
                                         <div class="form-group">
                                             <label for="kategori_cuti">Kategori Cuti</label>
                                             <select name="kategori_cuti" id="kategori_cuti" class="form-control select2bst4">
-                                                <option value="" disabled>Pilih Kategori Cuti</option>
+                                                <option value="" disabled selected>Pilih Kategori Cuti</option>
                                                 @foreach($leaveTypes as $id => $kategori)
                                                     <option value="{{ $id }}">{{ $kategori }}</option>
                                                 @endforeach

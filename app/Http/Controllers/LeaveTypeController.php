@@ -12,6 +12,16 @@ class LeaveTypeController extends Controller
         return response()->json($leaveTypes);
     }
 
+    public function getMaxAmount($id)
+    {
+        $leaveType = LeaveType::find($id);
+        if ($leaveType) {
+            return response()->json(['max_amount' => $leaveType->max_amount]);
+        } else {
+            return response()->json(['error' => 'Leave type not found'], 404);
+        }
+    }
+    
     public function index()
     {
         //
