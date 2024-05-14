@@ -196,8 +196,8 @@ class LeaveApplicationController extends Controller
     
         // Level 1 Untuk yang tidak memiliki Atasan langsung
         if ($leaveApplication->level_approve === 1) {
-            // Jika leave_type_id mempunyai kategori cuti "CUTI KHUSUS", saldo tidak dikurangi
-            if ($leaveApplication->leaveType->kategori_cuti === 'CUTI KHUSUS') {
+            // Jika leave_type_id mempunyai saldo_cuti "no", saldo tidak dikurangi
+            if ($leaveApplication->leaveType->saldo_cuti === 'no') {
                 // Set status menjadi approved
                 $leaveApplication->status = 'approved';
             } else {

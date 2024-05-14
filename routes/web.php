@@ -155,6 +155,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
     
     //Json
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
+    Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
 
     Route::prefix('Lembur')->group( function() {
         // Overtime

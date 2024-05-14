@@ -682,6 +682,31 @@
             }
         });
 
+        $('#leave_type_id').change(function() {
+            var leaveTypeId = $(this).val();
+            if (leaveTypeId !== '') {
+                $.ajax({
+                    url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#max_amount_display').text('Maksimal jumlah cuti: ' + data.max_amount);
+
+                        if (leaveTypeId === '1') {
+                            $('#file_upload_container').show();
+                            $('#file_upload').prop('required', true); // Make file input required
+                        } else {
+                            $('#file_upload_container').hide();
+                            $('#file_upload').prop('required', false); // Make file input not required
+                        }
+                    }
+                });
+            } else {
+                $('#max_amount_display').text('');
+                $('#file_upload_container').hide();
+                $('#file_upload').prop('required', false); // Make file input not required
+            }
+        });
+        
         // Validate file input on form submission
         $('form').submit(function() {
             var kategoriCuti = $('#kategori_cuti').val();

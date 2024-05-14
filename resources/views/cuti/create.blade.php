@@ -81,6 +81,7 @@
                                             <label for="leave_type_id">Jenis Cuti</label>
                                             <select name="leave_type_id" id="leave_type_id" class="form-control select2bst4" required></select>
                                         </div>
+                                        <div id="max_amount_display" style="color:red;"></div>
                                         
                                         <div class="form-group row">
                                             <div class="col">
