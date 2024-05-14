@@ -631,99 +631,91 @@
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
-    <script>
-        $('#kategori_cuti').change(function() {
-            var kategoriCuti = $(this).val();
-            if (kategoriCuti !== '') {
-                $.ajax({
-                    url: '/pengajuan-cuti/create/' + kategoriCuti,
-                    type: 'GET',
-                    success: function(data) {
-                        $('#leave_type_id').empty();
-                        $('#leave_type_id').append('<option value="" selected disabled>Pilih Cuti</option>');
-                        $.each(data, function(key, value) {
-                            $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
-                        });
+ <script>
+    $('#kategori_cuti').change(function() {
+        var kategoriCuti = $(this).val();
+        if (kategoriCuti !== '') {
+            $.ajax({
+                url: '/pengajuan-cuti/create/' + kategoriCuti,
+                type: 'GET',
+                success: function(data) {
+                    $('#leave_type_id').empty();
+                    $('#leave_type_id').append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
+                    $.each(data, function(key, value) {
+                        $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
+                    });
+                    $('#leave_type_id_container').show();
+                    
+                    if (kategoriCuti === 'CUTI TAHUNAN') {
+                        $('#leave_type_id_container').hide();
+                        $('#leave_type_id').val('20'); // Set leave_type_id value to 4
+                    } else {
                         $('#leave_type_id_container').show();
-                        
-                        // Hide leave_type_id_container if kategoriCuti is 'CUTI TAHUNAN'
-                        if (kategoriCuti === 'CUTI TAHUNAN') {
-                            $('#leave_type_id_container').hide();
-                            $('#leave_type_id').val('20'); // Set leave_type_id value to 4
-                        } else {
-                            $('#leave_type_id_container').show();
-                        }
-                       // Check if selected leave category is 'CUTI KHUSUS'
-                        if (kategoriCuti === 'CUTI KHUSUS') {
-                            $('#file_upload_container').show();
-                            $('#file_upload').prop('required', true); // Make file input required
-                        } else {
-                            $('#file_upload_container').hide();
-                            $('#file_upload').prop('required', false); // Make file input not required
-                        }
                     }
-                });
-            } else {
-                $('#leave_type_id_container').hide();
-                $('#file_upload_container').hide();
-                $('#file_upload').prop('required', false); // Make file input not required
-            }
-        });
-        
-        // Function to handle change event of #leave_type_id
-        $('#leave_type_id').change(function() {
-            var leaveTypeId = $(this).val();
-            if (leaveTypeId === '1') {
-                $('#file_upload_container').show();
-                $('#file_upload').prop('required', true); // Make file input required
-            } else {
-                $('#file_upload_container').hide();
-                $('#file_upload').prop('required', false); // Make file input not required
-            }
-        });
 
-        $('#leave_type_id').change(function() {
-            var leaveTypeId = $(this).val();
-            if (leaveTypeId !== '') {
-                $.ajax({
-                    url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
-                    type: 'GET',
-                    success: function(data) {
-                        $('#max_amount_display').text('Maksimal jumlah cuti: ' + data.max_amount);
-
-                        if (leaveTypeId === '1') {
-                            $('#file_upload_container').show();
-                            $('#file_upload').prop('required', true); // Make file input required
-                        } else {
-                            $('#file_upload_container').hide();
-                            $('#file_upload').prop('required', false); // Make file input not required
-                        }
+                    if (kategoriCuti === 'CUTI KHUSUS') {
+                        $('#file_upload_container').show();
+                        $('#file_upload').prop('required', true); // Make file input required
+                    } else {
+                        $('#file_upload_container').hide();
+                        $('#file_upload').prop('required', false); // Make file input not required
                     }
-                });
-            } else {
-                $('#max_amount_display').text('');
-                $('#file_upload_container').hide();
-                $('#file_upload').prop('required', false); // Make file input not required
-            }
-        });
-        
-        // Validate file input on form submission
-        $('form').submit(function() {
-            var kategoriCuti = $('#kategori_cuti').val();
-            if (kategoriCuti === 'CUTI KHUSUS') {
-                var fileUpload = $('#file_upload').val();
-                if (fileUpload === '') {
-                    alert('Mohon unggah file PDF, JPG, atau PNG.');
-                    return false; // Prevent form submission
                 }
+            });
+        } else {
+            $('#leave_type_id_container').hide();
+            $('#file_upload_container').hide();
+            $('#file_upload').prop('required', false); // Make file input not required
+            $('#max_amount_display').hide(); // Hide max_amount_display
+        }
+    });
+
+    $('#leave_type_id').change(function() {
+        var leaveTypeId = $(this).val();
+        if (leaveTypeId !== '') {
+            $.ajax({
+                url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
+                type: 'GET',
+                success: function(data) {
+                    if (data.max_amount) {
+                        $('#max_amount_display').text('Maksimal jumlah cuti: ' + data.max_amount).show();
+                    } else {
+                        $('#max_amount_display').hide();
+                    }
+
+                    if (leaveTypeId === '1') {
+                        $('#file_upload_container').show();
+                        $('#file_upload').prop('required', true); // Make file input required
+                    } else {
+                        $('#file_upload_container').hide();
+                        $('#file_upload').prop('required', false); // Make file input not required
+                    }
+                }
+            });
+        } else {
+            $('#max_amount_display').hide();
+            $('#file_upload_container').hide();
+            $('#file_upload').prop('required', false); // Make file input not required
+        }
+    });
+
+    $('form').submit(function() {
+        var kategoriCuti = $('#kategori_cuti').val();
+        if (kategoriCuti === 'CUTI KHUSUS') {
+            var fileUpload = $('#file_upload').val();
+            if (fileUpload === '') {
+                alert('Mohon unggah file PDF, JPG, atau PNG.');
+                return false; // Prevent form submission
             }
-        });
-        $(document).ready(function() {
+        }
+    });
+
+    $(document).ready(function() {
         $('.select2bst4').select2({
             theme: 'bootstrap4'
         });
     });
-    </script>
+</script>   
 
 
 </body>
