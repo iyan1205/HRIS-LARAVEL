@@ -1,7 +1,7 @@
 <section>
     <header>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400" style="color: red;">
-            {{ __('Kata Sandi minimal 8 Karakter, Kombinasi Huruf, Angka, dan Simbol.') }}
+            {{ __('Kata Sandi minimal 8 Karakter, Kombinasi Huruf Kapital, Angka, dan Simbol.') }}
         </p>
     </header>
 
@@ -47,40 +47,6 @@
 
 <script>
     var passwordInput = document.getElementById('update_password_password');
-
-    // Tambahkan event listener untuk setiap kali input berubah
-    passwordInput.addEventListener('input', function() {
-        var password = this.value;
-
-        // Setelah input berubah, cek apakah password memenuhi aturan
-        var uppercaseRegex = /[A-Z]/;
-        var symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
-        var numberRegex = /[0-9]/;
-
-        var uppercaseValid = uppercaseRegex.test(password);
-        var symbolValid = symbolRegex.test(password);
-        var lengthValid = password.length >= 8;
-        var numberValid = numberRegex.test(password);
-
-        // Membuat ikon ceklis untuk setiap aturan
-        var uppercaseIcon = uppercaseValid ? '&#10003;' : '';
-        var symbolIcon = symbolValid ? '&#10003;' : '';
-        var lengthIcon = lengthValid ? '&#10003;' : '';
-        var numberIcon = numberValid ? '&#10003;' : '';
-
-        // Tampilkan ikon ceklis dalam elemen password-requirements
-        document.getElementById('password-requirements').innerHTML = uppercaseIcon + ' Huruf Kapital ' +
-            symbolIcon + ' Simbol ' +
-            lengthIcon + ' 8 karakter ' +
-            numberIcon + ' Number';
-
-        // Setel warna teks menjadi hijau jika semua aturan terpenuhi, dan merah jika tidak
-        var color = (uppercaseValid && symbolValid && lengthValid && numberValid) ? 'green' : 'red';
-        document.getElementById('password-requirements').style.color = color;
-    });
-</script>
-<script>
-    var passwordInput = document.getElementById('update_password_password');
     var confirmPasswordInput = document.getElementById('update_password_password_confirmation');
     var passwordMatchMessage = document.getElementById('password-match-message');
 
@@ -91,6 +57,29 @@
     function validatePassword() {
         var password = passwordInput.value;
         var confirmPassword = confirmPasswordInput.value;
+
+        // Cek apakah password memenuhi aturan
+        var uppercaseRegex = /[A-Z]/;
+        var symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+        var numberRegex = /[0-9]/;
+
+        var uppercaseValid = uppercaseRegex.test(password);
+        var symbolValid = symbolRegex.test(password);
+        var lengthValid = password.length >= 8;
+        var numberValid = numberRegex.test(password);
+
+        // Membuat ikon ceklis untuk setiap aturan
+        var uppercaseIcon = uppercaseValid ? '&#10003;' : '&#10007;';
+        var symbolIcon = symbolValid ? '&#10003;' : '&#10007;';
+        var lengthIcon = lengthValid ? '&#10003;' : '&#10007;';
+        var numberIcon = numberValid ? '&#10003;' : '&#10007;';
+
+        // Tampilkan ikon ceklis dalam elemen password-requirements
+        document.getElementById('password-requirements').innerHTML = 
+            '<span style="color:' + (lengthValid ? 'green' : 'red') + ';">' + lengthIcon + ' 8 karakter</span><br>' +
+            '<span style="color:' + (uppercaseValid ? 'green' : 'red') + ';">' + uppercaseIcon + ' Huruf Kapital</span><br>' +
+            '<span style="color:' + (numberValid ? 'green' : 'red') + ';">' + numberIcon + ' Angka</span><br>' +
+            '<span style="color:' + (symbolValid ? 'green' : 'red') + ';">' + symbolIcon + ' Simbol</span>';
 
         // Periksa apakah password konfirmasi cocok dengan password yang dimasukkan
         var match = (password === confirmPassword);
