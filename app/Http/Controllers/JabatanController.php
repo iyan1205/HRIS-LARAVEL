@@ -94,7 +94,7 @@ class JabatanController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|unique:jabatans,name,'.$id,
             'level' => 'nullable',
-            'level' => 'nullable'
+            'level_approve' => 'nullable'
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
