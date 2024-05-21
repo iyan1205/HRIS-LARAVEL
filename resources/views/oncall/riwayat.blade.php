@@ -52,7 +52,7 @@
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
-                                                <td>{{ $oncall->interval }} Hari</td>
+                                                <td>{{ $oncall->interval }} </td>
                                                 <td>{{ $oncall->keterangan }} </td>
                                                 <td>
                                                     @if($oncall->status == 'rejected')

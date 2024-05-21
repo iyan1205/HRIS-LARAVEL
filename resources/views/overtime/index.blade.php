@@ -37,7 +37,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Interval</th>
+                                            <th>Total Jam</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>

@@ -133,6 +133,9 @@ class OnCallController extends Controller
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
+        // Tambahkan session flash message
+        $message = 'Pengajuan On Call berhasil dibuat.';
+        Session::flash('successAdd', $message);
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('oncall');

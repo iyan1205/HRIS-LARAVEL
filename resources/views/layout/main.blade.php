@@ -330,7 +330,7 @@
                     clear: 'fa fa-trash',
                     close: 'fa fa-check'
                 },
-                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
                 toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
                 buttons: {
                     showClose: true, // Menampilkan tombol Close
@@ -355,7 +355,7 @@
                     close: 'fa fa-check'
                 },
                 useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
-                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
                 toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
                 buttons: {
                     showClose: true, // Menampilkan tombol Close
