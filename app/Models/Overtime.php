@@ -17,6 +17,7 @@ class Overtime extends Model
         'alasan_reject ',
         'keterangan',
         'approver_id',
+        'level_approve',
         'updated_by',
 
     ];
@@ -33,7 +34,6 @@ class Overtime extends Model
 
     public function approve($updatedBy)
     {
-        $this->status = 'approved';
         $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
         $this->save();
     }

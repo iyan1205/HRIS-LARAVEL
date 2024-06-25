@@ -243,7 +243,11 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#allTable').DataTable();
+            $('#allTable').DataTable({
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
         });
     </script>
     <script>
@@ -649,8 +653,10 @@
                     if (kategoriCuti === 'CUTI TAHUNAN') {
                         $('#leave_type_id_container').hide();
                         $('#leave_type_id').val('20'); // Set leave_type_id value to 20
+                        $('#max_amount_display').text('Maksimal Jumlah Cuti: 5').show();
                     } else {
                         $('#leave_type_id_container').show();
+                        $('#max_amount_display').hide();
                     }
 
                     if (kategoriCuti === 'CUTI KHUSUS') {
@@ -678,7 +684,7 @@
                 type: 'GET',
                 success: function(data) {
                     if (data.max_amount) {
-                        $('#max_amount_display').text('Maksimal jumlah cuti: ' + data.max_amount).show();
+                        $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount).show();
                     } else {
                         $('#max_amount_display').hide();
                     }

@@ -40,7 +40,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 1%">No</th>
-                                            <th>Nama Lengkap</th>
+                                            <th>User</th>
                                             <th>Email</th>
                                             <th>Roles</th>
                                             <th>Action</th>

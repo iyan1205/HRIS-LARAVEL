@@ -287,6 +287,15 @@
                                             <label class="form-check-label" for="belum_menikah"
                                                 style="margin-left: 24px;">Belum
                                                 Menikah</label>
+                                                <input class="form-check-input" type="radio" id="duda"
+                                                name="status_ktp" value="Duda" style="margin-left: 6px;"
+                                                {{ old('status_ktp') == 'Duda' ? 'checked' : '' }} required>
+                                            <label class="form-check-label" for="duda"
+                                                style="margin-left: 24px;">Duda</label><input class="form-check-input" type="radio" id="janda"
+                                                name="status_ktp" value="Janda" style="margin-left: 6px;"
+                                                {{ old('status_ktp') == 'Janda' ? 'checked' : '' }} required>
+                                            <label class="form-check-label" for="janda"
+                                                style="margin-left: 24px;">Janda</label>
                                         </div>
                                     </div>
 

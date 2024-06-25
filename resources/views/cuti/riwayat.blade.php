@@ -38,6 +38,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Kategori</th>
                                             <th>Jenis</th>
+                                            <th>Maksimal Cuti</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Total Hari</th>
@@ -51,6 +52,12 @@
                                                 <td>{{ $cuti->user->karyawan->name }}</td>
                                                 <td>{{ $cuti->leavetype->kategori_cuti }}</td>
                                                 <td>{{ $cuti->leavetype->name }}</td>
+                                                <td> @if (is_numeric($cuti->leavetype->max_amount) && $cuti->leavetype->max_amount != '-')
+                                                    <span class="text-danger font-weight-bold">{{ $cuti->leavetype->max_amount }} Hari</span>
+                                                @else
+                                                    -
+                                                @endif
+                                                </td>
                                                 <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}

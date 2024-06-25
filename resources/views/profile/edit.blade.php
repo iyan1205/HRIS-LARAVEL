@@ -32,15 +32,20 @@
                       </div>
       
                       <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
-      
-                      <p class="text-muted text-center">{{ Auth::user()->karyawan->nik }}</p>
+                      
+                      <p class="text-muted text-center">
+                        {{ optional(Auth::user()->karyawan)->nik ?? 'Admin' }}
+
+                      </p>
       
                       <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
-                          <b>Tanggal Masuk :</b> {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }}
+                          <b>Tanggal Masuk :</b> 
+                          {{ Auth::user()->karyawan ? \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') : 'null' }}
+
                         </li>
                         <li class="list-group-item">
-                          <b>Saldo Cuti :</b> {{ Auth::user()->leave_balances->saldo_cuti }}
+                          <b>Saldo Cuti :</b> {{ optional(Auth::user()->leave_balances)->saldo_cuti ?? 'Admin' }}
                         </li>
                         
                         
@@ -60,14 +65,14 @@
                       <strong><i class="fas fa-book mr-1"></i> Institusi</strong>
       
                       <p class="text-muted">
-                        {{ Auth::user()->karyawan->pendidikan->institusi }}
+                        {{ optional(Auth::user()->karyawan)->pendidikan->institusi ?? 'Admin' }}
                       </p>
       
                       <hr>
       
                       <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
       
-                      <p class="text-muted">{{ Auth::user()->karyawan->alamat_ktp }}</p>
+                      <p class="text-muted">{{ optional(Auth::user()->karyawan)->alamat_ktp ?? 'Admin'}}</p>
       
                       <hr>
       
@@ -77,6 +82,10 @@
                   <!-- /.card -->
                 </div>
                 <!-- /.col -->
+                @role('Super-Admin|admin')
+                
+                @else
+                
                 <div class="col-md-9">
                   <div class="card">
                     <div class="card-header p-2">
@@ -360,6 +369,7 @@
                   </div>
                   <!-- /.card -->
                 </div>
+                @endrole
                 <!-- /.col -->
               </div>
               <!-- /.row -->

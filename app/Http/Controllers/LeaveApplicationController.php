@@ -210,6 +210,7 @@ class LeaveApplicationController extends Controller
                 // Set status menjadi approved
                 $leaveApplication->status = 'approved';
             }
+            $leaveApplication->level_approve = '0';
         }
     
         // Level 2 Untuk Yang memiliki Atasan Langsung
