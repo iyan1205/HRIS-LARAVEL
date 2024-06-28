@@ -6,6 +6,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
 use App\Http\Controllers\LeaveBalanceController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OnCallController;
 use App\Http\Controllers\OvertimeController;
@@ -133,7 +134,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
         Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
         Route::get('/pengajuan-cuti/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
-
+        
         Route::get('/laporan-cuti', [LeaveApplicationController::class, 'laporan'])->name('laporan-cuti');
         Route::get('/laporan-cuti/search', [LeaveApplicationController::class, 'search'])->name('laporan-search');
         
@@ -151,6 +152,10 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
         Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
     });
+    
+    //Json
+    Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
+    Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
 
     Route::prefix('Lembur')->group( function() {
         // Overtime

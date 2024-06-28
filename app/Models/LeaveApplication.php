@@ -16,6 +16,7 @@ class LeaveApplication extends Model
         'status',
         'manager_id',
         'level_approve',
+        'file_upload',
         'total_days',
         'alasan_reject',
         'updated_by',

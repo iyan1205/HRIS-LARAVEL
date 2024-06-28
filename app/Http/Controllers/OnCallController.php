@@ -80,7 +80,9 @@ class OnCallController extends Controller
             'user_id' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'approver_id' => 'nullable'
+            'approver_id' => 'nullable',
+            'level_approve' => 'nullable'
+            
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -129,10 +131,14 @@ class OnCallController extends Controller
             'end_date' => $end_date,
             'interval' => $interval_formatted,
             'approver_id' => $approver_id,
+            'level_approve' => $request->input('level_approve'),
             'keterangan' => $request->input('keterangan'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
+        // Tambahkan session flash message
+        $message = 'Pengajuan On Call berhasil dibuat.';
+        Session::flash('successAdd', $message);
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('oncall');
@@ -143,10 +149,20 @@ class OnCallController extends Controller
         $updatedBy = $user->name;
         $oncalls = OnCall::findOrFail($id);
 
+        if ($oncalls->level_approve === 1) {
+            $oncalls->status = 'approved';
+            $oncalls->level_approve = '0';
+        } else {
+            $oncalls->status = 'pending';
+            $oncalls->level_approve = '1';
+            $oncalls->approver_id = $user->karyawan->jabatan->manager_id;
+        }
+        
+
         $oncalls->approve($updatedBy);
         $oncalls->save();
 
-        $message = 'Lembur Approved.';
+        $message = 'Oncall Approved.';
         Session::flash('successAdd', $message);
         return redirect()->route('approval-oncall');
 

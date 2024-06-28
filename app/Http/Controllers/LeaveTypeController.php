@@ -2,13 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LeaveType;
 use Illuminate\Http\Request;
 
 class LeaveTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function getLeaveTypeByCategory($kategori_cuti){
+        $leaveTypes = LeaveType::where('kategori_cuti', $kategori_cuti)->pluck('name', 'id');
+        return response()->json($leaveTypes);
+    }
+
+    public function getMaxAmount($id)
+    {
+        $leaveType = LeaveType::find($id);
+        if ($leaveType) {
+            return response()->json([
+                'max_amount' => $leaveType->max_amount,
+                'file_upload' => $leaveType->file_upload
+            ]);
+        } else {
+            return response()->json(['error' => 'Leave type not found'], 404);
+        }
+    }
+
     public function index()
     {
         //

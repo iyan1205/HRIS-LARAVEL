@@ -67,7 +67,7 @@
                                 <h5><i class="icon fas fa-info"></i> Data Tidak Ada!</h5>
                                 Pilih Tanggal yang sesuai
                             </div>
-                            <a href="{{ route('laporan-cuti') }}" class=" btn btn-secondary">Kembali</a>
+                            <a href="{{ route('laporan-lembur') }}" class=" btn btn-secondary">Kembali</a>
                             @endif
                             </div>
                             <!-- /.card-body -->

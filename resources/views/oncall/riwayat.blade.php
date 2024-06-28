@@ -52,8 +52,8 @@
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
-                                                <td>{{ $oncall->interval }} Hari</td>
-                                                <td>{{ $oncall->keterangan }} Hari</td>
+                                                <td>{{ $oncall->interval }} </td>
+                                                <td>{{ $oncall->keterangan }} </td>
                                                 <td>
                                                     @if($oncall->status == 'rejected')
                                                         <span class="badge bg-danger">
@@ -88,7 +88,7 @@
                                                                     <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" disabled> {{ $oncall->alasan_reject }}</textarea>
                                                                 </div>
 
-                                                            </div>v>
+                                                            </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                             </div>

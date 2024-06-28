@@ -89,7 +89,9 @@ class OvertimeController extends Controller
             'user_id' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'approver_id' => 'nullable'
+            'approver_id' => 'nullable',
+            'level_approve' => 'required',
+            
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -138,10 +140,14 @@ class OvertimeController extends Controller
             'end_date' => $end_date,
             'interval' => $interval_formatted,
             'approver_id' => $approver_id,
+            'level_approve' => $request->input('level_approve'),
             'keterangan' => $request->input('keterangan'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
+        // Tambahkan session flash message
+        $message = 'Pengajuan Lembur berhasil dibuat.';
+        Session::flash('successAdd', $message);
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('overtime');
@@ -152,6 +158,15 @@ class OvertimeController extends Controller
         $updatedBy = $user->name;
         $overtimes = Overtime::findOrFail($id);
 
+        if ($overtimes->level_approve === 1) {
+            $overtimes->status = 'approved';
+            $overtimes->level_approve = '0';
+        } else {
+            $overtimes->status = 'pending';
+            $overtimes->level_approve = '1';
+            $overtimes->approver_id = $user->karyawan->jabatan->manager_id;
+        }
+        
         $overtimes->approve($updatedBy);
         $overtimes->save();
 
