@@ -17,15 +17,15 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name'      => 'IT Dev',
             'email'      => 'it@rs-hamori.co.id',
-            'password'      => Hash::make('!Hamori24$'),
+            'password'      => Hash::make('ITh4m0r1@'),
         ]);
-        $admin->assignRole('admin');
+        $admin->assignRole('Super-Admin');
 
         $karyawan = User::create([
-            'name'      => 'Iyan',
-            'email'      => 'iyan.hermawan@rs-hamori.co.id',
-            'password'      => Hash::make('12345678'),
+            'name'      => 'Admin HRIS',
+            'email'      => 'admin.hris@rs-hamori.co.id',
+            'password'      => Hash::make('!Hamori24$'),
         ]);
-        $karyawan->assignRole('karyawan');
+        $karyawan->assignRole('admin');
     }
 }
