@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('jabatans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('level', ['Direktur', 'Manajer', 'Kanit', 'SPV', 'Staff'])->nullable();
+            $table->integer('level_approve')->default(1);
             $table->timestamps();
         });
+        
     }
 
     /**

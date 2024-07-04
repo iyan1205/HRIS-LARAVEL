@@ -7,7 +7,6 @@ use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-
 class RolePermissionSeeder extends Seeder
 {
     /**
@@ -15,30 +14,52 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create(['name' => 'tambah-user']);
-        Permission::create(['name' => 'edit-user']);
-        Permission::create(['name' => 'hapus-user']);
-        Permission::create(['name' => 'lihat-user']);
+        // Create permissions
+        $permissions = [
+            'create user', 'edit user', 'delete user', 'view user',
+            'create karyawan', 'edit karyawan', 'delete karyawan', 'view karyawan',
+            'tambah permission', 'sidebar organisasi', 'sidebar masterkaryawan',
+            'sidebar masteruser', 'sidebar pengajuancuti', 'resign karyawan',
+            'view cuti', 'edit cuti', 'delete cuti', 'tambah cuti', 'approve cuti', 
+            'pelatihan', 'view saldo', 'edit saldo', 'delete saldo', 'create saldo', 
+            'sidebar saldocuti', 'approve overtime', 'view overtime', 'edit overtime', 
+            'delete overtime', 'tambah overtime', 'sidebar laporan cuti', 'sidebar laporan lembur', 
+            'restore departemen'
+        ];
 
-        Permission::create(['name' => 'tambah-karyawan']);
-        Permission::create(['name' => 'edit-karyawan']);
-        Permission::create(['name' => 'hapus-karyawan']);
-        Permission::create(['name' => 'lihat-karyawan']);
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
 
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'karyawan']);
+        // Create roles
+        $roles = ['Super-Admin', 'admin', 'karyawan', 'Approver'];
+        foreach ($roles as $role) {
+            Role::create(['name' => $role]);
+        }
 
+        // Assign permissions to roles
         $roleAdmin = Role::findByName('admin');
-        $roleAdmin->givePermissionTo('tambah-user');
-        $roleAdmin->givePermissionTo('edit-user');
-        $roleAdmin->givePermissionTo('hapus-user');
-        $roleAdmin->givePermissionTo('lihat-user');
-        $roleAdmin->givePermissionTo('tambah-karyawan');
-        $roleAdmin->givePermissionTo('edit-karyawan');
-        $roleAdmin->givePermissionTo('hapus-karyawan');
-        $roleAdmin->givePermissionTo('lihat-karyawan');
+        $roleAdmin->givePermissionTo([
+            'create karyawan', 'edit karyawan', 'delete karyawan', 'view karyawan',
+            'sidebar organisasi', 'sidebar masterkaryawan', 'resign karyawan', 'pelatihan',
+            'view saldo', 'edit saldo', 'delete saldo', 'create saldo', 'sidebar saldocuti',
+            'sidebar laporan cuti', 'sidebar laporan lembur'
+        ]);
 
         $roleKaryawan = Role::findByName('karyawan');
-        $roleKaryawan->givePermissionTo('lihat-karyawan');
+        $roleKaryawan->givePermissionTo([
+            'edit user', 'sidebar pengajuancuti', 'view cuti', 'tambah cuti', 
+            'delete cuti', 'view saldo', 'tambah overtime', 'view overtime'
+        ]);
+
+        $roleApprover = Role::findByName('Approver');
+        $roleApprover->givePermissionTo([
+            'view cuti', 'tambah cuti', 'edit cuti', 'delete cuti', 
+            'approve cuti', 'approve overtime', 'view overtime', 'tambah overtime'
+        ]);
+
+        // Assign all permissions to Super-Admin
+        $roleSuperAdmin = Role::findByName('Super-Admin');
+        $roleSuperAdmin->syncPermissions(Permission::all());
     }
 }
