@@ -237,5 +237,13 @@
                 @endcan
             </ul>
         </li>
+        <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Kehadiran
+                </p>
+            </a>
+        </li>
     </ul>
 </nav>

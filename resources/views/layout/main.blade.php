@@ -404,6 +404,9 @@
                 
                 });
 
+                $('#time_in').datetimepicker({
+                    format: 'HH:mm'
+                });
                 // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
                 $('#end_date').datetimepicker({
                     format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
@@ -541,6 +544,10 @@
           //Timepicker
           $('#timepicker').datetimepicker({
             format: 'LT'
+          })
+
+          $('#time_in').datetimepicker({
+            format: 'HH:mm'
           })
       
           //Bootstrap Duallistbox

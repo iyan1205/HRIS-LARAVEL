@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,7 +38,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::group(['middleware' => ['isAdmin']], function() {
+Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     // Users Routes
@@ -208,17 +209,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::get('/attendance/edit/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');//tomboledit
+    Route::post('/attendance/check-out/{id}', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    Route::get('/attendance/records', [AttendanceController::class, 'records'])->name('attendace.records');
 
 
 });
-
-
-
-// Absen Route
-
-
-// Gallery Route
-Route::get('/gallery', [HomeController::class, 'index'])->name('gallery');
 
 
 
