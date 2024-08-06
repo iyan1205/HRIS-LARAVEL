@@ -62,8 +62,6 @@ class LeaveApplicationController extends Controller
     }
     
 
-    
-
     public function create()
     {
         $users = User::pluck('name', 'id'); //Select Nama Karyawan/User
