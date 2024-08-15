@@ -36,14 +36,16 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
+                                            <th>Jabatan</th>
                                             <th>Kategori Cuti</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
+                                            <th>Jenis Cuti</th>
+                                            <th>Tanggal Awal</th>
+                                            <th>Tanggal Akhir</th>
+                                            <th>Total Hari</th>
                                             <th>Status</th>
                                             @if($status == '' || $status == 'rejected')
                                             <th>updated by</th>
                                             @endif
-                                            <th>Total Hari</th>
                                             @if($status == '' || $status == 'rejected')
                                             <th>Alasan Reject</th>
                                             @endif
@@ -53,15 +55,17 @@
                                         @foreach($results as $result)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $result->user_name }}</td>
+                                            <td>{{ $result->karyawan_name }}</td>
+                                            <td>{{ $result->nama_jabatan }}</td>
+                                            <td>{{ $result->kategori }}</td>
                                             <td>{{ $result->leave_type }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
+                                            <td>{{ $result->total_days }} Hari</td>
                                             <td>{{ $result->status }}</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
-                                            <td>{{ $result->total_days }} Hari</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->alasan_reject }}</td>
                                             @endif

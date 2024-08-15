@@ -70,14 +70,17 @@
 
                                     <div class="form-group">
                                         <label for="time_in_photo">Upload Foto</label>
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="time_in_photo" name="time_in_photo" accept="image/*"  capture="camera" required>
-                                                <label class="custom-file-label" for="time_in_photo">Choose file</label>
-                                            </div>
+                                        <div class="custom-file">
+                                            <!-- Input file yang tersembunyi -->
+                                            <input type="file" class="custom-file-input" id="time_in_photo" name="time_in_photo" accept="image/*" capture="camera" required>
+                                            <!-- Label tombol dengan ikon kamera -->
+                                            <label class="form-control1" for="time_in_photo">
+                                                <i class="fa fa-camera"></i>
+                                            </label>
                                         </div>
+                                        <img id="photo_preview" src="#" alt="Foto Pratinjau" style="display: none; margin-top: 5px;" width="100%">
                                     </div>
-
+                                    
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
@@ -91,5 +94,17 @@
             </div><!-- /.container-fluid -->
         </section>
     </div>
-    
+    <script>
+        document.getElementById('time_in_photo').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photo_preview').src = e.target.result;
+                    document.getElementById('photo_preview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 @endsection

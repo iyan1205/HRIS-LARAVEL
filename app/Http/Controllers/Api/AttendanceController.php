@@ -11,51 +11,52 @@ use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
-    public function index(Request $request)
+    public function getTodayAttendance(Request $request)
     {
         $user = Auth::user();
-        $attendances = Attendance::where('user_id', $user->id)->get();
+        $attendances = Attendance::where('user_id', $user->id)
+        ->whereDate('created_at', Carbon::today())
+        ->latest()
+        ->first();
         return response()->json($attendances);
     }
+    
 
-    public function checkIn(Request $request)
+    public function store(Request $request)
     {
-        $user = Auth::user();
-        $now = Carbon::now(); // waktu server
-
-        $existingAttendance = Attendance::where('user_id', $user->id)
-            ->where('date', $now->toDateString())
-            ->first();
-
-        if (!$existingAttendance) {
-            $attendance = new Attendance();
-            $attendance->user_id = $user->id;
-            $attendance->date = $now->toDateString();
-            $attendance->check_in = $now->toTimeString();
-            $attendance->save();
-
-            return response()->json(['message' => 'Checked in successfully', 'attendance' => $attendance], 200);
+        // Validasi input
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'tanggal' => 'nullable|date',
+            'foto' => 'required|image|mimes:jpg,jpeg,png', // Validasi foto sebagai gambar dengan ekstensi tertentu
+            'status' => 'required|in:hadir,pulang,sakit,izin',
+            'jam' => 'required|date_format:H:i'
+        ]);
+    
+        // Simpan file foto jika ada
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('photos/attendance'), $filename); // Simpan file di folder 'uploads'
         } else {
-            return response()->json(['message' => 'Already checked in today'], 400);
+            $filename = null; // Jika tidak ada file, set ke null
         }
+    
+        // Buat data ke dalam tabel Attendance
+        $attendance = Attendance::create([
+            'user_id' => $request->input('user_id'),
+            'tanggal' => $request->input('tanggal'),
+            'foto' => $filename, // Simpan nama file foto
+            'status' => $request->input('status'),
+            'jam' => $request->input('jam')
+        ]);
+    
+        // Respons JSON
+        return response()->json([
+            'message' => 'Attendance created successfully',
+            'data' => $attendance
+        ], 201);
     }
+    
 
-    public function checkOut(Request $request)
-    {
-        $user = Auth::user();
-        $now = Carbon::now(); // waktu server
-
-        $attendance = Attendance::where('user_id', $user->id)
-            ->where('date', $now->toDateString())
-            ->first();
-
-        if ($attendance && $attendance->check_out === null) {
-            $attendance->check_out = $now->toTimeString();
-            $attendance->save();
-
-            return response()->json(['message' => 'Checked out successfully', 'attendance' => $attendance], 200);
-        } else {
-            return response()->json(['message' => 'Already checked out today or not checked in yet'], 400);
-        }
-    }
 }

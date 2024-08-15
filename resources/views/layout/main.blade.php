@@ -46,7 +46,32 @@
         .red-star {
             color: red;
         }
-        
+        .custom-file {
+        position: relative;
+            }
+
+            .custom-file-input {
+                display: none;
+            }
+
+            .form-control1 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff; /* Warna latar belakang tombol */
+                color: rgb(99, 99, 99); /* Warna ikon */
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                font-size: 24px; /* Ukuran ikon */
+                border: 1px solid #057aff; /* Border sesuai warna latar belakang */
+            }
+
+            .form-control1 i {
+                margin: 0;
+            }
+
     </style>
 </head>
 @php

@@ -48,7 +48,7 @@ class AttendanceController extends Controller
         $photoName = $user->name . '_' . Carbon::now()->format('YmdHis') . '.' . $extension;
 
         // Simpan foto ke dalam folder 'photos' di dalam folder storage/app/public/
-        $photo->storeAs('photos', $photoName, 'public');
+        $photo->storeAs('photos/check-in', $photoName, 'public');
 
         $attendance = new Attendance([
             'user_id' => $user->id,
@@ -60,7 +60,7 @@ class AttendanceController extends Controller
 
         $attendance->save();
 
-        return redirect()->route('attendance.index')->with('success', 'Checked in successfully!');
+        return redirect()->route('attendance.index')->with('successAdd', 'Checked in successfully!');
     }
 
 

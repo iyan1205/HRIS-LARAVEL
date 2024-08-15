@@ -119,17 +119,21 @@ class LeaveApplicationController extends Controller
             return redirect()->back()->withInput()->with('error', $message);
         }
         
-         // Memeriksa saldo cuti pengguna
-        $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
+         // Periksa apakah jenis cuti memerlukan pengecekan saldo
+        $leaveType = LeaveType::find($request->input('leave_type_id'));
+        if ($leaveType->cek_saldo) {
+            // Memeriksa saldo cuti pengguna
+            $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
 
-        if (!$leaveBalance) {
-            $message = 'Saldo cuti pengguna tidak ditemukan.';
-            return redirect()->back()->withInput()->with('error', $message);
-        }
+            if (!$leaveBalance) {
+                $message = 'Saldo cuti pengguna tidak ditemukan.';
+                return redirect()->back()->withInput()->with('error', $message);
+            }
 
-        if ($leaveBalance->saldo_cuti <= 0) {
-            $message = 'Sisa Cuti Sudah Habis.';
-            return redirect()->back()->withInput()->with('error', $message);
+            if ($leaveBalance->saldo_cuti <= 0) {
+                $message = 'Sisa Cuti Sudah Habis.';
+                return redirect()->back()->withInput()->with('error', $message);
+            }
         }
 
         // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
@@ -300,11 +304,15 @@ class LeaveApplicationController extends Controller
     
         $query = LeaveApplication::select(
                 'leave_applications.*',
-                'leave_types.name as leave_type',
-                'users.name as user_name'
+                'leave_types.name as leave_type', 'leave_types.kategori_cuti as kategori',
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan'
             )
             ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
             ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
             ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
             ->whereBetween('leave_applications.end_date', [$startDate, $endDate]);
     

@@ -11,12 +11,10 @@ class Attendance extends Model
 
     protected $fillable = [
         'user_id',
-        'date',
-        'time_in',
-        'time_in_photo',
-        'time_out',
-        'time_out_photo',
-        'status', //check_in dan check_out
+        'tanggal',
+        'jam',
+        'foto',
+        'status',
     ];
 
     public function user()
