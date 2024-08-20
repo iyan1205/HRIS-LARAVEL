@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('leave_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('kategori_cuti',['SAKIT','IZIN','CUTI KHUSUS','CUTI TAHUNAN']);
+            $table->enum('file_upload',['yes','no'])->default('yes');
             $table->string('max_amount');
             $table->timestamps();
         });

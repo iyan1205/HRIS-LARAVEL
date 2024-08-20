@@ -45,7 +45,7 @@
 
                         </li>
                         <li class="list-group-item">
-                          <b>Saldo Cuti :</b> {{ optional(Auth::user()->leave_balances)->saldo_cuti ?? 'Admin' }}
+                          <b>Saldo Cuti :</b> {{ optional(Auth::user()->leave_balances)->saldo_cuti ?? '0' }}
                         </li>
                         
                         

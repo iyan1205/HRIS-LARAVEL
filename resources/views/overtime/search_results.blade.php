@@ -49,7 +49,7 @@
                                         @foreach($results as $result)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $result->user_name }}</td>
+                                            <td>{{ $result->karyawan_name }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->status }}</td>

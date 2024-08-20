@@ -26,7 +26,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('saldo-cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                {{-- <a href="{{ route('saldo-cuti.create') }}" class="btn btn-primary mb-3">Tambah Data</a> --}}
                             </div>
                             
                             <div class="card-body ">
@@ -48,8 +48,8 @@
                                                 <td class="project-actions text-right">
                                                     <a href="{{ route('saldo-cuti.edit', ['id' => $saldocuti->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                         Edit</a>
-                                                    <a data-toggle="modal" data-target="#modal-hapus{{ $saldocuti->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                        Hapus</a>
+                                                    {{-- <a data-toggle="modal" data-target="#modal-hapus{{ $saldocuti->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
+                                                        Hapus</a> --}}
                                                 </td>
                                             </tr>
                                         @endforeach

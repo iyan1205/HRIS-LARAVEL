@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('interval');
             $table->enum('status', ['pending', 'rejected' ,'approved'])->default('pending');
             $table->string('keterangan');
-            $table->string('approver_id');
-            $table->string('updated_by');
+            $table->string('alasan_reject')->nullable();
+            $table->string('approver_id')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }
