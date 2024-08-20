@@ -60,7 +60,7 @@ class KaryawanController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'nik' => 'required|numeric|unique:karyawans,nik|digits:4|min:4',
-            'user_id' => 'nullable',
+            'user_id' => 'required',
             'departemen_id' => 'required',
             'jabatan_id' => 'required',
             'unit_id' => 'required',

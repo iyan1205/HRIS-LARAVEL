@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Karyawan;
 use App\Models\LeaveApplication;
+use App\models\Overtime;
+use App\models\OnCall;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +24,13 @@ class HomeController extends Controller
         $jumlahKaryawanResign = Karyawan::where('status', 'resign')->count();
         $pengajuanReject = 0;
         $pengajuanApproved = 0;
+        $lemburpending = 0;
+        $lemburrejected = 0;
+        $lemburapproved = 0;
+        $oncallpending = 0;
+        $oncallrejected = 0;
+        $oncallapproved = 0;
+
         if(Auth::check()){
             /** @var App\Models\User */
             $users = Auth::user();
@@ -37,10 +46,33 @@ class HomeController extends Controller
             $pengajuanApproved = LeaveApplication::where('status', 'approved')
             ->where('user_id', auth()->id())
             ->count();
+            $lemburpending = Overtime::where('status', 'pending')
+            ->where('user_id', auth()->id())
+            ->count();
+            $lemburrejected = Overtime::where('status', 'rejected')
+            ->where('user_id', auth()->id())
+            ->count();
+            $lemburapproved = Overtime::where('status', 'approved')
+            ->where('user_id', auth()->id())
+            ->count();
+            $oncallpending = OnCall::where('status', 'pending')
+            ->where('user_id', auth()->id())
+            ->count();
+            $oncallrejected = OnCall::where('status', 'rejected')
+            ->where('user_id', auth()->id())
+            ->count();
+            $oncallapproved = OnCall::where('status', 'approved')
+            ->where('user_id', auth()->id())
+            ->count();
         }
 
     }
-        return view('dashboard', compact('jumlahKaryawanAktif','jumlahKaryawanResign', 'pengajuanCuti','pengajuanReject', 'pengajuanApproved'));
+        return view('dashboard', compact(
+            'jumlahKaryawanAktif','jumlahKaryawanResign',
+            'pengajuanCuti','pengajuanReject', 'pengajuanApproved',
+            'lemburpending','lemburrejected','lemburapproved',
+            'oncallpending','oncallrejected','oncallapproved'
+        ));
     }
 
     public function create()

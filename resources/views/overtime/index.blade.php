@@ -27,21 +27,8 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('overtime.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                                <a href="{{ route('overtime.riwayat') }}" class="btn btn-warning mb-3">Riwayat Pengajuan Lembur</a>
                             </div>
-                            {{-- <div class="form-group">
-                                <label>Date range:</label>
-              
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="far fa-calendar-alt"></i>
-                                    </span>
-                                  </div>
-                                  <input type="text" class="form-control float-right" id="reservation">
-                                </div>
-                                <!-- /.input group -->
-                              </div> --}}
-                            <!-- /.card-header -->
                             <div class="card-body ">
                                 <table class="table table-bordered table-hover" id="allTable">
                                     <thead>
@@ -50,7 +37,7 @@
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
-                                            <th>Selang Waktu</th>
+                                            <th>Total Jam</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>

@@ -36,7 +36,7 @@
                                 <form>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="name">Nama</label>
+                                            <label for="name">User</label>
                                             <input type="text" class="form-control" id="name"
                                                 placeholder="Enter name" name="nama" value="{{ $user->name }}">
                                             @error('name')
@@ -58,6 +58,9 @@
                                             @error('password')
                                                 <small>{{ $message }}</small>
                                             @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password
                                         </div>
                                         <div class="form-group">
                                             <label for="photo">Roles</label>
@@ -108,4 +111,15 @@
             nextSibling.innerText = fileName;
         });
     </script>
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("exampleInputPassword1");
+            var showPasswordCheckbox = document.getElementById("showPassword");
+            if (showPasswordCheckbox.checked) {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+        </script>
 @endsection

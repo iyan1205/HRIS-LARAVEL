@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="level" class="form-label">Level Jabatan:</label>
-                                            <select class="form-control" id="level" name="level" style="width: 100%;" required>
+                                            <select class="form-control" id="level" name="level" style="width: 100%;" >
                                                 <option value="" selected>Pilih level</option>
                                                 <option value="Direktur" {{ $jabatan->level == 'Direktur' ? 'selected' : '' }}>Direktur</option>
                                                 <option value="Manajer" {{ $jabatan->level == 'Manajer' ? 'selected' : '' }}>Manajer</option>
@@ -77,6 +77,19 @@
                                                 </small>
                                                 @enderror
                                             </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="level_approve" class="form-label">Level Approve Cuti:</label>
+                                            <select class="form-control select2bs4" id="level_approve" name="level_approve" style="width: 100%;" >
+                                                <option value="" selected >Pilih</option>
+                                                <option value="1" {{ $jabatan->level_approve == '1' ? 'selected' : '' }}>1 Tahap</option>
+                                                <option value="2" {{ $jabatan->level_approve == '2' ? 'selected' : '' }}>2 Tahap</option>
+                                            </select>
+                                            @error('level_approve')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                            @enderror
                                         </div>
                                     </div>
                                     <!-- /.card-body -->

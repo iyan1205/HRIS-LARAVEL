@@ -58,6 +58,20 @@ class OvertimeController extends Controller
             abort(401);
     }
 
+    public function riwayat()
+    {
+        // Ambil pengguna yang sedang login
+        $user = Auth::user();
+    
+        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        $overtimes = Overtime::where('user_id', $user->id)
+            ->whereIn('status', ['rejected', 'approved'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return view('overtime.riwayat', compact('overtimes'));
+    }
+
     public function create()
     {
         $users = User::pluck('name', 'id');
@@ -75,7 +89,9 @@ class OvertimeController extends Controller
             'user_id' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'approver_id' => 'nullable'
+            'approver_id' => 'nullable',
+            'level_approve' => 'required',
+            
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -124,10 +140,14 @@ class OvertimeController extends Controller
             'end_date' => $end_date,
             'interval' => $interval_formatted,
             'approver_id' => $approver_id,
+            'level_approve' => $request->input('level_approve'),
             'keterangan' => $request->input('keterangan'),
             // Tambahkan kolom lain yang perlu disimpan
         ]);
 
+        // Tambahkan session flash message
+        $message = 'Pengajuan Lembur berhasil dibuat.';
+        Session::flash('successAdd', $message);
 
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('overtime');
@@ -138,6 +158,15 @@ class OvertimeController extends Controller
         $updatedBy = $user->name;
         $overtimes = Overtime::findOrFail($id);
 
+        if ($overtimes->level_approve === 1) {
+            $overtimes->status = 'approved';
+            $overtimes->level_approve = '0';
+        } else {
+            $overtimes->status = 'pending';
+            $overtimes->level_approve = '1';
+            $overtimes->approver_id = $user->karyawan->jabatan->manager_id;
+        }
+        
         $overtimes->approve($updatedBy);
         $overtimes->save();
 
@@ -146,9 +175,27 @@ class OvertimeController extends Controller
         return redirect()->route('approval-overtime');
 
     }
-    /**
-     * Display the specified resource.
-     */
+    
+    public function reject(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+
+        $overimes = Overtime::findOrFail($id);
+        // Set nilai alasan reject
+        $alasan_reject = $request->input('alasan_reject');
+
+        // Simpan alasan reject
+        $overimes->alasan_reject = $alasan_reject;
+
+        $overimes->reject($updatedBy);
+        $overimes->save();
+
+        $message = 'Pengajuan Lembur Tidak Di Setujui.';
+        Session::flash('successAdd', $message);
+        return redirect()->route('approval-overtime');
+
+    }
+
     public function show(string $id)
     {
         //
@@ -177,4 +224,36 @@ class OvertimeController extends Controller
     {
         //
     }
+
+    public function laporan()
+    {
+        return view('overtime.search');
+    }
+
+    public function search(Request $request){
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $status = $request->input('status');
+
+        $query = Overtime::select(
+                'overtimes.*',
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan'
+            )
+            ->join('users', 'overtimes.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->whereBetween('overtimes.start_date', [$startDate, $endDate])
+            ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
+
+            if ($status) {
+                $query->where('overtimes.status', $status);
+            }
+        
+            $results = $query->get();
+
+        return view('overtime.search_results', compact('results', 'status'));
+    }
+
 }

@@ -46,6 +46,32 @@
         .red-star {
             color: red;
         }
+        .custom-file {
+        position: relative;
+            }
+
+            .custom-file-input {
+                display: none;
+            }
+
+            .form-control1 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff; /* Warna latar belakang tombol */
+                color: rgb(99, 99, 99); /* Warna ikon */
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                font-size: 24px; /* Ukuran ikon */
+                border: 1px solid #057aff; /* Border sesuai warna latar belakang */
+            }
+
+            .form-control1 i {
+                margin: 0;
+            }
+
     </style>
 </head>
 @php
@@ -98,6 +124,7 @@
                             <i class="fas fa-user mr-2"></i>Profile
                         </a>
                         @endcan
+                        
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
                             <i class="fas fa-arrow-right mr-2"></i>Log Out
@@ -131,7 +158,7 @@
                     <div class="image">
                         @if(Auth::user()->image)
                         <img src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
-                            class="img-circle elevation-2" alt="User Image">
+                            class="img" alt="User Image">
                         @else
                         <p>No image available</p>
                         @endif
@@ -241,7 +268,11 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#allTable').DataTable();
+            $('#allTable').DataTable({
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
         });
     </script>
     <script>
@@ -328,7 +359,7 @@
                     clear: 'fa fa-trash',
                     close: 'fa fa-check'
                 },
-                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
                 toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
                 buttons: {
                     showClose: true, // Menampilkan tombol Close
@@ -353,7 +384,7 @@
                     close: 'fa fa-check'
                 },
                 useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
-                sideBySide: true, // Menampilkan input waktu secara berdampingan dengan input tanggal
+                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
                 toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
                 buttons: {
                     showClose: true, // Menampilkan tombol Close
@@ -398,6 +429,9 @@
                 
                 });
 
+                $('#time_in').datetimepicker({
+                    format: 'HH:mm'
+                });
                 // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
                 $('#end_date').datetimepicker({
                     format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
@@ -536,6 +570,10 @@
           $('#timepicker').datetimepicker({
             format: 'LT'
           })
+
+          $('#time_in').datetimepicker({
+            format: 'HH:mm'
+          })
       
           //Bootstrap Duallistbox
           $('.duallistbox').bootstrapDualListbox()
@@ -554,63 +592,9 @@
           })
       
         })
-        // BS-Stepper Init
-        document.addEventListener('DOMContentLoaded', function () {
-          window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-        })
+        
       
-        // DropzoneJS Demo Code Start
-        Dropzone.autoDiscover = false
       
-        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-        var previewNode = document.querySelector("#template")
-        previewNode.id = ""
-        var previewTemplate = previewNode.parentNode.innerHTML
-        previewNode.parentNode.removeChild(previewNode)
-      
-        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-          url: "/target-url", // Set the url
-          thumbnailWidth: 80,
-          thumbnailHeight: 80,
-          parallelUploads: 20,
-          previewTemplate: previewTemplate,
-          autoQueue: false, // Make sure the files aren't queued until manually added
-          previewsContainer: "#previews", // Define the container to display the previews
-          clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-        })
-      
-        myDropzone.on("addedfile", function(file) {
-          // Hookup the start button
-          file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-        })
-      
-        // Update the total progress bar
-        myDropzone.on("totaluploadprogress", function(progress) {
-          document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-        })
-      
-        myDropzone.on("sending", function(file) {
-          // Show the total progress bar when upload starts
-          document.querySelector("#total-progress").style.opacity = "1"
-          // And disable the start button
-          file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-        })
-      
-        // Hide the total progress bar when nothing's uploading anymore
-        myDropzone.on("queuecomplete", function(progress) {
-          document.querySelector("#total-progress").style.opacity = "0"
-        })
-      
-        // Setup the buttons for all transfers
-        // The "add files" button doesn't need to be setup because the config
-        // `clickable` has already been specified.
-        document.querySelector("#actions .start").onclick = function() {
-          myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-        }
-        document.querySelector("#actions .cancel").onclick = function() {
-          myDropzone.removeAllFiles(true)
-        }
-        // DropzoneJS Demo Code End
       </script>
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
@@ -619,7 +603,7 @@
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Sukses!',
+                title: 'Login Berhasil',
                 text: '{{ session('success') }}',
             });
         </script>
@@ -635,18 +619,142 @@
             });
         </script>
     @endif
-    @if (session('reject'))
-        <script>
-            Swal.fire({
-                position: "top",
-                icon: "success",
-                title: "{{ session('reject') }}",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        </script>
-    @endif
     
+    <script>
+        $(function () {
+            var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+    
+            $("#laporan").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Cuti_' + today; // Menetapkan nama file sebagai "Laporan_Cuti_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
+    
+            $("#laporan_lembur").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Lembur_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
+            
+            $("#laporan_oncall").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        filename: function() {
+                            return 'Laporan_Oncall_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                        }
+                    }
+                ]
+            }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+<script>
+    $('#kategori_cuti').change(function() {
+        var kategoriCuti = $(this).val();
+        if (kategoriCuti !== '') {
+            $.ajax({
+                url: '/pengajuan-cuti/create/' + kategoriCuti,
+                type: 'GET',
+                success: function(data) {
+                    $('#leave_type_id').empty();
+                    $('#leave_type_id').append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
+                    $.each(data, function(key, value) {
+                        $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
+                    });
+                    $('#leave_type_id_container').show();
+                    
+                    if (kategoriCuti === 'CUTI TAHUNAN') {
+                        $('#leave_type_id_container').hide();
+                        $('#leave_type_id').val('20'); // Set leave_type_id value to 20
+                        $('#max_amount_display').text('Maksimal Jumlah Cuti: 5').show();
+                    } else {
+                        $('#leave_type_id_container').show();
+                        $('#max_amount_display').hide();
+                    }
+
+                    if (kategoriCuti === 'CUTI KHUSUS') {
+                        $('#file_upload_container').show();
+                        $('#file_upload').prop('required', true); // Make file input required
+                    } else {
+                        $('#file_upload_container').hide();
+                        $('#file_upload').prop('required', false); // Make file input not required
+                    }
+                }
+            });
+        } else {
+            $('#leave_type_id_container').hide();
+            $('#file_upload_container').hide();
+            $('#file_upload').prop('required', false); // Make file input not required
+            $('#max_amount_display').hide(); // Hide max_amount_display
+        }
+    });
+
+    $('#leave_type_id').change(function() {
+        var leaveTypeId = $(this).val();
+        if (leaveTypeId !== '') {
+            $.ajax({
+                url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
+                type: 'GET',
+                success: function(data) {
+                    if (data.max_amount) {
+                        $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount).show();
+                    } else {
+                        $('#max_amount_display').hide();
+                    }
+
+                    if (data.file_upload === 'yes') {
+                        $('#file_upload_container').show();
+                        $('#file_upload').prop('required', true); // Make file input required
+                    } else {
+                        $('#file_upload_container').hide();
+                        $('#file_upload').prop('required', false); // Make file input not required
+                    }
+                }
+            });
+        } else {
+            $('#max_amount_display').hide();
+            $('#file_upload_container').hide();
+            $('#file_upload').prop('required', false); // Make file input not required
+        }
+    });
+
+    $('form').submit(function() {
+        var kategoriCuti = $('#kategori_cuti').val();
+        if (kategoriCuti === 'CUTI KHUSUS') {
+            var fileUpload = $('#file_upload').val();
+            if (fileUpload === '') {
+                alert('Mohon unggah file PDF, JPG, atau PNG.');
+                return false; // Prevent form submission
+            }
+        }
+    });
+
+    $(document).ready(function() {
+        $('.select2bst4').select2({
+            theme: 'bootstrap4'
+        });
+    });
+</script>  
+
 
 </body>
 

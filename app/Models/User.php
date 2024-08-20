@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,8 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 use ReflectionFunctionAbstract;
 use Spatie\Permission\Traits\HasRoles;
 
-//implements MustVerifyEmail
-class User extends Authenticatable
+//
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasUuids, HasRoles;
 
@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasOne(Karyawan::class);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     public function leave_applications()
     {
         return $this->hasMany(LeaveApplication::class);
@@ -68,4 +73,7 @@ class User extends Authenticatable
         return $this->hasMany(Overtime::class);
     }
     
+    public function oncall(){
+        return $this->hasMany(OnCall::class);
+    }
 }

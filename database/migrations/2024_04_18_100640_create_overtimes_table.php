@@ -17,8 +17,11 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->string('interval');
-            $table->enum('status', ['pending', 'approved'])->default('pending');
+            $table->enum('status', ['pending', 'rejected' ,'approved'])->default('pending');
             $table->string('keterangan');
+            $table->string('alasan_reject')->nullable();
+            $table->string('approver_id')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

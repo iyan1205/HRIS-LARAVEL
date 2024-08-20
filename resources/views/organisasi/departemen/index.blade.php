@@ -28,6 +28,9 @@
                     <div class="card">
                         <div class="card-header">
                             <a href="{{ route('departemen.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                            @can('restore departemen')
+                            <a href="{{ route('departemen.datasoft') }}" class="btn btn-secondary mb-3">Deleted</a>
+                            @endcan
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body ">

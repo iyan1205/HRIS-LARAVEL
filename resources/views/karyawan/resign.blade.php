@@ -35,6 +35,7 @@
                                         <th>Nama Lengkap</th>
                                         <th>Departemen</th>
                                         <th>Jabatan</th>
+                                        <th>Tanggal Resign</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -45,6 +46,8 @@
                                         <td>{{ $karyawan->user->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($karyawan->tgl_resign)->format('d/m/Y') }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>

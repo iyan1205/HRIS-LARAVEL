@@ -109,9 +109,16 @@ class DepartemenController extends Controller
         return redirect()->route('departemen');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function datasoft(){
+        $departemens = Departemen::onlyTrashed()->get();
+        return view('organisasi.departemen.datasoft', compact('departemens'));
+    }
+
+    public function restore(string $id){
+        Departemen::withTrashed()->find($id)->restore();
+        return redirect()->back();
+    }
+
     public function destroy(string $id)
     {
         $data = Departemen::find($id);

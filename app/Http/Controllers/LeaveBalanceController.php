@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LeaveBalance;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -49,7 +50,8 @@ class LeaveBalanceController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::pluck('name', 'id'); //Select Nama Karyawan/User        
+        return view('cuti.saldo-cuti.create', compact('users'));
     }
 
     /**
@@ -57,7 +59,31 @@ class LeaveBalanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         // Validasi input dari form
+         $validator = Validator::make($request->all(), [
+            'user_id' => 'required|string|max:255|unique:leave_balances',
+            'saldo_cuti' => 'required'
+            // Tambahkan aturan validasi sesuai kebutuhan
+        ]);
+
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        // Buat dan simpan leave_balances baru
+        $leave_balances = LeaveBalance::create([
+            'user_id' => $request->input('user_id'),
+            'saldo_cuti' => $request->input('saldo_cuti'),
+            // Tambahkan kolom lain yang perlu disimpan
+        ]);
+
+        // Tambahkan session flash message
+        $message = 'Saldo Cuti Berhasil Ditambahkan';
+        Session::flash('successAdd', $message);
+
+        // Redirect ke halaman tertentu atau tampilkan pesan sukses
+        return redirect()->route('saldo-cuti');
     }
 
     /**

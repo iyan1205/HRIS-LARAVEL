@@ -28,21 +28,24 @@
                   <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                       <div class="text-center">
-                        <img class="profile-user-img img-fluid img-circle"
-                             src="{{ asset('storage/avatar/' . auth()->user()->image) }}"
-                             alt="User profile picture">
+                        <img class="profile-user-img" src="{{ asset('storage/avatar/' . auth()->user()->image) }}" alt="User profile picture">
                       </div>
       
                       <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
-      
-                      <p class="text-muted text-center">{{ Auth::user()->karyawan->nik }}</p>
+                      
+                      <p class="text-muted text-center">
+                        {{ optional(Auth::user()->karyawan)->nik ?? 'Admin' }}
+
+                      </p>
       
                       <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
-                          <b>Tanggal Masuk :</b> {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }}
+                          <b>Tanggal Masuk :</b> 
+                          {{ Auth::user()->karyawan ? \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') : 'null' }}
+
                         </li>
                         <li class="list-group-item">
-                          <b>Saldo Cuti :</b> {{ Auth::user()->leave_balances->saldo_cuti }}
+                          <b>Saldo Cuti :</b> {{ optional(Auth::user()->leave_balances)->saldo_cuti ?? 'Admin' }}
                         </li>
                         
                         
@@ -62,14 +65,14 @@
                       <strong><i class="fas fa-book mr-1"></i> Institusi</strong>
       
                       <p class="text-muted">
-                        {{ Auth::user()->karyawan->pendidikan->institusi }}
+                        {{ optional(Auth::user()->karyawan)->pendidikan->institusi ?? 'Admin' }}
                       </p>
       
                       <hr>
       
                       <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
       
-                      <p class="text-muted">{{ Auth::user()->karyawan->alamat_ktp }}</p>
+                      <p class="text-muted">{{ optional(Auth::user()->karyawan)->alamat_ktp ?? 'Admin'}}</p>
       
                       <hr>
       
@@ -79,6 +82,10 @@
                   <!-- /.card -->
                 </div>
                 <!-- /.col -->
+                @role('Super-Admin|admin')
+                
+                @else
+                
                 <div class="col-md-9">
                   <div class="card">
                     <div class="card-header p-2">
@@ -88,6 +95,7 @@
                         <li class="nav-item"><a class="nav-link" href="#pendidikan" data-toggle="tab">Data Pendidikan</a></li>
                         <li class="nav-item"><a class="nav-link" href="#paramedis" data-toggle="tab">Data Paramedis</a></li>
                         <li class="nav-item"><a class="nav-link" href="#pelatihan" data-toggle="tab">Data Pelatihan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#gantipassword" data-toggle="tab">Ganti Password</a></li>
                       </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -196,7 +204,7 @@
                             
                               <div class="form-group row">
                                 <div class="offset-sm-2 col-sm-10">
-                                  <button type="submit" class="btn btn-success">Update</button>
+                                  <button type="submit" class="btn btn-success">Simpan</button>
                                 
                                 </div>
                               </div>
@@ -346,11 +354,14 @@
                                   @php $count++; @endphp
                               @endforeach
                             </div>
-                        </div>
+                          </div>
                         
                         </div>
                         <!-- /.tab-pane -->
-                        
+                        <div class="tab-pane" id="gantipassword">
+                          <!-- The password -->
+                          @include('profile.partials.update-password-form')
+                        </div>
                         <!-- /.tab-pane -->
                       </div>
                       <!-- /.tab-content -->
@@ -358,6 +369,7 @@
                   </div>
                   <!-- /.card -->
                 </div>
+                @endrole
                 <!-- /.col -->
               </div>
               <!-- /.row -->
@@ -371,5 +383,25 @@
           nextSibling.innerText = fileName;
       });
   </script>
+
+  <script>
+    // Cek jika status 'password-updated' diterima dari redirect atau terdapat pesan kesalahan pada bidang 'current_password'
+    @if(session('status') === 'password-updated' || $errors->updatePassword->has('current_password') || $errors->updatePassword->has('password'))
+        // Hilangkan kelas "active" dari tab saat ini
+        document.querySelector('.nav-item .nav-link.active').classList.remove('active');
+
+        // Tambahkan kelas "active" ke tab "gantipassword"
+        document.querySelector('.nav-item a[href="#gantipassword"]').classList.add('active');
+
+        // Cari tab konten saat ini dan sembunyikan
+        document.querySelector('.tab-pane.active').classList.remove('active', 'show');
+
+        // Tampilkan tab konten "gantipassword"
+        document.getElementById('gantipassword').classList.add('active', 'show');
+    @endif
+</script>
+
+
+
   
 @endsection

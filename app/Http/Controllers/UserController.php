@@ -80,7 +80,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'nullable',
             'roles' => 'required|array',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Jangan gunakan 'required' untuk photo karena bisa saja user tidak mengganti foto
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -94,7 +94,7 @@ class UserController extends Controller
         $data['roles'] = $request->roles;
 
         if ($request->password) {
-            $data['password'] = Hash::make($request->password); // Gunakan $request->password, bukan $request->email
+            $data['password'] = Hash::make($request->password); //
         }
 
         // Hapus foto lama jika pengguna mengunggah foto baru

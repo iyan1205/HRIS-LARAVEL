@@ -6,7 +6,9 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LeaveApplicationController;
 use App\Http\Controllers\LeaveBalanceController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OnCallController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\PermissionController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,13 +32,13 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', [LoginController::class, 'index'])->name('auth.login');
+Route::get('/', [LoginController::class, 'index'])->middleware('forceLogout')->name('auth.login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::group(['middleware' => ['isAdmin']], function() {
+Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     // Users Routes
@@ -95,6 +98,9 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/departemen/update/{id}', [DepartemenController::class, 'update'])->name('departemen.update');
         Route::delete('/departemen/delete/{id}', [DepartemenController::class, 'destroy'])->name('departemen.delete');
 
+        Route::get('/departemen/datasoft', [DepartemenController::class, 'datasoft'])->name('departemen.datasoft');
+        Route::get('/departemen/restore/{id}', [DepartemenController::class, 'restore'])->name('departemen.restore');
+
     // Unit
         Route::get('/unit', [UnitController::class, 'index'])->name('unit');
         Route::get('/unit/create', [UnitController::class, 'create'])->name('unit.create');
@@ -113,6 +119,8 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
         Route::delete('/jabatan/update/{id}', [JabatanController::class, 'destroy'])->name('jabatan.delete');
     });
+
+
 // Pelatihan
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan');
     Route::get('/pelatihan/create', [PelatihanController::class, 'create'])->name('pelatihan.create');
@@ -122,40 +130,76 @@ Route::group(['middleware' => ['isAdmin']], function() {
     Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
 
-// Pengajuan Cuti Route
-    Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
-    Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
-    Route::get('/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
+    Route::prefix('Cuti')->group(function () {
+        // Pengajuan Cuti Route
+        Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
+        Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
+        Route::get('/pengajuan-cuti/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
+        
+        Route::get('/laporan-cuti', [LeaveApplicationController::class, 'laporan'])->name('laporan-cuti');
+        Route::get('/laporan-cuti/search', [LeaveApplicationController::class, 'search'])->name('laporan-search');
+        
+        Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
+        Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
+        
+        Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
+        Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
+        // Saldo
+        Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
+        Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
+        Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
+        //Proses Saldo
+        Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
+        Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
+        Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+    });
+    
+    //Json
+    Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
+    Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
 
-    Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
-    Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
+    Route::prefix('Lembur')->group( function() {
+        // Overtime
+        Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
+        Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
+        Route::get('/overtime/riwayat-overtime', [OvertimeController::class, 'riwayat'])->name('overtime.riwayat');
 
-    Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
-    Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
-
-// Saldo
-    Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
-    Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
-    Route::post('/saldo-cuti/store', [LeaveBalanceController::class, 'store'])->name('saldo-cuti.store');
-//Proses Saldo
-    Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
-    Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
-    Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+        Route::get('/laporan-overtime', [OvertimeController::class, 'laporan'])->name('laporan-lembur');
+        Route::get('/laporan-overtime/search', [OvertimeController::class, 'search'])->name('overtime-search');
+        
+        Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
+        Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
+        
+        Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+        Route::put('/overtime/{id}/reject', [OvertimeController::class, 'reject'])->name('overtime.reject');
+    
+        //Proses Overtime
+        Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
+        Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
+        Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
+    });
  
-// Overtime
-    Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
-    Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
-    
-    Route::get('/overtime/create', [OvertimeController::class, 'create'])->name('overtime.create');
-    Route::post('/overtime/store', [OvertimeController::class, 'store'])->name('overtime.store');
-    
-    Route::put('/overtime/{id}/approve', [OvertimeController::class, 'approve'])->name('overtime.approve');
+    Route::prefix('oncall')->group( function (){
+        //Oncall
+        Route::get('/oncall',[OnCallController::class, 'index'])->name('oncall');
+        Route::get('/approval-oncall', [OnCallController::class, 'approval'])->name('approval-oncall');
+        Route::get('/oncall/riwayat-oncall', [OnCallController::class, 'riwayat'])->name('oncall.riwayat');
+        
+        Route::get('/laporan-oncall', [OnCallController::class, 'laporan'])->name('laporan-oncall');
+        Route::get('/laporan-oncall/search', [OnCallController::class, 'search'])->name('oncall-search');
 
-//Proses Overtime
-    Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
-    Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
-    Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
+        Route::get('/oncall/create', [OnCallController::class, 'create'])->name('oncall.create');
+        Route::post('/oncall/store', [OnCallController::class, 'store'])->name('oncall.store');
+        
+        Route::put('/oncall/{id}/approve', [OnCallController::class, 'approve'])->name('oncall.approve');
+        Route::put('/oncall/{id}/reject', [OnCallController::class, 'reject'])->name('oncall.reject');
+    
+        //Proses Overtime
+        Route::get('/oncall/edit/{id}', [OnCallController::class, 'edit'])->name('oncall.edit');
+        Route::put('/oncall/update/{id}', [OnCallController::class, 'update'])->name('oncall.update');
+        Route::delete('/oncall/delete/{id}', [OnCallController::class, 'destroy'])->name('oncall.delete');
 
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -165,17 +209,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::get('/attendance/edit/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');//tomboledit
+    Route::post('/attendance/check-out/{id}', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    Route::get('/attendance/records', [AttendanceController::class, 'records'])->name('attendace.records');
 
 
 });
-
-
-
-// Absen Route
-
-
-// Gallery Route
-Route::get('/gallery', [HomeController::class, 'index'])->name('gallery');
 
 
 

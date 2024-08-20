@@ -34,9 +34,9 @@
                                 <form>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="name">Nama</label>
+                                            <label for="name">User</label>
                                             <input type="text" class="form-control" id="name"
-                                                placeholder="Enter name" name="nama">
+                                                placeholder="Enter User" name="nama">
                                             @error('nama')
                                                 <small>{{ $message }}</small>
                                             @enderror

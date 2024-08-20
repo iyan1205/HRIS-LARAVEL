@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+
+
 class LoginRequest extends FormRequest
 {
     /**
@@ -40,17 +42,51 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
+   
+        // Attempt to authenticate the user
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
+    
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
+            
+            
+        }
+    if (Auth::check()) {
+        /** @var App\Models\User */
+        $user = Auth::user();
+        if ($user->hasRole(['Super-Admin', 'admin'])) {
+            RateLimiter::clear($this->throttleKey());
+            return; // Bypass further checks
+        }
+        // Check if the user's karyawan status is null
+        if (is_null($user->karyawan) || is_null($user->karyawan->status)) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+    
+            throw ValidationException::withMessages([
+                'email' => 'Email belum terdaftar.',
+            ]);
+        }
+    
+        // Check if the user's karyawan status is not active
+        if ($user->karyawan->status !== 'active') {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+    
+            throw ValidationException::withMessages([
+                'email' => 'Anda telah resign.',
+            ]);
         }
 
+    }
+            
         RateLimiter::clear($this->throttleKey());
     }
+    
+
+    
 
     /**
      * Ensure the login request is not rate limited.

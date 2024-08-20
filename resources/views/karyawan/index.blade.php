@@ -43,9 +43,9 @@
                                         <th style="width: 10px">No</th>
                                         <th>Nama Lengkap</th>
                                         <th>NIK</th>
+                                        <th>Email</th>
                                         <th>Jabatan</th>
                                         <th>Departemen</th>
-                                        <th>Unit</th>
                                         <th style="width: 150px">Action</th>
                                     </tr>
                                 </thead>
@@ -55,9 +55,9 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $karyawan->name }}</td>
                                         <td>{{ $karyawan->nik }}</td>
+                                        <td>{{ $karyawan->user->email }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
-                                        <td>{{ $karyawan->unit->name }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
                                                 Edit</a>
