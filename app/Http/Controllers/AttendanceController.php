@@ -79,7 +79,7 @@ class AttendanceController extends Controller
         ]);
 
         if ($request->hasFile('time_out_photo')) {
-            $path = $request->file('time_out_photo')->store('attendance_photos', 'public');
+            $path = $request->file('time_out_photo')->store('photos/check-out', 'public');
             $attendance->time_out_photo = $path;
         }
 
@@ -87,7 +87,7 @@ class AttendanceController extends Controller
         $attendance->status = 'check_out';
         $attendance->save();
 
-        return redirect()->route('attendance.index')->with('success', 'Checked out successfully!');
+        return redirect()->route('attendance.index')->with('successAdd', 'Checked out successfully!');
     }
     
 }

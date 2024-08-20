@@ -39,7 +39,7 @@ class LeaveApplication extends Model
 
     public function LeaveType()
     {
-        return $this->belongsTo(LeaveType::class, 'leave_type_id');
+        return $this->belongsTo(LeaveType::class);
     }
 
     public function approve($updatedBy)

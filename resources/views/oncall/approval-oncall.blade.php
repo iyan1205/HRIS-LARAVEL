@@ -121,11 +121,5 @@
 </div>
 @endforeach
 
-<script>
-    // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
-    $(document).on('click', '.approveBtn', function() {
-        var oncallId = $(this).data('oncall-id');
-        $('#approveForm' + oncallId).submit();
-    });
-</script>
+
 @endsection

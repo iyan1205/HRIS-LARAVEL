@@ -84,7 +84,7 @@
 
                                     <div class="form-group row">
                                         <div class="col">
-                                            <label for="start_date">Tanggal Awal:</label>
+                                            <label for="start_date">Tanggal Awal:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="start_date" data-target-input="nearest">
                                                 <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" required/>
                                                 <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <label for="end_date" class="form-label">Tanggal Akhir:</label>
+                                            <label for="end_date">Tanggal Akhir:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="end_date" data-target-input="nearest">
                                                 <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" required/>
                                                 <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
@@ -102,9 +102,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Total Hari:</label>
+                                        <input type="text" class="form-control" id="total_days" disabled/>
+                                    </div>
+                                    
 
                                     <div class="form-group" id="file_upload_container" style="display: none;">
-                                        <label for="file_upload">Upload File</label>
+                                        <label for="file_upload">Upload File <span class="red-star">*</span></label>
                                         <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
@@ -130,12 +136,4 @@
             </div><!-- /.container-fluid -->
         </section>
     </div>
-
-    <script>
-        document.getElementById('file_upload').addEventListener('change', function(e) {
-            var fileName = e.target.files[0].name;
-            var nextSibling = e.target.nextElementSibling;
-            nextSibling.innerText = fileName;
-        });
-    </script>
 @endsection
