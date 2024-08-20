@@ -237,9 +237,13 @@ class OvertimeController extends Controller
 
         $query = Overtime::select(
                 'overtimes.*',
-                'users.name as user_name'
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan'
             )
             ->join('users', 'overtimes.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
             ->whereBetween('overtimes.start_date', [$startDate, $endDate])
             ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
 

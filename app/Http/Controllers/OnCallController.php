@@ -229,9 +229,13 @@ class OnCallController extends Controller
 
         $query = OnCall::select(
                 'on_calls.*',
-                'users.name as user_name'
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan'
             )
             ->join('users', 'on_calls.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
             ->whereBetween('on_calls.start_date', [$startDate, $endDate])
             ->whereBetween('on_calls.end_date', [$startDate, $endDate]);
 
