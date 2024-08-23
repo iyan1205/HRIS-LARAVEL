@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Form On Call</h1>
+                        <h1 class="m-0">Form Edit On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Kehadiran</a></li>
-                            <li class="breadcrumb-item active">Edit Form On Call</li>
+                            <li class="breadcrumb-item"><a href="{{ route('oncall') }}">On Call</a></li>
+                            <li class="breadcrumb-item active">Form Edit On Call</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -87,6 +87,7 @@
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
+                                            </div>
                                         </div>
 
                                         <!-- Display total duration -->
@@ -103,7 +104,7 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <button type="submit" class="btn btn-success">Update</button>
                                     </div>
                                 </form>
                             </div>

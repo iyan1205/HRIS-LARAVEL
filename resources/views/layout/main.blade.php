@@ -668,7 +668,7 @@
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
-<!-- Menambah cuti -->
+<!-- TAMBAH/EDIT cuti -->
 <script>
 $(document).ready(function() {
     // Handle kategori_cuti change event
@@ -743,17 +743,7 @@ $(document).ready(function() {
         }
     });
 
-    // Form submit validation
-    $('form').submit(function() {
-        var kategoriCuti = $('#kategori_cuti').val();
-        if (kategoriCuti === 'CUTI KHUSUS') {
-            var fileUpload = $('#file_upload').val();
-            if (fileUpload === '') {
-                alert('Mohon unggah file PDF, JPG, atau PNG.');
-                return false; // Prevent form submission
-            }
-        }
-    });
+
 });
 
     // Handle file upload change event to update the label with the selected file name
@@ -848,7 +838,7 @@ $(document).ready(function() {
                         badge.style.display = 'none'; // Menyembunyikan badge jika nilainya 0
                     }
                 })
-                .catch(error => console.error(`Error fetching ${badgeId}:`, error));
+                .catch(() => {}); 
         }
 
         // Initial calls to update all counts

@@ -29,11 +29,12 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Karyawan</th>
+                                        <th>Tanggal Pengajuan</th>
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
-                                        <th>Interval</th>
+                                        <th>Total Jam</th>
                                         <th>Keterangan</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,6 +42,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $oncall->user->karyawan->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($oncall->created_at)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($oncall->start_date)->format('d/m/Y H:i') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}</td>
                                         <td>{{ $oncall->interval }}</td>

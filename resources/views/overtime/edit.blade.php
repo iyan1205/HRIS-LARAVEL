@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Edit Form Lembur</h1>
+                        <h1 class="m-0">Form Edit Lembur</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Lembur</a></li>
-                            <li class="breadcrumb-item active">Edit Form Lembur</li>
+                            <li class="breadcrumb-item"><a href="{{ route('overtime') }}">Lembur</a></li>
+                            <li class="breadcrumb-item active">Form Edit Lembur</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->

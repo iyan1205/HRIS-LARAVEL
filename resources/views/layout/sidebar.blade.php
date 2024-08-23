@@ -166,7 +166,7 @@
                 <i class="nav-icon fas fa-calendar-plus"></i>
                 <p>Lembur
                     <i class="fas fa-angle-left right"></i>
-                    <span class="badge badge-info right" id="lemburCountBadge" style="display:none;">0</span>
+                    {{-- <span class="badge badge-info right" id="lemburCountBadge" style="display:none;">0</span> --}}
                 </p>
             </a>
             <ul class="nav nav-treeview">
@@ -206,7 +206,7 @@
                 <i class="nav-icon fas fa-calendar-alt"></i>
                 <p>On-Call
                     <i class="fas fa-angle-left right"></i>
-                    <span id="oncallCountBadge" class="badge badge-info right" style="display:none;">0</span>
+                    {{-- <span id="oncallCountBadge" class="badge badge-info right" style="display:none;">0</span> --}}
                 </p>
             </a>
             <ul class="nav nav-treeview">
@@ -240,13 +240,13 @@
                 @endcan
             </ul>
         </li>
-        <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
+        {{-- <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
             <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
                     Kehadiran
                 </p>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </nav>
