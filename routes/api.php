@@ -26,6 +26,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/store', [AttendanceController::class, 'store']);
-    Route::get('attendances/today', [AttendanceController::class, 'getTodayAttendance']);
-    Route::post('attendances/{id}/checkout', [AttendanceController::class, 'checkout']);
+    Route::get('/attendance-history', [AttendanceController::class, 'index']);
 });

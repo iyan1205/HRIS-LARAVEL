@@ -227,14 +227,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/edit/{id}', [AttendanceController::class, 'edit'])->name('attendance.edit');//tomboledit
     Route::post('/attendance/check-out/{id}', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
     Route::get('/attendance/records', [AttendanceController::class, 'records'])->name('attendace.records');
-
-    // Menghitung jumlah pengajuan realtime
-    Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
-    Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
-    Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
-
 });
 
+// Menghitung jumlah pengajuan realtime
+Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
+Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
+Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
 
 
 

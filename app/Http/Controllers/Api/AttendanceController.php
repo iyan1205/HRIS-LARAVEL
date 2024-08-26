@@ -24,37 +24,33 @@ class AttendanceController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tanggal' => 'nullable|date',
-            'foto' => 'required|image|mimes:jpg,jpeg,png', // Validasi foto sebagai gambar dengan ekstensi tertentu
-            'status' => 'required|in:hadir,pulang,sakit,izin',
-            'jam' => 'required|date_format:H:i'
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'user_id'   => 'required|uuid',
+            'tanggal'   => 'required|date',
+            'jam'       => 'required',
+            'status'    => 'required|string|max:255',
+            'foto'      => 'required|string', // Assuming the photo is base64 encoded
+            'latitude'  => 'required|numeric',
+            'longitude' => 'required|numeric',
         ]);
-    
-        // Simpan file foto jika ada
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('photos/attendance'), $filename); // Simpan file di folder 'uploads'
-        } else {
-            $filename = null; // Jika tidak ada file, set ke null
-        }
-    
-        // Buat data ke dalam tabel Attendance
-        $attendance = Attendance::create([
-            'user_id' => $request->input('user_id'),
-            'tanggal' => $request->input('tanggal'),
-            'foto' => $filename, // Simpan nama file foto
-            'status' => $request->input('status'),
-            'jam' => $request->input('jam')
-        ]);
-    
-        // Respons JSON
+
+        // Save data to the database
+        $data = new Attendance(); // Replace with your actual model
+        $data->user_id = $validatedData['user_id'];
+        $data->tanggal = $validatedData['tanggal'];
+        $data->jam = $validatedData['jam'];
+        $data->status = $validatedData['status'];
+        $data->foto = $validatedData['foto'];
+        $data->latitude = $validatedData['latitude'];
+        $data->longitude = $validatedData['longitude'];
+        $data->save();
+
+        // Return a response
         return response()->json([
-            'message' => 'Attendance created successfully',
-            'data' => $attendance
+            'success' => true,
+            'message' => 'Data stored successfully',
+            'data' => $data
         ], 201);
     }
     
