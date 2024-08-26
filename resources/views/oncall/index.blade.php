@@ -10,7 +10,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item active">On Call</li>
                         </ol>
                     </div><!-- /.col -->
@@ -34,28 +34,98 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Kode Pengajuan</th>
                                             <th>Nama Karyawan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Total Jam</th>
                                             <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($oncalls as $oncall)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td style="text-align: center;"> <span class="badge bg-info"><b>OC-{{ $oncall->id }}</b></span></td>
                                                 <td>{{ $oncall->user->karyawan->name }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($oncall->start_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($oncall->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $oncall->interval }}</td>
-                                                <td><span class="badge bg-secondary">{{ $oncall->status }}</span></td>
-                                                 
-
+                                                <td>
+                                                    <span class="badge bg-secondary">
+                                                        <a href="" title="Lihat Status" data-toggle="modal" data-target="#modal-status{{ $oncall->id }}">
+                                                        {{ $oncall->status }} </a>
+                                                    </span></td>
+                                                <td>
+                                                <a data-toggle="modal" data-target="#modal-detail{{  $oncall->id }}" class="btn btn-info btn-sm" title="Keterangan"><i class="fas fa-eye"></i></a>
+                                                @if (is_null($oncall->updated_by))
+                                                    <a href="{{ route('oncall.edit', ['id' => $oncall->id]) }}" class="btn btn-success btn-sm" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                @endif
+                                                </td>
                                             </tr>
-                                            
+                                            <div class="modal fade" id="modal-status{{ $oncall->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Riwayat Approve</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="">Tanggal Edit:</label>
+                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($oncall->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="">Di Edit Oleh:</label>
+                                                                    <input type="text" class="form-control" value="{{ $oncall->updated_by ?? 'Belum di Edit'}}" readonly> 
+                                                                </div>                                                            
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="modal-detail{{ $oncall->id }}">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content bg-default">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Detail</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="keterangan">Keterangan:</label>
+                                                                <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." readonly >{{ $oncall->keterangan }}</textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Diperbarui pada:</label>
+                                                                <input type="text" class="form-control" value="{{ $oncall->updated_at == $oncall->created_at ? 'Belum Diperbarui' : \Carbon\Carbon::parse($oncall->updated_at)->format('d/m/Y H:i:s') }}" readonly>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Diperbarui oleh:</label>
+                                                                <input type="text" class="form-control" value="{{ $oncall->updated_by ?? 'Belum Diperbarui Atasan'}}" readonly> 
+                                                            </div>                                                            
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>

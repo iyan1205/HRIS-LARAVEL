@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Riwayat Cuti</h1>
+                        <h1 class="m-0">Riwayat Cuti: <b>{{ $user->karyawan->name ?? 'Admin'}}</b></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Cuti</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('pengajuan-cuti') }}">Cuti </a></li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -35,7 +35,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Karyawan</th>
+                                            <th>Kode Pengajuan</th>
                                             <th>Kategori</th>
                                             <th>Jenis</th>
                                             <th>Maksimal Cuti</th>
@@ -49,7 +49,7 @@
                                         @foreach ($leaveApplications as $cuti)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $cuti->user->karyawan->name }}</td>
+                                                <td style="text-align: center;"> <span class="badge bg-info"><b>LA-{{ $cuti->id }}</b></span></td>
                                                 <td>{{ $cuti->leavetype->kategori_cuti }}</td>
                                                 <td>{{ $cuti->leavetype->name }}</td>
                                                 <td> @if (is_numeric($cuti->leavetype->max_amount) && $cuti->leavetype->max_amount != '-')
@@ -70,6 +70,8 @@
                                                         </span>
                                                     @elseif($cuti->status == 'approved')
                                                         <span class="badge bg-success">{{ $cuti->status }}</span>
+                                                    @else()
+                                                        <span class="badge bg-warning">{{ $cuti->status }}</span>
                                                     @endif
                                                 </td>
                                                 

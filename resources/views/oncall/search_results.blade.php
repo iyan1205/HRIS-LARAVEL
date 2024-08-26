@@ -36,13 +36,15 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
+                                            <th>Jabatan</th>
+                                            <th>Tanggal Awal</th>
+                                            <th>Tanggal Akhir</th>
+                                            <th>Total Jam</th>
+                                            <th>Keterangan</th>
                                             <th>Status</th>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved' )
                                             <th>updated by</th>
                                             @endif
-                                            <th>Total Jam</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -50,13 +52,15 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $result->karyawan_name }}</td>
+                                            <td>{{ $result->nama_jabatan }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
+                                            <td>{{ $result->interval }}</td>
+                                            <td>{{ $result->keterangan }}</td>
                                             <td>{{ $result->status }}</td>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
-                                            <td>{{ $result->interval }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
