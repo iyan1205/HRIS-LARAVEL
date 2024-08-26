@@ -60,6 +60,9 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
+                                            <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password
+                                        </div>
+                                        <div class="form-group">
                                             <label for="photo">Roles</label>
                                             @foreach ($roles as $role)
                                             <div class="icheck-primary d-outline">
@@ -108,4 +111,15 @@
             nextSibling.innerText = fileName;
         });
     </script>
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("exampleInputPassword1");
+            var showPasswordCheckbox = document.getElementById("showPassword");
+            if (showPasswordCheckbox.checked) {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+        </script>
 @endsection

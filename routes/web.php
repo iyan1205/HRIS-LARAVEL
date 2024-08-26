@@ -16,6 +16,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,7 +38,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::group(['middleware' => ['isAdmin']], function() {
+Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     // Users Routes
@@ -141,8 +142,15 @@ Route::group(['middleware' => ['isAdmin']], function() {
         Route::get('/pengajuan-cuti/create', [LeaveApplicationController::class, 'create'])->name('cuti.create');
         Route::post('/pengajuan-cuti/store', [LeaveApplicationController::class, 'store'])->name('cuti.store');
         
+        Route::get('/pengajuan-cuti/edit/{id}', [LeaveApplicationController::class, 'edit'])->name('cuti.edit');
+        Route::put('/pengajuan-cuti/update/{id}', [LeaveApplicationController::class, 'update'])->name('cuti.update');
+        Route::delete('/pengajuan-cuti/delete/{id}', [LeaveApplicationController::class, 'destroy'])->name('cuti.delete');
+
         Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
         Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
+        Route::put('/pengajuan-cuti/{id}/cancel', [LeaveApplicationController::class, 'cancel'])->name('leave-application.cancel');    
+        Route::get('/pengajuan-cuti/edit/{kategori}', [LeaveApplicationController::class, 'getLeaveTypes']);
+
         // Saldo
         Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
         Route::get('/saldo-cuti/create', [LeaveBalanceController::class, 'create'])->name('saldo-cuti.create');
@@ -155,7 +163,11 @@ Route::group(['middleware' => ['isAdmin']], function() {
     
     //Json
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
+
+    Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
+    
+
 
     Route::prefix('Lembur')->group( function() {
         // Overtime
@@ -174,6 +186,7 @@ Route::group(['middleware' => ['isAdmin']], function() {
     
         //Proses Overtime
         Route::get('/overtime/edit/{id}', [OvertimeController::class, 'edit'])->name('overtime.edit');
+        Route::get('/overtime/show/{id}', [OvertimeController::class, 'show'])->name('overtime.show');
         Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
         Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
     });
@@ -209,17 +222,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-
 });
 
-
-
-// Absen Route
-
-
-// Gallery Route
-Route::get('/gallery', [HomeController::class, 'index'])->name('gallery');
-
+// Menghitung jumlah pengajuan realtime
+Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
+Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
+Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
 
 
 
