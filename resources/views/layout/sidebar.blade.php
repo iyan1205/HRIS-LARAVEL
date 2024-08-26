@@ -116,7 +116,7 @@
                 <i class="nav-icon fas fa-paper-plane"></i>
                 <p>Cuti
                     <i class="fas fa-angle-left right"></i>
-                    <span class="badge badge-info right" id="pendingCountBadge" style="display:none;">0</span> 
+                    <span class="badge badge-info right" id="pendingCountBadge" style="display:none;"></span> 
                 </p>
             </a>
             <ul class="nav nav-treeview">
@@ -166,7 +166,7 @@
                 <i class="nav-icon fas fa-calendar-plus"></i>
                 <p>Lembur
                     <i class="fas fa-angle-left right"></i
-                    <span class="badge badge-info right" id="lemburCountBadge" style="display:none;">0</span>
+                    <span class="badge badge-info right" id="lemburCountBadge" style="display:none;"></span>
                 </p>
             </a>
             <ul class="nav nav-treeview">
@@ -206,7 +206,7 @@
                 <i class="nav-icon fas fa-calendar-alt"></i>
                 <p>On-Call
                     <i class="fas fa-angle-left right"></i>
-                    <span id="oncallCountBadge" class="badge badge-info right" style="display:none;">0</span>
+                    <span id="oncallCountBadge" class="badge badge-info right" style="display:none;"></span>
                 </p>
             </a>
             <ul class="nav nav-treeview">

@@ -111,17 +111,16 @@
                         </div>
                         <!-- /.info-box-content -->
                     </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
 
-                    <!-- /.col -->
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Disetujui</span>
-                                <span class="info-box-number">{{ $pengajuanApproved }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
+                        <div class="info-box-content">
+                            <span class="info-box-text">Disetujui</span>
+                            <span class="info-box-number">{{ $pengajuanApproved }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -157,136 +156,137 @@
                     </div>
                     <!-- /.info-box -->
                 </div>
+                <!-- /.col -->
+            </div>
+            <!-- LEMBUR -->
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h5 class="m-0">Pengajuan Lembur</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
 
-                <!-- LEMBUR -->
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h5 class="m-0">Pengajuan Lembur</h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Tidak Disetujui</span>
-                                <span class="info-box-number">{{ $lemburrejected }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
+                        <div class="info-box-content">
+                            <span class="info-box-text">Tidak Disetujui</span>
+                            <span class="info-box-number">{{ $lemburrejected }}</span>
                         </div>
-                        <!-- /.info-box -->
+                        <!-- /.info-box-content -->
                     </div>
-                    <!-- /.col -->
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Disetujui</span>
-                                <span class="info-box-number">{{ $lemburapproved }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-
-                    <!-- fix for small devices only -->
-                    <div class="clearfix hidden-md-up"></div>
-
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Belum Disetujui</span>
-                                <span class="info-box-number">{{ $lemburpending }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Jumlah Pengajuan</span>
-                                <span class="info-box-number">{{ $lemburpending + $lemburrejected + $lemburapproved  }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
+                    <!-- /.info-box -->
                 </div>
-                <!-- ON CALL -->
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h5 class="m-0">Pengajuan On Call</h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
 
-                            <div class="info-box-content">
-                                <span class="info-box-text">Tidak Disetujui</span>
-                                <span class="info-box-number">{{ $oncallrejected }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
+                        <div class="info-box-content">
+                            <span class="info-box-text">Disetujui</span>
+                            <span class="info-box-number">{{ $lemburapproved }}</span>
                         </div>
-                        <!-- /.info-box -->
+                        <!-- /.info-box-content -->
                     </div>
-                    <!-- /.col -->
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Disetujui</span>
-                                <span class="info-box-number">{{ $oncallapproved }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-
-                    <!-- fix for small devices only -->
-                    <div class="clearfix hidden-md-up"></div>
-
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Belum Disetujui</span>
-                                <span class="info-box-number">{{ $oncallpending }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Jumlah Pengajuan</span>
-                                <span class="info-box-number">{{ $oncallpending + $oncallrejected + $oncallapproved  }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
+                    <!-- /.info-box -->
                 </div>
-            </div><!-- /.container-fluid -->
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Belum Disetujui</span>
+                            <span class="info-box-number">{{ $lemburpending }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Jumlah Pengajuan</span>
+                            <span class="info-box-number">{{ $lemburpending + $lemburrejected + $lemburapproved  }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- ON CALL -->
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h5 class="m-0">Pengajuan On Call</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Tidak Disetujui</span>
+                            <span class="info-box-number">{{ $oncallrejected }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Disetujui</span>
+                            <span class="info-box-number">{{ $oncallapproved }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- fix for small devices only -->
+                <div class="clearfix hidden-md-up"></div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Belum Disetujui</span>
+                            <span class="info-box-number">{{ $oncallpending }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box mb-3">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Jumlah Pengajuan</span>
+                            <span class="info-box-number">{{ $oncallpending + $oncallrejected + $oncallapproved  }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+            </div>
+        </div><!-- /.container-fluid -->
         
         @endrole
         <!-- /.content -->
