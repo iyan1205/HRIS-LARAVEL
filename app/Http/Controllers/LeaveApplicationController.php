@@ -307,10 +307,6 @@ class LeaveApplicationController extends Controller
     }
     
     
-
-
-    
-    
     public function update(Request $request, $id)
     {
         $leaveApplication = LeaveApplication::findOrFail($id);

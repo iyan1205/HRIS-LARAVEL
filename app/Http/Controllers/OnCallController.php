@@ -34,7 +34,7 @@ class OnCallController extends Controller
             if ($users->hasRole(['Super-Admin'])) {
                 $oncalls = OnCall::where('status', 'pending')->get();
             } else if ($users->hasRole('Approver')) {
-                // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
+                // Query untuk mendapatkan pengajuan
                
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
             $oncalls = OnCall::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->get();   
