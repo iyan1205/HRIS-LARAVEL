@@ -165,7 +165,7 @@
             <a href="#" class="nav-link {{ request()->is('Lembur/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-calendar-plus"></i>
                 <p>Lembur
-                    <i class="fas fa-angle-left right"></i
+                    <i class="fas fa-angle-left right"></i>
                     <span class="badge badge-info right" id="lemburCountBadge" style="display:none;"></span>
                 </p>
             </a>

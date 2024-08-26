@@ -283,7 +283,7 @@ class LeaveApplicationController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
         $leaveApplication = LeaveApplication::findOrFail($id);
         $users = User::pluck('name', 'id');
