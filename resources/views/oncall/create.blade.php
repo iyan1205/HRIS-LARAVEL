@@ -87,6 +87,13 @@
                                                     </div>
                                             </div>
                                         </div>
+
+                                        <!-- Display total duration -->
+                                        <div class="form-group">
+                                            <label for="total_duration">Total Jam:</label>
+                                            <input type="text" id="total_duration" class="form-control" readonly>
+                                        </div>
+                                        
                                         <div class="form-group">
                                             <label>Keterangan</label>
                                             <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required></textarea>

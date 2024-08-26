@@ -76,6 +76,7 @@
 </head>
 @php
     $user = Auth::user();
+    
 @endphp
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -667,10 +668,13 @@
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
+<!-- TAMBAH/EDIT cuti -->
 <script>
+$(document).ready(function() {
+    // Handle kategori_cuti change event
     $('#kategori_cuti').change(function() {
         var kategoriCuti = $(this).val();
-        if (kategoriCuti !== '') {
+        if (kategoriCuti) {
             $.ajax({
                 url: '/pengajuan-cuti/create/' + kategoriCuti,
                 type: 'GET',
@@ -681,7 +685,8 @@
                         $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
                     });
                     $('#leave_type_id_container').show();
-                    
+
+                    // Show/hide file upload container based on kategori_cuti
                     if (kategoriCuti === 'CUTI TAHUNAN') {
                         $('#leave_type_id_container').hide();
                         $('#leave_type_id').val('20'); // Set leave_type_id value to 20
@@ -693,69 +698,166 @@
 
                     if (kategoriCuti === 'CUTI KHUSUS') {
                         $('#file_upload_container').show();
-                        $('#file_upload').prop('required', true); // Make file input required
+                        $('#file_upload').prop('required', true);
                     } else {
                         $('#file_upload_container').hide();
-                        $('#file_upload').prop('required', false); // Make file input not required
+                        $('#file_upload').prop('required', false);
                     }
                 }
             });
         } else {
             $('#leave_type_id_container').hide();
             $('#file_upload_container').hide();
-            $('#file_upload').prop('required', false); // Make file input not required
-            $('#max_amount_display').hide(); // Hide max_amount_display
+            $('#file_upload').prop('required', false);
+            $('#max_amount_display').hide();
         }
     });
 
+    // Handle leave_type_id change event
     $('#leave_type_id').change(function() {
         var leaveTypeId = $(this).val();
-        if (leaveTypeId !== '') {
+        if (leaveTypeId) {
             $.ajax({
                 url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
                 type: 'GET',
                 success: function(data) {
                     if (data.max_amount) {
-                        $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount).show();
+                        $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount + ' Hari').show();
                     } else {
                         $('#max_amount_display').hide();
                     }
 
                     if (data.file_upload === 'yes') {
                         $('#file_upload_container').show();
-                        $('#file_upload').prop('required', true); // Make file input required
+                        $('#file_upload').prop('required', true);
                     } else {
                         $('#file_upload_container').hide();
-                        $('#file_upload').prop('required', false); // Make file input not required
+                        $('#file_upload').prop('required', false);
                     }
                 }
             });
         } else {
             $('#max_amount_display').hide();
             $('#file_upload_container').hide();
-            $('#file_upload').prop('required', false); // Make file input not required
+            $('#file_upload').prop('required', false);
         }
     });
 
-    $('form').submit(function() {
-        var kategoriCuti = $('#kategori_cuti').val();
-        if (kategoriCuti === 'CUTI KHUSUS') {
-            var fileUpload = $('#file_upload').val();
-            if (fileUpload === '') {
-                alert('Mohon unggah file PDF, JPG, atau PNG.');
-                return false; // Prevent form submission
+
+});
+
+    // Handle file upload change event to update the label with the selected file name
+    $('#file_upload').change(function() {
+        var fileName = $(this).val().split('\\').pop(); // Extract the file name from the file path
+        $(this).next('.custom-file-label').html(fileName); // Update the label text
+    });
+
+$(document).ready(function() {
+    $('.select2bst4').select2({
+        theme: 'bootstrap4'
+    });
+});
+</script> 
+ 
+
+<!-- Menampilkan kalkulasi waktu -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize datetime pickers
+        $('#start_dateover').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+        $('#end_dateover').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+            useCurrent: false
+        });
+
+        // Calculate the difference in hours and minutes when either date changes
+        $('#start_dateover, #end_dateover').on('change.datetimepicker', function() {
+            var startDate = $('#start_dateover').find('input').val();
+            var endDate = $('#end_dateover').find('input').val();
+
+            if (startDate && endDate) {
+                var start = moment(startDate, 'YYYY-MM-DD HH:mm');
+                var end = moment(endDate, 'YYYY-MM-DD HH:mm');
+                
+                // Calculate the difference in minutes
+                var diff = end.diff(start, 'minutes');
+
+                // Convert total minutes to hours and minutes
+                var hours = Math.floor(diff / 60);
+                var minutes = diff % 60;
+
+                $('#total_duration').val(hours + ' jam ' + minutes + ' menit');
+            }
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        // Initialize the date pickers
+        $('#start_date').datetimepicker({
+            format: 'L'
+        });
+        $('#end_date').datetimepicker({
+            format: 'L'
+        });
+
+        // Update total days when either date changes
+        $('#start_date, #end_date').on('change.datetimepicker', function () {
+            calculateDays();
+        });
+
+        function calculateDays() {
+            var startDate = $('#start_date').datetimepicker('date');
+            var endDate = $('#end_date').datetimepicker('date');
+            
+            if (startDate && endDate) {
+                var start = moment(startDate);
+                var end = moment(endDate);
+                var days = end.diff(start, 'days') + 1; // Add 1 to include both start and end dates
+
+                $('#total_days').val(days + ' Hari');
             }
         }
     });
+</script>
 
-    $(document).ready(function() {
-        $('.select2bst4').select2({
-            theme: 'bootstrap4'
-        });
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateBadge(url, badgeId, dataKey) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById(badgeId);
+                    if (data[dataKey] > 0) {
+                        badge.textContent = data[dataKey];
+                        badge.style.display = 'inline-block'; // Menampilkan badge jika nilainya lebih dari 0
+                    } else {
+                        badge.style.display = 'none'; // Menyembunyikan badge jika nilainya 0
+                    }
+                })
+                .catch(() => {}); 
+        }
+
+        // Initial calls to update all counts
+        updateBadge('{{ route('api.pending-count') }}', 'pendingCountBadge', 'pendingCount');
+        updateBadge('{{ route('api.over-count') }}', 'lemburCountBadge', 'countOvertime');
+        updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
+
+        // Optionally, update the counts periodically
+        setInterval(function() {
+            updateBadge('{{ route('api.pending-count') }}', 'pendingCountBadge', 'pendingCount');
+            updateBadge('{{ route('api.over-count') }}', 'lemburCountBadge', 'countOvertime');
+            updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
+        }, 5000); // Update every minute
     });
-</script>  
 
+    
+</script>
 
+    
 </body>
 
 </html>

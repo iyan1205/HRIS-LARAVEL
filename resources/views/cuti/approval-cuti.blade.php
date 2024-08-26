@@ -34,11 +34,11 @@
                                         <th>Kategori</th>
                                         <th>Jenis</th>
                                         <th>Maksimal Cuti</th>
-                                        <th>Tanggal Mulai</th>
-                                        <th>Tanggal Akhir</th>
+                                        <th>Tanggal Pengajuan</th>
+                                        <th>Tanggal Mulai/Akhir</th>
                                         <th>Total Hari</th>
                                         <th>Dokumen Pendukung</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,8 +54,14 @@
                                             -
                                         @endif
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($cuti->created_at)->format('d/m/Y') }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}
+                                            @if($cuti->start_date != $cuti->end_date)
+                                                s.d. {{ \Carbon\Carbon::parse($cuti->end_date)->format('d/m/Y') }}
+                                            @endif
+                                        </td>
+                                        
                                         <td>{{ $cuti->total_days }} Hari</td>
                                         <td>
                                             @if ( $cuti->file_upload)

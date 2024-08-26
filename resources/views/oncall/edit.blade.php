@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Form Lembur</h1>
+                        <h1 class="m-0">Form Edit On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Kehadiran</a></li>
-                            <li class="breadcrumb-item active">Form Lembur</li>
+                            <li class="breadcrumb-item"><a href="{{ route('oncall') }}">On Call</a></li>
+                            <li class="breadcrumb-item active">Form Edit On Call</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -21,7 +21,9 @@
         
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('overtime.store') }}" method="POST" enctype="multipart/form-data">@csrf
+                <form action="{{ route('oncall.update', $oncalls->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-6">
@@ -32,9 +34,9 @@
                             </div>
                              @endif
 
-                            <div class="card card-primary">
+                            <div class="card card-success">
                                 <div class="card-header">
-                                    <h3 class="card-title">Form Lembur</h3>
+                                    <h3 class="card-title">Edit Form On Call</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
@@ -70,39 +72,39 @@
                                         <div class="form-group row">
                                             <div class="col">
                                                 <label>Tanggal Awal:</label>
-                                                <div class="input-group date" id="start_dateover" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="start_date"/>
-                                                    <div class="input-group-append" data-target="#start_dateover" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    <div class="input-group date" id="start_dateover" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="start_date" value="{{ $oncalls->start_date }}"/>
+                                                        <div class="input-group-append" data-target="#start_dateover" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
                                                     </div>
-                                                </div>
                                             </div>
                                             <div class="col">
                                                 <label for="end_dateover" class="form-label">Tanggal Akhir:</label>
                                                 <div class="input-group date" id="end_dateover" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="end_date"/>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="end_date" value="{{ $oncalls->end_date }}"/>
                                                     <div class="input-group-append" data-target="#end_dateover" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Display total duration -->
                                         <div class="form-group">
                                             <label for="total_duration">Total Jam:</label>
-                                            <input type="text" id="total_duration" class="form-control" readonly>
+                                            <input type="text" id="total_duration" class="form-control" readonly value="{{ $oncalls->interval }}">
                                         </div>
                                         
                                         <div class="form-group">
                                             <label>Keterangan</label>
-                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required></textarea>
+                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required>{{ $oncalls->keterangan }}</textarea>
                                         </div>
 
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-success">Update</button>
                                     </div>
                                 </form>
                             </div>
@@ -112,8 +114,7 @@
                 </form>
             </div>
             <!-- /.row -->
-    </div><!-- /.container-fluid -->
-    </section>
+       </section>
     </div>
-   
+  
 @endsection
