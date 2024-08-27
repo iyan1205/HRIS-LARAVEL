@@ -6,12 +6,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Riwayat Lembur</h1>
+                        <h1 class="m-0">Riwayat Lembur: <b>{{ $user->karyawan->name ?? 'Admin'}}</b></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Lembur</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('overtime') }}">Lembur</a></li>
+                            <li class="breadcrumb-item active">Riwayat Lembur</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -35,7 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Karyawan</th>
+                                            <th>Kode Pengajuan</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Total Jam</th>
@@ -47,7 +48,7 @@
                                         @foreach ($overtimes as $overtime)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $overtime->user->karyawan->name }}</td>
+                                                <td style="text-align: center;"> <span class="badge bg-info"><b>OT-{{ $overtime->id }}</b></span></td>
                                                 <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
@@ -111,31 +112,4 @@
         </section>
         <!-- /.content -->
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mendaftarkan event click pada semua tombol rejectBtn
-            const rejectButtons = document.querySelectorAll('.rejectBtn');
-            rejectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const cutiId = this.getAttribute('data-cuti-id');
-    
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Tolak',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
-                            document.getElementById('rejectForm' + cutiId).submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 @endsection
