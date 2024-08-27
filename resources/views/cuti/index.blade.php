@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Cuti</h1>
+                        <h1 class="m-0">Pengajuan Cuti</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -91,7 +91,11 @@
                                                                 </div>
                                                                 <div>
                                                                     <label for="file_upload">Dokumen Pendukung</label>
-                                                                    <a href="{{ asset('storage/'. $cuti->file_upload) }}" class="form-control" readonly target="_blank">Lihat Dokumen</a>
+                                                                    @if ( $cuti->file_upload)
+                                                                    <a href="{{ asset('storage/'. $cuti->file_upload) }}" class="form-control" target="_blank">Lihat Dokumen</a></td>
+                                                                    @else
+                                                                    <input class="form-control" readonly value="File tidak tersedia">
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">

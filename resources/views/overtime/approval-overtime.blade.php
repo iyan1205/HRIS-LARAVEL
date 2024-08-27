@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Lembur</h1>
+                    <h1 class="m-0">Approval Lembur</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Lembur</li>
+                        <li class="breadcrumb-item active">Approval Lembur</li>
                     </ol>
                 </div>
             </div>
@@ -28,6 +28,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kode Pengajuan</th>
                                         <th>Nama Karyawan</th>
                                         <th>Tanggal Pengajuan</th>
                                         <th>Tanggal Mulai</th>
@@ -41,6 +42,7 @@
                                     @foreach ($overtimes as $overtime)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td style="text-align: center;"> <span class="badge bg-info"><b>OT-{{ $overtime->id }}</b></span></td>
                                         <td>{{ $overtime->user->karyawan->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->created_at)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}</td>

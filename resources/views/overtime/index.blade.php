@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Lembur</h1>
+                        <h1 class="m-0">Pengajuan Lembur</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -48,17 +48,13 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td style="text-align: center;"> <span class="badge bg-info"><b>OT-{{ $overtime->id }}</b></span></td>
-
                                                 <td>{{ $overtime->user->karyawan->name }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}
                                                 </td>
                                                 <td>{{ $overtime->interval }}</td>
-                                                <td>
-                                                    <span class="badge bg-secondary">
-                                                        {{ $overtime->status }}
-                                                    </span></td>
+                                                <td><span class="badge bg-secondary">{{ $overtime->status }}</span></td>
                                                 <td>
                                                 <a data-toggle="modal" data-target="#modal-detail{{  $overtime->id }}" class="btn btn-info btn-sm" title="Keterangan"><i class="fas fa-eye"></i></a>
                                                 @if (is_null($overtime->updated_by))
@@ -115,31 +111,5 @@
         </section>
         <!-- /.content -->
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mendaftarkan event click pada semua tombol rejectBtn
-            const rejectButtons = document.querySelectorAll('.rejectBtn');
-            rejectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const cutiId = this.getAttribute('data-cuti-id');
-    
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Tolak',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
-                            document.getElementById('rejectForm' + cutiId).submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+   
 @endsection

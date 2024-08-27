@@ -70,7 +70,7 @@ class OvertimeController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
     
-        return view('overtime.riwayat', compact('overtimes'));
+        return view('overtime.riwayat', compact('overtimes','user'));
     }
 
     public function create()

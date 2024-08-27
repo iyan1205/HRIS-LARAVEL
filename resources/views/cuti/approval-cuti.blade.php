@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Cuti</h1>
+                    <h1 class="m-0">Approval Cuti</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Cuti</li>
+                        <li class="breadcrumb-item active">Approval Cuti</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -30,6 +30,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kode Pengajuan</th>
                                         <th>Nama Karyawan</th>
                                         <th>Kategori</th>
                                         <th>Jenis</th>
@@ -45,6 +46,7 @@
                                     @foreach ($leaveApplications as $cuti)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td style="text-align: center;"> <span class="badge bg-info"><b>LA-{{ $cuti->id }}</b></span></td>
                                         <td>{{ $cuti->user->karyawan->name }}</td>
                                         <td>{{ $cuti->leavetype->kategori_cuti }}</td>
                                         <td>{{ $cuti->leavetype->name }}</td>
