@@ -97,7 +97,7 @@
             <!-- CUTI -->
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5 class="m-0">Pengajuan Cuti</h1>
+                    <h5 class="m-0"><a href="{{ route('pengajuan-cuti') }}">Pengajuan Cuti</a></h5>
                 </div><!-- /.col -->
             </div><!-- /.row -->
             <div class="row">
@@ -115,7 +115,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-12 col-sm-6 col-md-3">
-                    <div class="info-box mb-3">
+                    <div class="info-box mb-3" >
                         <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
 
                         <div class="info-box-content">
@@ -161,13 +161,13 @@
             <!-- LEMBUR -->
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5 class="m-0">Pengajuan Lembur</h1>
+                    <h5 class="m-0"><a href="{{ route('overtime') }}">Pengajuan Lembur</a></h5>
                 </div><!-- /.col -->
             </div><!-- /.row -->
             <div class="row">
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fas fa-calendar-plus"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Tidak Disetujui</span>
@@ -180,7 +180,7 @@
                 <!-- /.col -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fas fa-calendar-plus"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Disetujui</span>
@@ -197,7 +197,7 @@
 
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fas fa-calendar-plus"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Belum Disetujui</span>
@@ -210,7 +210,7 @@
                 <!-- /.col -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fas fa-calendar-plus"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Jumlah Pengajuan</span>
@@ -225,13 +225,13 @@
             <!-- ON CALL -->
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5 class="m-0">Pengajuan On Call</h1>
+                    <h5 class="m-0"><a href="{{ route('oncall') }}">Pengajuan On Call</a></h5>
                 </div><!-- /.col -->
             </div><!-- /.row -->
             <div class="row">
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-calendar-alt"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Tidak Disetujui</span>
@@ -244,7 +244,7 @@
                 <!-- /.col -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-calendar-alt"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Disetujui</span>
@@ -261,7 +261,7 @@
 
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Belum Disetujui</span>
@@ -274,7 +274,7 @@
                 <!-- /.col -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-paper-plane"></i></span>
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-calendar-alt"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Jumlah Pengajuan</span>

@@ -60,7 +60,7 @@ class OnCallController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
     
-        return view('oncall.riwayat', compact('oncalls'));
+        return view('oncall.riwayat', compact('oncalls','user'));
     }
 
     public function create()

@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">On Call</h1>
+                        <h1 class="m-0">Pengajuan On Call</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -56,8 +56,7 @@
                                                 <td>{{ $oncall->interval }}</td>
                                                 <td>
                                                     <span class="badge bg-secondary">
-                                                        <a href="" title="Lihat Status" data-toggle="modal" data-target="#modal-status{{ $oncall->id }}">
-                                                        {{ $oncall->status }} </a>
+                                                        {{ $oncall->status }} 
                                                     </span></td>
                                                 <td>
                                                 <a data-toggle="modal" data-target="#modal-detail{{  $oncall->id }}" class="btn btn-info btn-sm" title="Keterangan"><i class="fas fa-eye"></i></a>
@@ -68,33 +67,7 @@
                                                 @endif
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="modal-status{{ $oncall->id }}">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Riwayat Approve</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                            <div class="modal-body">
-                                                                <div class="form-group">
-                                                                    <label for="">Tanggal Edit:</label>
-                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($oncall->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
-                                                                </div>
-
-                                                                <div class="form-group">
-                                                                    <label for="">Di Edit Oleh:</label>
-                                                                    <input type="text" class="form-control" value="{{ $oncall->updated_by ?? 'Belum di Edit'}}" readonly> 
-                                                                </div>                                                            
-                                                            </div>
-                                                            <div class="modal-footer justify-content-between">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                            </div>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                            </div>
+                                            
                                             <div class="modal fade" id="modal-detail{{ $oncall->id }}">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content bg-default">
@@ -140,31 +113,5 @@
         </section>
         <!-- /.content -->
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mendaftarkan event click pada semua tombol rejectBtn
-            const rejectButtons = document.querySelectorAll('.rejectBtn');
-            rejectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const cutiId = this.getAttribute('data-cuti-id');
-    
-                    Swal.fire({
-                        title: 'Konfirmasi',
-                        text: 'Apakah Anda yakin ingin menolak pengajuan cuti ini?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, Tolak',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika pengguna mengonfirmasi, kirim permintaan Ajax untuk menolak pengajuan cuti
-                            document.getElementById('rejectForm' + cutiId).submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+   
 @endsection
