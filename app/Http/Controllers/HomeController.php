@@ -22,6 +22,7 @@ class HomeController extends Controller
     {
         $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
         $jumlahKaryawanResign = Karyawan::where('status', 'resign')->count();
+        $karyawanCount = User::role('karyawan')->count();
         $pengajuanReject = 0;
         $pengajuanApproved = 0;
         $lemburpending = 0;
@@ -36,6 +37,7 @@ class HomeController extends Controller
             $users = Auth::user();
         if ($users->hasRole(['Super-Admin', 'admin'])) {
             $pengajuanCuti = LeaveApplication::where('status', 'pending')->count();
+            
         }else{
             $pengajuanCuti = LeaveApplication::where('status', 'pending')
             ->where('user_id', auth()->id())
@@ -68,7 +70,7 @@ class HomeController extends Controller
 
     }
         return view('dashboard', compact(
-            'jumlahKaryawanAktif','jumlahKaryawanResign',
+            'jumlahKaryawanAktif','jumlahKaryawanResign','karyawanCount',
             'pengajuanCuti','pengajuanReject', 'pengajuanApproved',
             'lemburpending','lemburrejected','lemburapproved',
             'oncallpending','oncallrejected','oncallapproved'

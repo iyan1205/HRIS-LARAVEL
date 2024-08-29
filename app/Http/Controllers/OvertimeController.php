@@ -318,8 +318,12 @@ class OvertimeController extends Controller
 
     public function getOverCount()
     {
-        $users = Auth::user();
-        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+        /** @var App\Models\User */
+        $user = Auth::user();
+        if ($user->hasRole('Super-Admin')) {
+            return response()->json(['countOvertime' => 0]);
+        }
+        $subordinateIds = $user->karyawan->jabatan->subordinates->pluck('manager_id');
         $countOvertime = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->count();  
         return response()->json(['countOvertime' => $countOvertime]); // Mengubah 'countovertime' menjadi 'overCount'
     }
