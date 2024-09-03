@@ -11,16 +11,21 @@ class Attendance extends Model
 
     protected $fillable = [
         'user_id',
-        'date',
-        'time_in',
-        'time_in_photo',
-        'time_out',
-        'time_out_photo',
+        'nik',
+        'departemen',
+        'jenis_kelamin',
+        'unit',
+        'jabatan',
         'status',
+        'tanggal',
+        'jam',
+        'lokasi',
+        'foto',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

@@ -11,51 +11,56 @@ use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
-    public function getTodayAttendance(Request $request)
+    public function attendance()
     {
-        $user = Auth::user();
-        $attendances = Attendance::where('user_id', $user->id)
-        ->whereDate('created_at', Carbon::today())
-        ->latest()
-        ->first();
-        return response()->json($attendances);
+        $userId = Auth::id();
+
+        $attendance = Attendance::where('user_id', $userId)->get();
+
+    return response()->json([
+        'user_id' => $userId,
+        'attendance' => $attendance
+    ]);
     }
-    
 
     public function store(Request $request)
     {
-        // Validasi input
+        // Validate the request
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tanggal' => 'nullable|date',
-            'foto' => 'required|image|mimes:jpg,jpeg,png', // Validasi foto sebagai gambar dengan ekstensi tertentu
-            'status' => 'required|in:hadir,pulang,sakit,izin',
-            'jam' => 'required|date_format:H:i'
+            'user_id' => 'required',
+            'nik' => 'required|string|max:255',
+            'departemen' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|string|in:Laki-Laki,Perempuan',
+            'unit' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:255',
+            'status' => 'required|string|in:Hadir,Izin,Sakit,Pulang',
+            'tanggal' => 'required|date',
+            'jam' => 'required|date_format:H:i:s',
+            'lokasi' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Optional, adjust as needed
         ]);
-    
-        // Simpan file foto jika ada
+
+        // Handle the file upload
+        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('photos/attendance'), $filename); // Simpan file di folder 'uploads'
-        } else {
-            $filename = null; // Jika tidak ada file, set ke null
+            $fotoPath = $request->file('foto')->store('attendances', 'public\attendance_photos');
         }
-    
-        // Buat data ke dalam tabel Attendance
+
+        // Create a new attendance record
         $attendance = Attendance::create([
-            'user_id' => $request->input('user_id'),
-            'tanggal' => $request->input('tanggal'),
-            'foto' => $filename, // Simpan nama file foto
-            'status' => $request->input('status'),
-            'jam' => $request->input('jam')
+            'nik' => $request->nik,
+            'departemen' => $request->departemen,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'unit' => $request->unit,
+            'jabatan' => $request->jabatan,
+            'status' => $request->status,
+            'tanggal' => $request->tanggal,
+            'jam' => $request->jam,
+            'lokasi' => $request->lokasi,
+            'foto' => $fotoPath,
         ]);
-    
-        // Respons JSON
-        return response()->json([
-            'message' => 'Attendance created successfully',
-            'data' => $attendance
-        ], 201);
+
+        return response()->json(['message' => 'Attendance submitted successfully', 'data' => $attendance], 201);
     }
     
 
