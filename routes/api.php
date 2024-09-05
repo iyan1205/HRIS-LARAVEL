@@ -32,7 +32,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->get('/attendance', [AttendanceController::class, 'attendance']);
-
+Route::middleware('auth:sanctum')->post('/attendance/store', [AttendanceController::class, 'store']);
+Route::get('/server-time', [AttendanceController::class, 'getTime']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('attendances/today', [AttendanceController::class, 'getTodayAttendance']);
     Route::post('attendances/{id}/checkout', [AttendanceController::class, 'checkout']);

@@ -81,4 +81,9 @@ class Karyawan extends Authenticatable
     {
         return $this->belongsToMany(Pelatihan::class)->withTimestamps();
     }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class, 'user_id', 'user_id');
+    }
 }

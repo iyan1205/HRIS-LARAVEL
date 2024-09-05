@@ -28,4 +28,8 @@ class Attendance extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'user_id', 'user_id');
+    }
 }
