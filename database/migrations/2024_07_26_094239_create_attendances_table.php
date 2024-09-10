@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->time('time_in')->nullable();
-            $table->string('time_in_photo')->nullable(); 
-            $table->time('time_out')->nullable();
-            $table->string('time_out_photo')->nullable();
+            $table->string('nik')->nullable(); 
+            $table->string('departemen')->nullable(); 
+            $table->string('jenis_kelamin')->nullable(); 
+            $table->string('jabatan')->nullable(); 
+            $table->string('unit')->nullable(); 
+            $table->enum('status',[
+                'Hadir','Izin','Sakit','Pulang']);
+            $table->date('tanggal');
+            $table->time('jam')->nullable();
+            $table->string('lokasi')->nullable(); 
+            $table->string('foto')->nullable();
             $table->enum('status',['check_in','check_out'])->default('check_in');
             $table->timestamps();
         });

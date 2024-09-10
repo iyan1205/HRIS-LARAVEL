@@ -17,6 +17,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\SppdController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -210,7 +211,26 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/oncall/edit/{id}', [OnCallController::class, 'edit'])->name('oncall.edit');
         Route::put('/oncall/update/{id}', [OnCallController::class, 'update'])->name('oncall.update');
         Route::delete('/oncall/delete/{id}', [OnCallController::class, 'destroy'])->name('oncall.delete');
+    });
 
+    Route::prefix('sppd')->group(function(){
+        Route::get('/sppd',[SppdController::class, 'index'])->name('sppd');
+        Route::get('/approval-sppd', [SppdController::class, 'approval'])->name('approval-sppd');
+        Route::get('/sppd/riwayat-sppd', [SppdController::class, 'riwayat'])->name('riwayat-sppd');
+        
+        Route::get('/laporan-sppd', [SppdController::class, 'laporan'])->name('laporan-sppd');
+        Route::get('/laporan-sppd/search', [SppdController::class, 'search'])->name('sppd-search');
+
+        Route::get('/sppd/create', [SppdController::class, 'create'])->name('sppd.create');
+        Route::post('/sppd/store', [SppdController::class, 'store'])->name('sppd.store');
+        
+        Route::put('/sppd/{id}/approve', [SppdController::class, 'approve'])->name('sppd.approve');
+        Route::put('/sppd/{id}/reject', [SppdController::class, 'reject'])->name('sppd.reject');
+    
+        //Proses Overtime
+        Route::get('/sppd/edit/{id}', [SppdController::class, 'edit'])->name('sppd.edit');
+        Route::put('/sppd/update/{id}', [SppdController::class, 'update'])->name('sppd.update');
+    
     });
 });
 

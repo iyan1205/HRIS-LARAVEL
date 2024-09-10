@@ -76,4 +76,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function oncall(){
         return $this->hasMany(OnCall::class);
     }
+
+    public function sppds()
+    {
+        return $this->hasMany(Sppd::class);
+    }
+
 }

@@ -521,7 +521,38 @@
           $('.select2bs4').select2({
             theme: 'bootstrap4'
           })
-      
+                // Ensure all fasilitas are hidden when the page loads
+            $('#fasilitas_kendaraan_group').hide();
+            $('#fasilitas_transportasi_group').hide();
+            $('#fasilitas_akomodasi_group').hide();
+
+            // Event listener for 'kategori_dinas' dropdown change using Select2 event
+            $('#kategori_dinas').on('change.select2', function () {
+                var kategori = $(this).val();
+                //console.log('Kategori selected:', kategori); // Debugging line
+
+                // Hide all fasilitas groups initially
+                $('#fasilitas_kendaraan_group').hide();
+                $('#fasilitas_transportasi_group').hide();
+                $('#fasilitas_akomodasi_group').hide();
+
+                // Show relevant groups based on selected category
+                if (kategori === 'DOMESTIK DALAM KOTA' || kategori === 'DOMESTIK LUAR KOTA (TIDAK MENGINAP)') {
+                    //console.log('Showing kendaraan group');
+                    $('#fasilitas_kendaraan_group').show();
+                } else if (kategori === 'DOMESTIK LUAR KOTA (MENGINAP)' || kategori === 'LUAR NEGERI') {
+                    //console.log('Showing transportasi and akomodasi groups');
+                    $('#fasilitas_transportasi_group').show();
+                    $('#fasilitas_akomodasi_group').show();
+                }
+            });
+
+            // Ensure all fasilitas are hidden when the page loads
+            window.onload = function () {
+                $('#fasilitas_kendaraan_group').hide();
+                $('#fasilitas_transportasi_group').hide();
+                $('#fasilitas_akomodasi_group').hide();
+            };
           //Datemask dd/mm/yyyy
           $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
           //Datemask2 mm/dd/yyyy
@@ -855,9 +886,7 @@ $(document).ready(function() {
     });
 
     
-</script>
-
-    
+</script>   
 </body>
 
 </html>

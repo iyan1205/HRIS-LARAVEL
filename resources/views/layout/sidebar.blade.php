@@ -240,6 +240,14 @@
                 @endcan
             </ul>
         </li>
+        <li class="nav-item {{ request()->is('sppd/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('sppd') }}" class="nav-link {{ request()->is('sppd/*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    SPPD
+                </p>
+            </a>
+        </li>
         {{-- <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
             <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
