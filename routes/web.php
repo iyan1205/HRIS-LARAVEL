@@ -18,6 +18,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SppdController;
+use App\Http\Controllers\WilayahController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,7 +169,9 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
     
-
+    Route::get('/provinsi', [WilayahController::class, 'getProvinsi']);
+    Route::get('/provinsi/{id_provinsi}/kota', [WilayahController::class, 'getKota']);
+    Route::get('/get-kota/{id_provinsi}', [WilayahController::class, 'getKotaByProvinsi']);
 
     Route::prefix('Lembur')->group( function() {
         // Overtime

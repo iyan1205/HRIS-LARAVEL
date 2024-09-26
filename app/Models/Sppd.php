@@ -14,14 +14,18 @@ class Sppd extends Model
         'fasilitas_kendaraan',
         'fasilitas_transportasi',
         'fasilitas_akomodasi',
-        'cost',
-        'kota_tujuan',
-        'negara_tujuan',
+        'biaya_transfortasi',
+        'biaya_akomodasi',
+        'biaya_pendaftaran',
+        'biaya_uangsaku',
+        'lokasi_tujuan',
         'rencana_kegiatan',
         'tanggal_berangkat',
         'tanggal_kembali',
         'status',
         'approver_id',
+        'level_approve',
+        'alasan_reject',
         'updated_by',
     ];
 
@@ -33,5 +37,18 @@ class Sppd extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+     public function approve($updatedBy)
+    {
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
+    }
+
+    public function reject($updatedBy)
+    {
+        $this->status = 'rejected';
+        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
+        $this->save();
     }
 }

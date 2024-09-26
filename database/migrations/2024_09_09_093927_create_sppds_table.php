@@ -19,26 +19,21 @@ return new class extends Migration
                 'DOMESTIK LUAR KOTA (MENGINAP)',
                 'DOMESTIK LUAR KOTA (TIDAK MENGINAP)',
                 'LUAR NEGERI']);
-            $table->enum('fasilitas_kendaraan',[
-                'DINAS',
-                'SEWA']);
-            $table->enum('fasilitas_transportasi',[
-                'PESAWAT',
-                'KERATA API',
-                'BUS',
-                'KAPAL LAUT',
-                'TRAVEL']);
-            $table->enum('fasilitas_akomodasi',[
-                    'HOTEL',
-                    'KOST']);
+            $table->string('fasilitas_kendaraan');
+            $table->string('fasilitas_transportasi');
+            $table->string('fasilitas_akomodasi');
             $table->enum('status',[
                 'pending','rejected','approved'])->default('pending');  
-            $table->string('cost');
-            $table->string('kota_tujuan')->default('-');
-            $table->string('negara_tujuan')->default('indonesia');
+            $table->integer('biaya_transfortasi');
+            $table->integer('biaya_akomodasi');
+            $table->integer('biaya_pendaftaran');
+            $table->integer('biaya_uangsaku');
+            $table->string('lokasi_tujuan');
             $table->string('rencana_kegiatan');
             $table->datetime('tanggal_berangkat');
             $table->datetime('tanggal_kembali');
+            $table->integer('level_approve');
+            $table->string('alasan_reject');
             $table->bigInteger('approver_id')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

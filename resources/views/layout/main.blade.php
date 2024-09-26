@@ -521,38 +521,106 @@
           $('.select2bs4').select2({
             theme: 'bootstrap4'
           })
-                // Ensure all fasilitas are hidden when the page loads
+        // Initial state
+        $('#fasilitas_kendaraan_group').hide();
+        $('#fasilitas_transportasi_group').hide();
+        $('#biaya_transfortasi_group').hide();
+        $('#fasilitas_akomodasi_group').hide();
+        $('#biaya_akomodasi_group').hide();
+        $('#provinsi_tujuan_group').hide();
+        $('#kota_tujuan_group').hide();
+        $('#negara_tujuan_group').hide();
+
+        // Function to show/hide fields based on selected kategori_dinas
+        function updateFieldsBasedOnCategory(kategori) {
             $('#fasilitas_kendaraan_group').hide();
             $('#fasilitas_transportasi_group').hide();
+            $('#biaya_transfortasi_group').hide();
             $('#fasilitas_akomodasi_group').hide();
+            $('#biaya_akomodasi_group').hide();
+            $('#provinsi_tujuan_group').hide();
+            $('#kota_tujuan_group').hide();
+            $('#negara_tujuan_group').hide();
 
-            // Event listener for 'kategori_dinas' dropdown change using Select2 event
-            $('#kategori_dinas').on('change.select2', function () {
-                var kategori = $(this).val();
-                //console.log('Kategori selected:', kategori); // Debugging line
+            if (kategori === 'DOMESTIK DALAM KOTA' || kategori === 'DOMESTIK LUAR KOTA (TIDAK MENGINAP)') {
+                $('#fasilitas_kendaraan_group').show();
+                $('#provinsi_tujuan_group').show();
+                $('#kota_tujuan_group').show();
+            } else if (kategori === 'DOMESTIK LUAR KOTA (MENGINAP)') {
+                $('#fasilitas_transportasi_group').show();
+                $('#biaya_transfortasi_group').show();
+                $('#fasilitas_akomodasi_group').show();
+                $('#biaya_akomodasi_group').show();
+                $('#provinsi_tujuan_group').show();
+                $('#kota_tujuan_group').show();
+            } else if (kategori === 'LUAR NEGERI') {
+                $('#fasilitas_transportasi_group').show();
+                $('#biaya_transfortasi_group').show();
+                $('#fasilitas_akomodasi_group').show();
+                $('#biaya_akomodasi_group').show();
+                $('#negara_tujuan_group').show();
+            }
 
-                // Hide all fasilitas groups initially
-                $('#fasilitas_kendaraan_group').hide();
-                $('#fasilitas_transportasi_group').hide();
-                $('#fasilitas_akomodasi_group').hide();
+            // Check the value of fasilitas_kendaraan when kategori_dinas changes
+            updateBiayaTransfortasiVisibility();
+        }
 
-                // Show relevant groups based on selected category
-                if (kategori === 'DOMESTIK DALAM KOTA' || kategori === 'DOMESTIK LUAR KOTA (TIDAK MENGINAP)') {
-                    //console.log('Showing kendaraan group');
-                    $('#fasilitas_kendaraan_group').show();
-                } else if (kategori === 'DOMESTIK LUAR KOTA (MENGINAP)' || kategori === 'LUAR NEGERI') {
-                    //console.log('Showing transportasi and akomodasi groups');
-                    $('#fasilitas_transportasi_group').show();
-                    $('#fasilitas_akomodasi_group').show();
+        // Function to show/hide biaya_transfortasi_group based on fasilitas_kendaraan value
+        function updateBiayaTransfortasiVisibility() {
+            var fasilitasKendaraan = $('#fasilitas_kendaraan').val();
+            var kategoriDinas = $('#kategori_dinas').val();
+            if (fasilitasKendaraan === 'SEWA' || kategoriDinas === 'DOMESTIK LUAR KOTA (MENGINAP)' || kategoriDinas === 'LUAR NEGERI') {
+                $('#biaya_transfortasi_group').show();
+            } else {
+                $('#biaya_transfortasi_group').hide();
+            }
+        }
+
+        // Event listener for category change
+        $('#kategori_dinas').on('change', function() {
+            updateFieldsBasedOnCategory($(this).val());
+        });
+
+        // Event listener for fasilitas_kendaraan change
+        $('#fasilitas_kendaraan').on('change', function() {
+            updateBiayaTransfortasiVisibility();
+        });
+
+        // Trigger the change event to set the correct fields on load
+        updateFieldsBasedOnCategory($('#kategori_dinas').val());
+        updateBiayaTransfortasiVisibility();
+
+            // Handle province change to load cities
+            $('#provinsi').on('change', function() {
+                var provinsiId = $(this).val();
+                if (provinsiId) {
+                    $.ajax({
+                        url: '/get-kota/' + provinsiId,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#kota').empty();
+                            $('#kota').append('<option value="">-- Pilih Kota --</option>');
+                            if (data.length) {
+                                $.each(data, function(key, value) {
+                                    $('#kota').append('<option value="' + value.id + '">' + value.nama + '</option>');
+                                });
+                            } else {
+                                $('#kota').append('<option value="">-- Tidak ada kota --</option>');
+                            }
+                        },
+                        error: function(xhr) {
+                            $('#kota').empty();
+                            $('#kota').append('<option value="">-- Tidak ada kota --</option>');
+                        }
+                    });
+                } else {
+                    $('#kota').empty();
+                    $('#kota').append('<option value="">-- Pilih Kota --</option>');
                 }
             });
 
-            // Ensure all fasilitas are hidden when the page loads
-            window.onload = function () {
-                $('#fasilitas_kendaraan_group').hide();
-                $('#fasilitas_transportasi_group').hide();
-                $('#fasilitas_akomodasi_group').hide();
-            };
+        
+
           //Datemask dd/mm/yyyy
           $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
           //Datemask2 mm/dd/yyyy
@@ -628,6 +696,7 @@
       
       
       </script>
+
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->

@@ -240,13 +240,45 @@
                 @endcan
             </ul>
         </li>
+
         <li class="nav-item {{ request()->is('sppd/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('sppd') }}" class="nav-link {{ request()->is('sppd/*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-book"></i>
-                <p>
-                    SPPD
+            <a href="#" class="nav-link {{ request()->is('sppd/*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>SPPD
+                    <i class="fas fa-angle-left right"></i>
+                    <span id="sppdCountBadge" class="badge badge-info right" style="display:none;"></span>
                 </p>
             </a>
+            <ul class="nav nav-treeview">
+                @can('view overtime')
+                <li class="nav-item">
+                    <a href="{{ route('sppd') }}"
+                        class="nav-link {{ request()->is('sppd/sppd*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan SPPD</p>
+                    </a>
+                </li>
+                @endcan
+                @can('approve overtime')
+                <li class="nav-item">
+                    <a href="{{ route('approval-sppd') }}"
+                        class="nav-link {{ request()->is('sppd/approval-sppd*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Approval SPPD</p>
+                    </a>
+                </li>
+                @endcan
+
+                @can('sidebar laporan lembur')
+                <li class="nav-item">
+                    <a href="{{ route('laporan-sppd') }}"
+                        class="nav-link {{ request()->is('sppd/laporan-sppd*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Laporan SPPD</p>
+                    </a>
+                </li>
+                @endcan
+            </ul>
         </li>
         {{-- <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
             <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">

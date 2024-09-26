@@ -6,12 +6,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Form SPPD</h1>
+                        <h1 class="m-0">Form Edit SPPD</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">SPPD</a></li>
-                            <li class="breadcrumb-item active">Form SPPD</li>
+                            <li class="breadcrumb-item active">Edit SPPD</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -24,21 +24,13 @@
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-6">
-                            <!-- general form elements -->
-                            @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                             @endif
-
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Form SPPD</h3>
+                                    <h3 class="card-title">Form Edit SPPD</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
-                                <form action="{{ route('sppd.store') }}" method="POST" >
-                                    @csrf
+                                <form action="{{ route('sppd.update', $sppd->id) }}" method="POST" >@csrf @method('PUT')
                                     <div class="card-body">
                                         @if(auth()->user()->hasRole('admin|Super-Admin'))
                                         <div class="form-group">
@@ -59,8 +51,8 @@
                                         @else
                                         <div class="form-group">
                                             <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
-                                            <input type="hidden" class="form-control" id="level_approve" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level == 'Direktur' ? 2 : 1 }}">
-                                            <input type="hidden" class="form-control" id="approver_id" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->level == 'Direktur' ? 112 : Auth::user()->karyawan->jabatan->manager_id }} ">
+                                            <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
+                                            <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                         </div>
                                         {{-- Hidden Approver --}}
                                         @endif
@@ -68,83 +60,89 @@
                                         <div class="form-group">
                                             <label for="kategori_dinas">Kategori:</label>
                                             <select class="form-control select2bs4" id="kategori_dinas" name="kategori_dinas" style="width: 100%;">
-                                                <option value="" disabled selected>Pilih Kategori</option>
-                                                <option value="DOMESTIK DALAM KOTA">DOMESTIK DALAM KOTA</option>
-                                                <option value="DOMESTIK LUAR KOTA (MENGINAP)">DOMESTIK LUAR KOTA (MENGINAP)</option>
-                                                <option value="DOMESTIK LUAR KOTA (TIDAK MENGINAP)">DOMESTIK LUAR KOTA (TIDAK MENGINAP)</option>
-                                                <option value="LUAR NEGERI">LUAR NEGERI</option>
+                                                <option value="DOMESTIK DALAM KOTA" {{ $sppd->kategori_dinas == 'DOMESTIK DALAM KOTA' ? 'selected' : '' }}>DOMESTIK DALAM KOTA</option>
+                                                <option value="DOMESTIK LUAR KOTA (MENGINAP)" {{ $sppd->kategori_dinas == 'DOMESTIK LUAR KOTA (MENGINAP)' ? 'selected' : '' }}>DOMESTIK LUAR KOTA (MENGINAP)</option>
+                                                <option value="DOMESTIK LUAR KOTA (TIDAK MENGINAP)" {{ $sppd->kategori_dinas == 'DOMESTIK LUAR KOTA (TIDAK MENGINAP)' ? 'selected' : '' }}>DOMESTIK LUAR KOTA (TIDAK MENGINAP)</option>
+                                                <option value="LUAR NEGERI" {{ $sppd->kategori_dinas == 'LUAR NEGERI' ? 'selected' : '' }}>LUAR NEGERI</option>
                                             </select>
                                         </div>
                                         
                                         <div class="form-group" id="fasilitas_kendaraan_group" style="display: none;">
                                             <label for="fasilitas_kendaraan">Fasilitas Kendaraan:</label>
                                             <select class="form-control select2bs4" id="fasilitas_kendaraan" name="fasilitas_kendaraan" style="width: 100%;">
-                                                <option value="" disabled selected>Pilih Kendaraan</option>
-                                                <option value="OPERASIONAL RS">OPERASIONAL RS</option>
-                                                <option value="SEWA">SEWA</option>
+                                                <option value="OPERASIONAL RS" {{ $sppd->fasilitas_kendaraan == 'OPERASIONAL RS' ? 'selected' : '' }}>OPERASIONAL RS</option>
+                                                <option value="SEWA" {{ $sppd->fasilitas_kendaraan == 'SEWA' ? 'selected' : '' }}>SEWA</option>
                                             </select>
                                         </div>
                                         
                                         <div class="form-group" id="fasilitas_transportasi_group" style="display: none;">
                                             <label for="fasilitas_transportasi">Fasilitas Transportasi:</label>
                                             <select class="form-control select2bs4" name="fasilitas_transportasi" style="width: 100%;">
-                                                <option value="" disabled selected>Pilih Transportasi</option>
-                                                <option value="PESAWAT">PESAWAT</option>
-                                                <option value="KERETA API">KERETA API</option>
-                                                <option value="BUS">BUS</option>
-                                                <option value="KAPAL LAUT">KAPAL LAUT</option>
-                                                <option value="TRAVEL">TRAVEL</option>
+                                                <option value="PESAWAT" {{ $sppd->fasilitas_transportasi == 'PESAWAT ' ? 'selected' : '' }}>PESAWAT</option>
+                                                <option value="KERETA API" {{ $sppd->fasilitas_transportasi == 'KERETA API' ? 'selected' : '' }}>KERETA API</option>
+                                                <option value="BUS"{{ $sppd->fasilitas_transportasi == 'BUS' ? 'selected' : '' }}>BUS</option>
+                                                <option value="KAPAL LAUT"{{ $sppd->fasilitas_transportasi == 'KAPAL LAUT' ? 'selected' : '' }}>KAPAL LAUT</option>
+                                                <option value="TRAVEL" {{ $sppd->fasilitas_transportasi == 'TRAVEL' ? 'selected' : '' }}>TRAVEL</option>
                                             </select>
                                         </div>
+
                                         <div class="form-group" id="biaya_transfortasi_group" style="display: none;">
                                             <label for="biaya_transfortasi">Biaya Transportasi:</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Rp</span>
                                                 </div>
-                                                <input type="number" class="form-control" id="biaya_transfortasi" name="biaya_transfortasi">
+                                                <input type="number" class="form-control" id="biaya_transfortasi" name="biaya_transfortasi" value="{{ $sppd->biaya_transfortasi }}">
                                             </div>
                                         </div>
 
                                         <div class="form-group" id="fasilitas_akomodasi_group" style="display: none;">
                                             <label for="fasilitas_akomodasi">Fasilitas Akomodasi:</label>
                                             <select class="form-control select2bs4" name="fasilitas_akomodasi" style="width: 100%;">
-                                                <option value="" disabled selected>Pilih Akomodasi</option>
-                                                <option value="HOTEL">HOTEL</option>
-                                                <option value="KOST">KOST</option>
+                                                <option value="HOTEL" {{ $sppd->fasilitas_akomodasi == 'HOTEL ' ? 'selected' : '' }}>HOTEL</option>
+                                                <option value="KOST" {{ $sppd->fasilitas_akomodasi == 'KOST ' ? 'selected' : '' }}>KOST</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group" id="biaya_akomodasi_group" style="display: none;">
                                             <label for="biaya_akomodasi">Biaya Akomodasi:</label>
-                                            <input type="number" class="form-control" id="biaya_akomodasi" name="biaya_akomodasi">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Rp</span>
+                                                </div>
+                                                <input type="number" class="form-control" id="biaya_akomodasi" name="biaya_akomodasi" value="{{ $sppd->biaya_akomodasi }}">
+                                            </div>
                                         </div>
                                         {{-- <div class="form-group" id="provinsi_tujuan_group" style="display: none;">
                                             <label for="provinsi" class="form-label">Provinsi Tujuan:</label>
                                             <select class="form-control select2bs4" id="provinsi" name="provinsi_tujuan"
                                                 style="width: 100%;">
-                                                @foreach ($provinsi as $prov)
-                                                    <option value="{{ $prov['id'] }}">{{ $prov['nama'] }}</option>
+                                                @foreach ($provinces as $prov)
+                                                <option value="{{ $prov['id'] }}" {{ $sppd->provinsi_tujuan == $prov['id'] ? 'selected' : '' }}>
+                                                    {{ $prov['nama'] }}
+                                                </option>
                                                 @endforeach
                                             </select>
                                         </div> --}}
-                                        <div class="form-group">
+                                        <div class="form-group" >
                                             <label for="kota" class="form-label">Lokasi Tujuan:</label>
-                                            <input class="form-control" id="lokasi_tujuan" name="lokasi_tujuan" >
-                                            {{-- <select class="form-control select2bs4" id="kota" name="kota_tujuan"
-                                                style="width: 100%;">
-                                                <option value="">-- Pilih Kota --</option>
+                                            <input class="form-control" id="kota_tujuan" name="lokasi_tujuan" value="{{ $sppd->lokasi_tujuan }}" >
+                                            {{-- <select class="form-control select2bs4" id="kota" name="kota_tujuan" style="width: 100%;">
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city['id'] }}" {{ $sppd->kota_tujuan == $city['id'] ? 'selected' : '' }}>
+                                                        {{ $city['nama'] }}
+                                                    </option>
+                                                @endforeach
                                             </select> --}}
                                         </div>
-                                       
-
+                                        
                                         <div class="form-group">
                                             <label for="biaya_pendaftaran">Biaya Pendaftaran:</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Rp</span>
                                                 </div>
-                                                <input type="number" class="form-control" id="biaya" name="biaya_pendaftaran">
+                                                <input type="number" class="form-control" id="biaya_pendaftaran" name="biaya_pendaftaran" value="{{ $sppd->biaya_pendaftaran }}">
                                             </div>
                                         </div>
 
@@ -154,20 +152,19 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Rp</span>
                                                 </div>
-                                                <input type="number" class="form-control" id="biaya_uangsaku" name="biaya_uangsaku">
+                                                <input type="number" class="form-control" id="biaya_uangsaku" name="biaya_uangsaku" value="{{ $sppd->biaya_uangsaku }}">
                                             </div>
                                         </div>
-
                                         <div class="form-group ">
                                             <label for="rencana_kegiatan">Rencana Kegiatan:</label>
-                                            <textarea class="form-control" id="rencana_kegiatan" name="rencana_kegiatan"></textarea>
+                                            <textarea class="form-control" id="rencana_kegiatan" name="rencana_kegiatan">{{ $sppd->rencana_kegiatan }}</textarea>
                                         </div>
 
                                         <div class="form-group row">
                                             <div class="col">
                                                 <label>Tanggal Berangkat:</label>
                                                     <div class="input-group date" id="start_dateover" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="tanggal_berangkat"/>
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#start_dateover" name="tanggal_berangkat" value="{{ $sppd->tanggal_berangkat }}"/>
                                                         <div class="input-group-append" data-target="#start_dateover" data-toggle="datetimepicker">
                                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                         </div>
@@ -176,7 +173,7 @@
                                             <div class="col">
                                                 <label for="tanggal_kembali" class="form-label">Tanggal Kembali:</label>
                                                 <div class="input-group date" id="end_dateover" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="tanggal_kembali"/>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#end_dateover" name="tanggal_kembali" value="{{ $sppd->tanggal_kembali }}"/>
                                                     <div class="input-group-append" data-target="#end_dateover" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
@@ -194,7 +191,7 @@
                             <!-- /.card -->
 
                         </div>
-                </form>
+                    </div>
             </div>
     </section>
     </div>
