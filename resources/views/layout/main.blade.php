@@ -823,7 +823,7 @@ $(document).ready(function() {
         }
     });
 </script>
-
+@role('karyawan')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateBadge(url, badgeId, dataKey) {
@@ -856,7 +856,7 @@ $(document).ready(function() {
 
     
 </script>
-
+@endrole
     
 </body>
 
