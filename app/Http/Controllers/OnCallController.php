@@ -306,12 +306,16 @@ class OnCallController extends Controller
 
     public function getOncallCount()
     {
-        $user = Auth::user();
-        $subordinateIds = $user->karyawan->jabatan->subordinates->pluck('manager_id');
-        $countOncall = OnCall::whereIn('approver_id', $subordinateIds)
-                             ->where('status', 'pending')
-                             ->count();
-    
+        /** @var App\Models\User */
+        $users = Auth::user();
+        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
+            $countOncall = OnCall::where('status', 'pending')->count();
+        }else{
+            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+            $countOncall = OnCall::whereIn('approver_id', $subordinateIds)
+                                 ->where('status', 'pending')
+                                 ->count();
+        }
         return response()->json(['countOncall' => $countOncall]);
     }
     
