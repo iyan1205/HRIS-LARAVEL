@@ -923,7 +923,7 @@ $(document).ready(function() {
         }
     });
 </script>
-
+@role('karyawan')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateBadge(url, badgeId, dataKey) {
@@ -955,7 +955,47 @@ $(document).ready(function() {
     });
 
     
-</script>   
+</script>
+@endrole   
+<script>
+    // Show input fields when pelatihan is selected
+    $('#pelatihan').on('change', function() {
+        var selected = $(this).val();
+        $('.pelatihan-group').hide(); // Hide all
+        selected.forEach(function(id) {
+            $('#pelatihan-' + id + '-details').show(); // Show selected
+        });
+    });
+
+    // Initially show fields for already selected pelatihan
+    $(document).ready(function() {
+        var selected = $('#pelatihan').val();
+        selected.forEach(function(id) {
+            $('#pelatihan-' + id + '-details').show(); // Show selected on load
+        });
+    });
+
+    // Add new Pelatihan input field
+    $('#add-pelatihan').on('click', function() {
+    var newPelatihanFields = `
+        <div class="form-group new-pelatihan-div">
+            <input type="text" name="new_pelatihan[]" class="form-control mb-2 new-pelatihan" placeholder="Nama Pelatihan Baru">
+            <label for="new_tanggal_expired[]">Tanggal Expired Pelatihan Baru</label>
+            <input type="date" name="new_tanggal_expired[]" class="form-control mb-2 new-expired">
+            <label for="new_file[]">File Sertifikat Pelatihan Baru</label>
+            <input type="file" name="new_file[]" class="form-control mb-2 new-file">
+            <!-- Cancel button to remove the new pelatihan div -->
+            <button type="button" class="btn btn-danger remove-pelatihan-btn">Batal</button>
+        </div>
+    `;
+    $('#new-pelatihan-container').append(newPelatihanFields);
+});
+
+// Function to remove the new pelatihan fieldset
+$(document).on('click', '.remove-pelatihan-btn', function() {
+    $(this).closest('.new-pelatihan-div').remove();
+});
+</script>
 </body>
 
 </html>

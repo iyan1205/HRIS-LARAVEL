@@ -364,7 +364,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="pelatihan-container">
                                     <div class="form-group">
                                         <label for="pelatihan">Pelatihan</label>
                                         <div class="select2-purple">
@@ -377,12 +377,42 @@
                                             @endforeach
                                             </select>
                                         </div>
-                                        @error('units')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
                                     </div>
+                                    <div id="pelatihan-details">
+                                        @foreach($karyawan->pelatihans as $pelatihan)
+                                        <div class="form-group pelatihan-group" id="pelatihan-{{ $pelatihan->id }}-details">
+                                            <!-- Edit Nama Pelatihan -->
+                                            <label for="name_{{ $pelatihan->id }}">Nama Pelatihan untuk {{ $pelatihan->name }}</label>
+                                            <input type="text" name="nama_pelatihan[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->name ?? $pelatihan->name }}" class="form-control">
+                                
+                                            <!-- Tanggal Expired Pelatihan -->
+                                            <label for="tanggal_expired_{{ $pelatihan->id }}">Tanggal Expired untuk {{ $pelatihan->name }}</label>
+                                            <input type="date" name="tanggal_expired[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->tanggal_expired ?? '' }}" class="form-control">
+                                
+                                            <!-- File Upload Pelatihan -->
+                                            <label for="file_{{ $pelatihan->id }}">File Sertifikat untuk {{ $pelatihan->name }}</label>
+                                            @if ($pelatihan->pivot->file)
+                                                <a href="{{ Storage::url($pelatihan->pivot->file) }}" target="_blank">Lihat file saat ini</a>
+                                            @endif
+                                            <input type="file" name="file[{{ $pelatihan->id }}]" class="form-control">
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                
+                                    <!-- New Pelatihan Input -->
+                                    <div id="new-pelatihan-container" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="new_pelatihan">Tambahkan Pelatihan Baru</label>
+                                            <input type="text" name="new_pelatihan[]" class="form-control mb-2 new-pelatihan" placeholder="Nama Pelatihan Baru">
+                                            <label for="new_tanggal_expired">Tanggal Expired Pelatihan Baru</label>
+                                            <input type="date" name="new_tanggal_expired[]" class="form-control mb-2 new-expired">
+                                            <label for="new_file">File Sertifikat Pelatihan Baru</label>
+                                            <input type="file" name="new_file[]" class="form-control mb-2 new-file">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Add More New Pelatihan Button -->
+                                    <button type="button" class="btn btn-success" id="add-new-pelatihan">Tambah Pelatihan Lain</button>
                                 </div>
                                 <!-- /.card-body -->
                             </div>
@@ -443,7 +473,7 @@
                     </div> <!-- /.row -->
                     <div class="row">
                         <div class="col-12">
-                            <a href="{{ route('karyawan') }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('karyawan') }}" class="btn btn-secondary float-right">Batal</a>
                             <button type="submit" class="btn btn-primary float-right">Simpan</button>
                         </div>
                     </div>
@@ -462,4 +492,5 @@
             }
         });
     </script>
+
 @endsection

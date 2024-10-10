@@ -179,8 +179,6 @@ class SppdController extends Controller
             $sppd->rencana_kegiatan = $request->input('rencana_kegiatan');
             $sppd->tanggal_berangkat = $request->input('tanggal_berangkat');
             $sppd->tanggal_kembali = $request->input('tanggal_kembali');
-            $sppd->level_approve = $request->input('level_approve');
-            $sppd->approver_id = $request->input('approver_id');
             
             // Save the record to the database
             $sppd->save();

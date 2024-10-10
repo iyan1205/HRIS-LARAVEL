@@ -51,8 +51,6 @@
                                         @else
                                         <div class="form-group">
                                             <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
-                                            <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
-                                            <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                         </div>
                                         {{-- Hidden Approver --}}
                                         @endif
