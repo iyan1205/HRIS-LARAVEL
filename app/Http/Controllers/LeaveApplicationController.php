@@ -447,14 +447,13 @@ class LeaveApplicationController extends Controller
     public function getPendingCount()
     {
         /** @var App\Models\User */
-        $users = Auth::user();
-        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
-            // Admin and superadmin see all pending 
-            $pendingCount = LeaveApplication::where('status', 'pending')->count();
-        } else {
-            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $pendingCount = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->count();
+        $user = Auth::user();
+        if ($user->hasRole('Super-Admin')) {
+            return response()->json(['pendingCount' => 0]);
         }
+        $subordinateIds = $user->karyawan->jabatan->subordinates->pluck('manager_id');
+        $pendingCount = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->count();
+
         return response()->json(['pendingCount' => $pendingCount]);
     }
 

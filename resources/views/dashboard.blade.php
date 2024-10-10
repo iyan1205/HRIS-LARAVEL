@@ -73,8 +73,8 @@
                                 <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-paper-plane"></i></span>
     
                                 <div class="info-box-content">
-                                    <span class="info-box-text">Pengajuan Cuti</span>
-                                    <span class="info-box-number">{{ $pengajuanCuti }}</span>
+                                    <span class="info-box-text">Jumlah User</span>
+                                    <span class="info-box-number">{{ $karyawanCount }}</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>

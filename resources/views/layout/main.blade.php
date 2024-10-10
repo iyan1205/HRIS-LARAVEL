@@ -824,6 +824,8 @@ $(document).ready(function() {
     });
 </script>
 
+@role('Super-Admin|karyawan')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateBadge(url, badgeId, dataKey) {
@@ -853,10 +855,8 @@ $(document).ready(function() {
             updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
         }, 5000); // Update every minute
     });
-
-    
 </script>
-
+@endrole
     
 </body>
 
