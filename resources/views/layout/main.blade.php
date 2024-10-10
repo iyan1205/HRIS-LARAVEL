@@ -823,7 +823,9 @@ $(document).ready(function() {
         }
     });
 </script>
+
 @role('Super-Admin|karyawan')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateBadge(url, badgeId, dataKey) {

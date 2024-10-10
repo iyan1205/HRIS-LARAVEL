@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td style="text-align: center;"> <span class="badge bg-info"><b>OT-{{ $overtime->id }}</b></span></td>
-                                        <td>{{ $overtime->user->karyawan->name }}</td>
+                                        <td>{{ $overtime->user->karyawan->name ?? 'Kosong' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->created_at)->format('d/m/Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->start_date)->format('d/m/Y H:i') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($overtime->end_date)->format('d/m/Y H:i') }}</td>
@@ -85,7 +85,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <p>Apakah Yakin Pengajuan overtime <b>{{ $overtime->user->karyawan->name }}</b> akan di Approve  ?</p>
+                    <p>Apakah Yakin Pengajuan overtime <b>{{ $overtime->user->karyawan->name ?? 'Kosong' }}</b> akan di Approve  ?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
