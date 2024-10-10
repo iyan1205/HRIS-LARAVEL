@@ -232,6 +232,7 @@
     <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <!-- Page Select script -->
     <script>
         $(document).ready(function() {
             $('#karyawanTable').DataTable({
@@ -243,249 +244,243 @@
                 "autoWidth": false,
                 "responsive": true,
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
+    
             $('#allTable').DataTable({
                 "info": true,
                 "autoWidth": false,
                 "responsive": true,
             });
-        });
-    </script>
-    <script>
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    </script>
-    <!-- Page Select script -->
-
-        <!-- Cuti -->
-        <script>
-            // Mendapatkan tanggal sekarang
-            var currentDate = new Date();
-            // Menambahkan 5 hari ke tanggal sekarang
-            var targetDate = new Date(currentDate);
-            targetDate.setDate(currentDate.getDate() + 5);
-        
-            // Inisialisasi datetimepicker untuk elemen input dengan id "start_date5"
-            $('#start_date5').datetimepicker({
-                format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                icons: {
-                    time: 'fa fa-clock',
-                    date: 'fa fa-calendar',
-                    up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down',
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-calendar-check-o',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-times'
-                },
-                minDate: targetDate, // Tidak memungkinkan pemilihan tanggal sebelum tanggal sekarang
-                maxDate: targetDate // Tidak memungkinkan pemilihan tanggal lebih dari 5 hari ke depan
-            });
-        
-            // Inisialisasi datetimepicker untuk elemen input dengan id "end_date5"
-            $('#end_date5').datetimepicker({
-                format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                icons: {
-                    time: 'fa fa-clock',
-                    date: 'fa fa-calendar',
-                    up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down',
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-calendar-check-o',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-times'
-                },
-                useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
-                minDate: targetDate // Mengatur tanggal minimum menjadi targetDate
-            });
-        
-            // Mengatur bahwa tanggal di end_date5 tidak bisa sebelum tanggal di start_date5
-            $("#start_date5").on("change.datetimepicker", function (e) {
-                $('#end_date5').datetimepicker('minDate', e.date);
-            });
-        
-            // Mengatur bahwa tanggal di start_date5 tidak bisa setelah tanggal di end_date5
-            $("#end_date5").on("change.datetimepicker", function (e) {
-                $('#start_date5').datetimepicker('maxDate', e.date);
-            });
-        </script>
-
-        <!-- Overtime -->
-        <script>
-            // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateover"
-            $('#start_dateover').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
-                icons: {
-                    time: 'fa fa-clock',
-                    date: 'fa fa-calendar',
-                    up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down',
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-calendar-check-o',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-check'
-                },
-                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
-                toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
-                buttons: {
-                    showClose: true, // Menampilkan tombol Close
-                    showToday: true, // Menampilkan tombol Today
-                    showClear: true, // Menampilkan tombol Clear
-                    showApply: true // Menampilkan tombol Apply
-                }
-            });
-        
-            // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateover"
-            $('#end_dateover').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
-                icons: {
-                    time: 'fa fa-clock',
-                    date: 'fa fa-calendar',
-                    up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down',
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-calendar-check-o',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-check'
-                },
-                useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
-                sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
-                toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
-                buttons: {
-                    showClose: true, // Menampilkan tombol Close
-                    showToday: true, // Menampilkan tombol Today
-                    showClear: true, // Menampilkan tombol Clear
-                    showApply: true // Menampilkan tombol Apply
-                }
-            });
-        
-            // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
-            $("#start_dateover").on("change.datetimepicker", function (e) {
-                $('#end_dateover').datetimepicker('minDate', e.date);
-            });
-        
-            // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
-            $("#end_dateover").on("change.datetimepicker", function (e) {
-                $('#start_dateover').datetimepicker('maxDate', e.date);
-            });
-        </script>
-        
-        
     
-        <!-- Cuti -->
-            <script>
-                // Mendapatkan tanggal sekarang
-                var currentDate = new Date();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+        </script>
+    <!-- Cuti -->
+    <script>
+        // Mendapatkan tanggal sekarang
+        var currentDate = new Date();
+        // Menambahkan 5 hari ke tanggal sekarang
+        var targetDate = new Date(currentDate);
+        targetDate.setDate(currentDate.getDate() + 5);
 
-                // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
-                $('#start_date').datetimepicker({
-                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                    icons: {
-                        time: 'fa fa-clock',
-                        date: 'fa fa-calendar',
-                        up: 'fa fa-chevron-up',
-                        down: 'fa fa-chevron-down',
-                        previous: 'fa fa-chevron-left',
-                        next: 'fa fa-chevron-right',
-                        today: 'fa fa-calendar-check-o',
-                        clear: 'fa fa-trash',
-                        close: 'fa fa-times'
-                    },
-                
-                });
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_date5"
+        $('#start_date5').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            minDate: targetDate, // Tidak memungkinkan pemilihan tanggal sebelum tanggal sekarang
+            maxDate: targetDate // Tidak memungkinkan pemilihan tanggal lebih dari 5 hari ke depan
+        });
 
-                // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
-                $('#end_date').datetimepicker({
-                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                    icons: {
-                        time: 'fa fa-clock',
-                        date: 'fa fa-calendar',
-                        up: 'fa fa-chevron-up',
-                        down: 'fa fa-chevron-down',
-                        previous: 'fa fa-chevron-left',
-                        next: 'fa fa-chevron-right',
-                        today: 'fa fa-calendar-check-o',
-                        clear: 'fa fa-trash',
-                        close: 'fa fa-times'
-                    },
-                    useCurrent: false // Tidak menggunakan tanggal saat ini secara default
-                });
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_date5"
+        $('#end_date5').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
+            minDate: targetDate // Mengatur tanggal minimum menjadi targetDate
+        });
 
-                // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
-                $("#start_date").on("change.datetimepicker", function (e) {
-                    $('#end_date').datetimepicker('minDate', e.date);
-                });
+        // Mengatur bahwa tanggal di end_date5 tidak bisa sebelum tanggal di start_date5
+        $("#start_date5").on("change.datetimepicker", function (e) {
+            $('#end_date5').datetimepicker('minDate', e.date);
+        });
 
-                // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
-                $("#end_date").on("change.datetimepicker", function (e) {
-                    $('#start_date').datetimepicker('maxDate', e.date);
-                });
-            </script>
-        <!-- //Cuti -->
-        <!-- Absen -->
-            <script>
-                // Mendapatkan tanggal sekarang
-                var currentDate = new Date();
+        // Mengatur bahwa tanggal di start_date5 tidak bisa setelah tanggal di end_date5
+        $("#end_date5").on("change.datetimepicker", function (e) {
+            $('#start_date5').datetimepicker('maxDate', e.date);
+        });
+    </script>
 
-                // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
-                $('#start_dateabsen').datetimepicker({
-                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                    icons: {
-                        time: 'fa fa-clock',
-                        date: 'fa fa-calendar',
-                        up: 'fa fa-chevron-up',
-                        down: 'fa fa-chevron-down',
-                        previous: 'fa fa-chevron-left',
-                        next: 'fa fa-chevron-right',
-                        today: 'fa fa-calendar-check-o',
-                        clear: 'fa fa-trash',
-                        close: 'fa fa-times'
-                    },
-                
-                });
+    <!-- Overtime -->
+    <script>
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateover"
+        $('#start_dateover').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-check'
+            },
+            sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
+            toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
+            buttons: {
+                showClose: true, // Menampilkan tombol Close
+                showToday: true, // Menampilkan tombol Today
+                showClear: true, // Menampilkan tombol Clear
+                showApply: true // Menampilkan tombol Apply
+            }
+        });
 
-                // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateabsen"
-                $('#end_dateabsen').datetimepicker({
-                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-                    icons: {
-                        time: 'fa fa-clock',
-                        date: 'fa fa-calendar',
-                        up: 'fa fa-chevron-up',
-                        down: 'fa fa-chevron-down',
-                        previous: 'fa fa-chevron-left',
-                        next: 'fa fa-chevron-right',
-                        today: 'fa fa-calendar-check-o',
-                        clear: 'fa fa-trash',
-                        close: 'fa fa-times'
-                    },
-                    useCurrent: false // Tidak menggunakan tanggal saat ini secara default
-                });
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateover"
+        $('#end_dateover').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm', // Format tanggal dan waktu yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-check'
+            },
+            useCurrent: false, // Tidak menggunakan tanggal saat ini secara default
+            sideBySide: false, // Menampilkan input waktu secara berdampingan dengan input tanggal
+            toolbarPlacement: 'bottom', // Menempatkan toolbar di bagian bawah
+            buttons: {
+                showClose: true, // Menampilkan tombol Close
+                showToday: true, // Menampilkan tombol Today
+                showClear: true, // Menampilkan tombol Clear
+                showApply: true // Menampilkan tombol Apply
+            }
+        });
 
-                // Mengatur bahwa tanggal di end_dateabsen tidak bisa sebelum tanggal di start_dateabsen
-                $("#start_dateabsen").on("change.datetimepicker", function (e) {
-                    $('#end_dateabsen').datetimepicker('minDate', e.date);
-                });
+        // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
+        $("#start_dateover").on("change.datetimepicker", function (e) {
+            $('#end_dateover').datetimepicker('minDate', e.date);
+        });
 
-                // Mengatur bahwa tanggal di start_dateabsen tidak bisa setelah tanggal di end_dateabsen
-                $("#end_dateabsen").on("change.datetimepicker", function (e) {
-                    $('#start_dateabsen').datetimepicker('maxDate', e.date);
-                });
-            </script>
-        <!-- Absen -->
+        // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
+        $("#end_dateover").on("change.datetimepicker", function (e) {
+            $('#start_dateover').datetimepicker('maxDate', e.date);
+        });
+    </script>
+
+
+
+    <!-- Cuti -->
+    <script>
+        // Mendapatkan tanggal sekarang
+        var currentDate = new Date();
+
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
+        $('#start_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+        
+        });
+
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
+        $('#end_date').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+        });
+
+        // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
+        $("#start_date").on("change.datetimepicker", function (e) {
+            $('#end_date').datetimepicker('minDate', e.date);
+        });
+
+        // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
+        $("#end_date").on("change.datetimepicker", function (e) {
+            $('#start_date').datetimepicker('maxDate', e.date);
+        });
+    </script>
+    <!-- //Cuti -->
+    <!-- Absen -->
+    <script>
+        // Mendapatkan tanggal sekarang
+        var currentDate = new Date();
+
+        // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
+        $('#start_dateabsen').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+        
+        });
+
+        // Inisialisasi datetimepicker untuk elemen input dengan id "end_dateabsen"
+        $('#end_dateabsen').datetimepicker({
+            format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false // Tidak menggunakan tanggal saat ini secara default
+        });
+
+        // Mengatur bahwa tanggal di end_dateabsen tidak bisa sebelum tanggal di start_dateabsen
+        $("#start_dateabsen").on("change.datetimepicker", function (e) {
+            $('#end_dateabsen').datetimepicker('minDate', e.date);
+        });
+
+        // Mengatur bahwa tanggal di start_dateabsen tidak bisa setelah tanggal di end_dateabsen
+        $("#end_dateabsen").on("change.datetimepicker", function (e) {
+            $('#start_dateabsen').datetimepicker('maxDate', e.date);
+        });
+    </script>
+    <!-- Absen -->
     
     <script>
         $(function () {
@@ -567,11 +562,11 @@
         
       
       
-      </script>
+    </script>
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success')) //Login
+    @if (session('success')) 
         <script>
             Swal.fire({
                 icon: 'success',
@@ -595,7 +590,7 @@
     <script>
         $(function () {
             var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
-    
+
             $("#laporan").DataTable({
                 "responsive": true,
                 "lengthChange": false,
@@ -609,7 +604,7 @@
                     }
                 ]
             }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
-    
+
             $("#laporan_lembur").DataTable({
                 "responsive": true,
                 "lengthChange": false,
@@ -639,93 +634,93 @@
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
         });
     </script>
-<script>
-    $('#kategori_cuti').change(function() {
-        var kategoriCuti = $(this).val();
-        if (kategoriCuti !== '') {
-            $.ajax({
-                url: '/pengajuan-cuti/create/' + kategoriCuti,
-                type: 'GET',
-                success: function(data) {
-                    $('#leave_type_id').empty();
-                    $('#leave_type_id').append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
-                    $.each(data, function(key, value) {
-                        $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
-                    });
-                    $('#leave_type_id_container').show();
-                    
-                    if (kategoriCuti === 'CUTI TAHUNAN') {
-                        $('#leave_type_id_container').hide();
-                        $('#leave_type_id').val('20'); // Set leave_type_id value to 20
-                        $('#max_amount_display').text('Maksimal Jumlah Cuti: 5').show();
-                    } else {
+    <script>
+        $('#kategori_cuti').change(function() {
+            var kategoriCuti = $(this).val();
+            if (kategoriCuti !== '') {
+                $.ajax({
+                    url: '/pengajuan-cuti/create/' + kategoriCuti,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#leave_type_id').empty();
+                        $('#leave_type_id').append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
+                        $.each(data, function(key, value) {
+                            $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
+                        });
                         $('#leave_type_id_container').show();
-                        $('#max_amount_display').hide();
-                    }
+                        
+                        if (kategoriCuti === 'CUTI TAHUNAN') {
+                            $('#leave_type_id_container').hide();
+                            $('#leave_type_id').val('20'); // Set leave_type_id value to 20
+                            $('#max_amount_display').text('Maksimal Jumlah Cuti: 5').show();
+                        } else {
+                            $('#leave_type_id_container').show();
+                            $('#max_amount_display').hide();
+                        }
 
-                    if (kategoriCuti === 'CUTI KHUSUS') {
-                        $('#file_upload_container').show();
-                        $('#file_upload').prop('required', true); // Make file input required
-                    } else {
-                        $('#file_upload_container').hide();
-                        $('#file_upload').prop('required', false); // Make file input not required
+                        if (kategoriCuti === 'CUTI KHUSUS') {
+                            $('#file_upload_container').show();
+                            $('#file_upload').prop('required', true); // Make file input required
+                        } else {
+                            $('#file_upload_container').hide();
+                            $('#file_upload').prop('required', false); // Make file input not required
+                        }
                     }
-                }
-            });
-        } else {
-            $('#leave_type_id_container').hide();
-            $('#file_upload_container').hide();
-            $('#file_upload').prop('required', false); // Make file input not required
-            $('#max_amount_display').hide(); // Hide max_amount_display
-        }
-    });
-
-    $('#leave_type_id').change(function() {
-        var leaveTypeId = $(this).val();
-        if (leaveTypeId !== '') {
-            $.ajax({
-                url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
-                type: 'GET',
-                success: function(data) {
-                    if (data.max_amount) {
-                        $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount).show();
-                    } else {
-                        $('#max_amount_display').hide();
-                    }
-
-                    if (data.file_upload === 'yes') {
-                        $('#file_upload_container').show();
-                        $('#file_upload').prop('required', true); // Make file input required
-                    } else {
-                        $('#file_upload_container').hide();
-                        $('#file_upload').prop('required', false); // Make file input not required
-                    }
-                }
-            });
-        } else {
-            $('#max_amount_display').hide();
-            $('#file_upload_container').hide();
-            $('#file_upload').prop('required', false); // Make file input not required
-        }
-    });
-
-    $('form').submit(function() {
-        var kategoriCuti = $('#kategori_cuti').val();
-        if (kategoriCuti === 'CUTI KHUSUS') {
-            var fileUpload = $('#file_upload').val();
-            if (fileUpload === '') {
-                alert('Mohon unggah file PDF, JPG, atau PNG.');
-                return false; // Prevent form submission
+                });
+            } else {
+                $('#leave_type_id_container').hide();
+                $('#file_upload_container').hide();
+                $('#file_upload').prop('required', false); // Make file input not required
+                $('#max_amount_display').hide(); // Hide max_amount_display
             }
-        }
-    });
-
-    $(document).ready(function() {
-        $('.select2bst4').select2({
-            theme: 'bootstrap4'
         });
-    });
-</script>  
+
+        $('#leave_type_id').change(function() {
+            var leaveTypeId = $(this).val();
+            if (leaveTypeId !== '') {
+                $.ajax({
+                    url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
+                    type: 'GET',
+                    success: function(data) {
+                        if (data.max_amount) {
+                            $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount).show();
+                        } else {
+                            $('#max_amount_display').hide();
+                        }
+
+                        if (data.file_upload === 'yes') {
+                            $('#file_upload_container').show();
+                            $('#file_upload').prop('required', true); // Make file input required
+                        } else {
+                            $('#file_upload_container').hide();
+                            $('#file_upload').prop('required', false); // Make file input not required
+                        }
+                    }
+                });
+            } else {
+                $('#max_amount_display').hide();
+                $('#file_upload_container').hide();
+                $('#file_upload').prop('required', false); // Make file input not required
+            }
+        });
+
+        $('form').submit(function() {
+            var kategoriCuti = $('#kategori_cuti').val();
+            if (kategoriCuti === 'CUTI KHUSUS') {
+                var fileUpload = $('#file_upload').val();
+                if (fileUpload === '') {
+                    alert('Mohon unggah file PDF, JPG, atau PNG.');
+                    return false; // Prevent form submission
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            $('.select2bst4').select2({
+                theme: 'bootstrap4'
+            });
+        });
+    </script>  
 
 
 </body>

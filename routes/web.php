@@ -163,7 +163,6 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     
     //Json
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
-
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
     
