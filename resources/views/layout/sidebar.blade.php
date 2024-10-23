@@ -44,8 +44,8 @@
         </li>@endcan 
 
         @can('sidebar masterkaryawan')
-        <li class="nav-item {{ request()->is('master-karyawan/*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ request()->is('master-karyawan/*') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('master/karyawan*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('master/karyawan/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-users-cog"></i>
                 <p>Master Karyawan
                     <i class="fas fa-angle-left right"></i>
@@ -54,14 +54,14 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{ route('karyawan') }}"
-                        class="nav-link {{ request()->is('master-karyawan/*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('master/karyawan/active*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Karyawan</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('resign') }}"
-                        class="nav-link {{ request()->is('master-karyawan/resign') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('master/karyawan/resign*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Resign</p>
                     </a>
@@ -110,7 +110,7 @@
             </a>
         </li>
         @endcan
-
+        @can('sidebar_cuti')
         <li class="nav-item {{ request()->is('Cuti/*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('Cuti/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-paper-plane"></i>
@@ -158,9 +158,21 @@
                     </a>
                 </li>
                 @endcan
+
+                @role('admin')
+                <li class="nav-item">
+                    <a href="{{ route('btn-sc.cuti') }}"
+                        class="nav-link {{ request()->is('Cuti/approval-cuti/*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Cancel Cuti</p>
+                    </a>
+                </li>
+                @endrole
+
             </ul>
         </li>
-
+        @endcan
+        @can('sidebar_lembur')
         <li class="nav-item {{ request()->is('Lembur/*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('Lembur/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-calendar-plus"></i>
@@ -198,9 +210,20 @@
                     </a>
                 </li>
                 @endcan
+                @role('admin')
+                <li class="nav-item">
+                    <a href="{{ route('overtime.sl') }}"
+                        class="nav-link {{ request()->is('Lembur/approval-overtime/*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Cancel Lembur</p>
+                    </a>
+                </li>
+                @endrole
             </ul>
         </li>
+        @endcan
 
+        @can('sidebar_oncall')
         <li class="nav-item {{ request()->is('oncall/*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('oncall/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-calendar-alt"></i>
@@ -229,7 +252,7 @@
                 </li>
                 @endcan
 
-                @can('sidebar laporan lembur')
+                @can('sidebar laporan oncall')
                 <li class="nav-item">
                     <a href="{{ route('laporan-oncall') }}"
                         class="nav-link {{ request()->is('oncall/laporan-oncall*') ? 'active' : '' }}">
@@ -238,8 +261,19 @@
                     </a>
                 </li>
                 @endcan
+                @role('admin')
+                <li class="nav-item">
+                    <a href="{{ route('oncall.ol') }}"
+                        class="nav-link {{ request()->is('oncall/approval-oncall/*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Cancel On-Call</p>
+                    </a>
+                </li>
+                @endrole
             </ul>
         </li>
+        @endcan
+
         {{-- <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
             <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>

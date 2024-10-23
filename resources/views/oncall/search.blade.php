@@ -25,10 +25,6 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                               
-                            </div>
-                           
                             <div class="card-body ">
                                 <form action="{{ route('oncall-search') }}" method="GET">
                                     <div class="form-group row">
