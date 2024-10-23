@@ -43,7 +43,7 @@
                                     @foreach ($resigns as $karyawan)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $karyawan->user->name }}</td>
+                                        <td>{{ $karyawan->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
                                         <td>

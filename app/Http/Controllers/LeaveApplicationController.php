@@ -7,6 +7,7 @@ use App\Models\LeaveApplication;
 use App\Models\LeaveBalance;
 use App\Models\LeaveType;
 use App\Models\User;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -256,9 +257,19 @@ class LeaveApplicationController extends Controller
         $leaveApplication = LeaveApplication::findOrFail($id);
         // Set nilai alasan reject
         $alasan_reject = $request->input('alasan_reject');
-
-        // Simpan alasan reject
         $leaveApplication->alasan_reject = $alasan_reject;
+
+        // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
+           // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
+        if ($leaveApplication->status == 'approved' && $leaveApplication->leavetype->kategori_cuti == 'CUTI TAHUNAN') {
+            // Find the user's leave balance record
+            $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->first();
+            if ($leaveBalance) {
+                // Add total_days of the rejected leave back to saldo_cuti
+                $leaveBalance->saldo_cuti += $leaveApplication->total_days;
+                $leaveBalance->save();
+            }
+        }
 
         $leaveApplication->reject($updatedBy);
         $leaveApplication->save();
@@ -401,8 +412,6 @@ class LeaveApplicationController extends Controller
         return redirect()->route('pengajuan-cuti');
     }
     
-    
-
     /**
      * Remove the specified resource from storage.
      */
@@ -410,6 +419,53 @@ class LeaveApplicationController extends Controller
     {
         //
     }
+
+    public function searchcuti(User $user){
+        /** @var App\Models\User */
+    $authUser = Auth::user();
+    if ($authUser->hasRole('admin')) {
+        $users = $user->activeKaryawan() // Using the injected User instance
+            ->get()
+            ->sortBy(fn($user) => $user->karyawan->name)
+            ->mapWithKeys(fn($user) => [$user->id => $user->karyawan->name]);
+    } else {
+        $karyawan = Karyawan::where('user_id', $authUser->id)->firstOrFail(); 
+         $users = $user->getActiveUsersByDepartment($karyawan->departemen_id); 
+    }
+        return view('cuti.searchcuti', compact('users'));
+    }
+
+    public function searchapprove(Request $request){
+        $users = $request->input('user_id');
+        $startDate = $request->input('start_date');
+
+        $query = LeaveApplication::select(
+                'leave_applications.*',
+                'leave_types.name as leave_type', 
+                'leave_types.kategori_cuti as kategori',
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan',
+            )
+            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+            ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->where('leave_applications.status', 'approved');
+        // Pastikan ada nilai untuk user_id,
+        if ($users) {
+            $query->where('users.id', $users);
+        }
+
+        if ($startDate) {
+            $query->where('leave_applications.start_date', '=', $startDate);
+        }
+
+        $results = $query->get();
+        
+        return view('cuti.results_approve', compact('results'));
+        }
+
 
     function laporan() {
         return view('cuti.search');

@@ -23,6 +23,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        @can('cancel_approve')
+                        <div class="card-header">
+                            <a href="{{ route('oncall.ol') }}" class="btn btn-danger mb-3">Cancel Approve</a>
+                        </div>
+                        @endcan
                         <div class="card-body">
                             <table class="table table-bordered table-hover" id="allTable">
                                 <thead>

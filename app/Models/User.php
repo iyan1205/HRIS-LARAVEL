@@ -76,4 +76,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function oncall(){
         return $this->hasMany(OnCall::class);
     }
+    public function scopeActiveKaryawan($query)
+    {
+        return $query->whereHas('karyawan', function ($q) {
+            $q->where('status', 'active');
+        })->with('karyawan');
+    }
+
+    public function getActiveUsersByDepartment($departemenId)
+    {
+        return $this->whereHas('karyawan', function ($query) use ($departemenId) {
+            $query->where('departemen_id', $departemenId)
+                ->where('status', 'active');
+        })
+        ->with('karyawan')
+        ->get()
+        ->sortBy(fn($user) => $user->karyawan->name)
+        ->pluck('karyawan.name', 'id');
+    }
 }
