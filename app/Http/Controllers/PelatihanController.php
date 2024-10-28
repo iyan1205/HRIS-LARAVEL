@@ -56,14 +56,24 @@ class PelatihanController extends Controller
         return redirect()->route('pelatihan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function viewCertificate($file)
     {
-        //
+        $path = storage_path('app/public/pelatihan_files/' . $file);
+        if (file_exists($path)) {
+            return response()->file($path, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Content-Type-Options' => 'nosniff',
+                'X-Download-Options' => 'noopen',
+                'Access-Control-Allow-Origin' => '*', // Allow all origins or specify your origin
+            ]);
+        }
+        return abort(404); // If file does not exist
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      */

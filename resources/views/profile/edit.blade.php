@@ -346,17 +346,44 @@
                         <div class="tab-pane" id="pelatihan">
                           <!-- The pelatihan -->
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nama Pelatihan</label>
-                            <div class="col-sm-5">
-                              @php $count = 1; @endphp
-                              @foreach($user->karyawan->pelatihans as $pelatihan)
-                                  <input type="text" class="form-control" value="{{ $count }}. {{ $pelatihan->name }}" readonly> <br>
-                                  @php $count++; @endphp
-                              @endforeach
-                            </div>
+                              <label for="inputPelatihan" class="col-sm-2 col-form-label">Nama Pelatihan</label>
+                              <div class="col-sm-10">
+                                  @php $count = 1; @endphp
+                                  @foreach($user->karyawan->pelatihans as $pelatihan)
+                                      <div class="card mb-3">
+                                          <div class="card-body">
+                                              <h5 class="card-title">{{ $count }}. {{ $pelatihan->name }}</h5>
+                                              <div class="mb-2">
+                                                  <!-- Tanggal Expired -->
+                                                  <label for="tanggalExpired_{{ $pelatihan->id }}">Tanggal Expired</label>
+                                                  <input type="text" class="form-control" id="tanggalExpired_{{ $pelatihan->id }}" value="{{ $pelatihan->pivot->tanggal_expired ?? 'Tidak ada tanggal expired' }}" readonly>
+                                              </div>
+                      
+                                              <div class="mb-2">
+                                                  <!-- File Sertifikat -->
+                                                  <label for="file_{{ $pelatihan->id }}">File Sertifikat</label>
+                                                  @if ($pelatihan->pivot->file)
+                                                  <div class="certificate-viewer">
+                                                    <iframe 
+                                                        src="{{ route('view.certificate', basename($pelatihan->pivot->file)) }}" 
+                                                        style="width: 100%; height: 600px; border: none;" 
+                                                        sandbox="allow-scripts allow-same-origin"
+                                                        oncontextmenu="return false;" <!-- Disable right-click -->
+                                                    ></iframe>
+                                                </div>                                                  
+                                                  @else
+                                                      <input type="text" class="form-control" value="Tidak ada file" readonly>
+                                                  @endif
+                                              </div>
+                                          </div>
+                                      </div>
+                                      @php $count++; @endphp
+                                  @endforeach
+                              </div>
                           </div>
-                        
-                        </div>
+                      </div>
+                      
+                      
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="gantipassword">
                           <!-- The password -->
@@ -376,6 +403,38 @@
             </div><!-- /.container-fluid -->
           </section>
     </div><!-- /.container-fluid -->
+
+    <!-- Include PDF.js -->
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+<!-- PDF viewer container -->
+<div id="pdf-viewer" style="width: 100%; height: 600px;"></div>
+
+<script>
+    const pdfUrl = '{{ route('view.certificate', basename($pelatihan->pivot->file)) }}'; // Set your PDF URL
+
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    loadingTask.promise.then(pdf => {
+        // Fetch the first page
+        pdf.getPage(1).then(page => {
+            const scale = 1.5; // Scale of the PDF
+            const viewport = page.getViewport({ scale });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            document.getElementById('pdf-viewer').appendChild(canvas);
+
+            // Render the PDF page into the canvas context
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            page.render(renderContext);
+        });
+    });
+</script>
+
     <script>
       document.getElementById('image').addEventListener('change', function(e) {
           var fileName = e.target.files[0].name;

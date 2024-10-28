@@ -11,10 +11,14 @@ class Pelatihan extends Model
 
     protected $fillable = [
         'name',
+        'tanggal_expired',
+        'file'
     ];
 
     public function karyawans()
     {
-        return $this->belongsToMany(Karyawan::class);
+        return $this->belongsToMany(Karyawan::class)
+                    ->withPivot('tanggal_expired', 'file')
+                    ->withTimestamps();
     }
 }
