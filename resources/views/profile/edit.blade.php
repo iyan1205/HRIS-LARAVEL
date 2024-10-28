@@ -344,44 +344,39 @@
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="pelatihan">
-                          <!-- The pelatihan -->
                           <div class="form-group row">
                               <label for="inputPelatihan" class="col-sm-2 col-form-label">Nama Pelatihan</label>
                               <div class="col-sm-10">
-                                  @php $count = 1; @endphp
-                                  @foreach($user->karyawan->pelatihans as $pelatihan)
-                                      <div class="card mb-3">
-                                          <div class="card-body">
-                                              <h5 class="card-title">{{ $count }}. {{ $pelatihan->name }}</h5>
-                                              <div class="mb-2">
-                                                  <!-- Tanggal Expired -->
-                                                  <label for="tanggalExpired_{{ $pelatihan->id }}">Tanggal Expired</label>
-                                                  <input type="text" class="form-control" id="tanggalExpired_{{ $pelatihan->id }}" value="{{ $pelatihan->pivot->tanggal_expired ?? 'Tidak ada tanggal expired' }}" readonly>
+                                @php $count = 1; @endphp
+                                @foreach($user->karyawan->pelatihans as $pelatihan)
+                                    <div class="card mb-3 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $count }}. {{ $pelatihan->name }}</h5> <br>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <!-- Tanggal Expired -->
+                                                <div class="me-3">
+                                                  Tanggal Expired:
+                                                  <p class="m-0">{{ $pelatihan->pivot->tanggal_expired ?? 'Tidak ada tanggal expired' }}</p>
                                               </div>
-                      
-                                              <div class="mb-2">
-                                                  <!-- File Sertifikat -->
-                                                  <label for="file_{{ $pelatihan->id }}">File Sertifikat</label>
-                                                  @if ($pelatihan->pivot->file)
-                                                  <div class="certificate-viewer">
-                                                    <iframe 
-                                                        src="{{ route('view.certificate', basename($pelatihan->pivot->file)) }}" 
-                                                        style="width: 100%; height: 600px; border: none;" 
-                                                        sandbox="allow-scripts allow-same-origin"
-                                                        oncontextmenu="return false;" <!-- Disable right-click -->
-                                                    ></iframe>
-                                                </div>                                                  
-                                                  @else
-                                                      <input type="text" class="form-control" value="Tidak ada file" readonly>
-                                                  @endif
-                                              </div>
-                                          </div>
-                                      </div>
-                                      @php $count++; @endphp
-                                  @endforeach
+                    
+                                                <!-- File Sertifikat -->
+                                                <div>
+                                                   File Sertifikat:
+                                                    @if ($pelatihan->pivot->file)
+                                                        <a href="{{ route('view.certificate', basename($pelatihan->pivot->file)) }}" class="btn btn-primary btn-sm" target="_blank">Lihat Sertifikat</a>
+                                                    @else
+                                                        <span>Tidak ada file</span>
+                                                    @endif 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @php $count++; @endphp
+                                @endforeach
                               </div>
                           </div>
                       </div>
+                      
                       
                       
                         <!-- /.tab-pane -->
@@ -403,38 +398,36 @@
             </div><!-- /.container-fluid -->
           </section>
     </div><!-- /.container-fluid -->
-
-    <!-- Include PDF.js -->
-<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
-
-<!-- PDF viewer container -->
-<div id="pdf-viewer" style="width: 100%; height: 600px;"></div>
-
-<script>
-    const pdfUrl = '{{ route('view.certificate', basename($pelatihan->pivot->file)) }}'; // Set your PDF URL
-
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    loadingTask.promise.then(pdf => {
-        // Fetch the first page
-        pdf.getPage(1).then(page => {
-            const scale = 1.5; // Scale of the PDF
-            const viewport = page.getViewport({ scale });
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            document.getElementById('pdf-viewer').appendChild(canvas);
-
-            // Render the PDF page into the canvas context
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-            page.render(renderContext);
-        });
-    });
-</script>
-
+    <script>
+      // Function to disable right-click context menu globally
+      document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+      });
+      // Function to prevent Ctrl + P and Ctrl + S when the PDF is opened in a new tab
+      document.addEventListener('keydown', function(e) {
+          // Check if Ctrl is pressed
+          if (e.ctrlKey) {
+              // Prevent Ctrl + P (Print)
+              if (e.key === 'p' || e.key === 'P') {
+                  e.preventDefault();
+              }
+              // Prevent Ctrl + S (Save)
+              if (e.key === 's' || e.key === 'S') {
+                  e.preventDefault();
+              }
+          }
+      });
+      // Function to open PDF in a new tab and prevent default action
+      function openPDF(event) {
+          // Open the PDF in a new tab
+          const pdfUrl = event.currentTarget.href; // Get the PDF URL from the clicked link
+          window.open(pdfUrl, '_blank'); // Open in a new tab
+  
+          // Prevent the default link behavior
+          event.preventDefault();
+          return false; // Prevent any other actions
+      }
+  </script>
     <script>
       document.getElementById('image').addEventListener('change', function(e) {
           var fileName = e.target.files[0].name;

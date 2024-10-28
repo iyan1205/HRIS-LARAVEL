@@ -73,7 +73,19 @@
             }
 
     </style>
+    <style>
+        /* Add styles to change the background color to gray */
+        body {
+            background-color: #f8f9fa; /* Light gray background for the entire body */
+        }
     
+        .certificate-viewer {
+            background-color: #d3d3d3; /* Gray background for the certificate viewer */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 @php
     $user = Auth::user();
