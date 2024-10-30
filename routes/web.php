@@ -130,6 +130,8 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
 
+    Route::get('/view-certificate/{file}', [PelatihanController::class, 'viewCertificate'])->name('view.certificate');
+
     Route::prefix('Cuti')->group(function () {
         // Pengajuan Cuti Route
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');

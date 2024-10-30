@@ -6,6 +6,7 @@ use App\Models\Pelatihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use setasign\Fpdi\Fpdi;
 
 class PelatihanController extends Controller
 {
@@ -56,14 +57,35 @@ class PelatihanController extends Controller
         return redirect()->route('pelatihan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+public function viewCertificate($file)
+{
+    $path = storage_path('app/public/pelatihan_files/' . $file); // Adjusted path
+    if (file_exists($path)) {
+        // Create a new PDF instance
+        $pdf = new FPDI();
+        $pdf->AddPage();
+        
+        // Set the source file (the existing PDF)
+        $pageCount = $pdf->setSourceFile($path);
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $templateId = $pdf->importPage($pageNo);
+            $pdf->useTemplate($templateId);
+            
+            // Add watermark to each page
+            $pdf->SetFont('Arial', 'B', 50);
+            $pdf->SetTextColor(200, 200, 200); // Light gray color
+            $pdf->SetXY(10, 100); // Position the watermark
+            $pdf->Text(50, 100, 'RS HAMORI'); // Add the watermark text
+        }
 
+        // Output the PDF as inline
+        $pdf->Output('I', 'certificate_with_watermark.pdf'); // 'I' for inline display
+        exit;
+    }
+    return abort(404); // If file does not exist
+}
+
+    
     /**
      * Show the form for editing the specified resource.
      */

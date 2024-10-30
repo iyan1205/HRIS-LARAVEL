@@ -183,6 +183,9 @@ class KaryawanController extends Controller
             'status' => 'nullable', // aktif atau resign
             'tgl_resign' => 'nullable',
             'resign_id' => 'nullable',
+            'new_pelatihan.*' => 'nullable|string|max:255|unique:pelatihans,name',
+            'new_tanggal_expired.*' => 'nullable|date',
+            'new_file.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
 
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
@@ -236,11 +239,46 @@ class KaryawanController extends Controller
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
 
+        $pelatihanData = [];
         if ($request->has('pelatihan')) {
-            $karyawan->pelatihans()->sync($request->pelatihan);
-        } else {
-            // Jika tidak ada pelatihan yang dipilih, bersihkan relasi pelatihan karyawan
-            $karyawan->pelatihans()->detach();
+            foreach ($request->input('pelatihan') as $pelatihanId) {
+                $pelatihanData[$pelatihanId] = [
+                    'tanggal_expired' => $request->input("tanggal_expired.$pelatihanId"),
+                    'file' => null,
+                ];
+                // Handle file upload
+                if ($request->hasFile("file.$pelatihanId")) {
+                    $file = $request->file("file.$pelatihanId");
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
+                    $pelatihanData[$pelatihanId]['file'] = $filePath;
+                }
+            }
+        }
+        // Sync pelatihan with additional details (expiration date and file)
+        $karyawan->pelatihans()->sync($pelatihanData);
+                // Handle new pelatihan inputs
+        // If new pelatihan names are provided, create new pelatihan entries
+        if ($request->has('new_pelatihan')) {
+            foreach ($request->input('new_pelatihan') as $index => $newPelatihanName) {
+                // Create the new Pelatihan
+                $newPelatihan = Pelatihan::create([
+                    'name' => $newPelatihanName,
+                ]);
+                // Handle file upload
+                $filePath = null;
+                if ($request->hasFile("new_file.$index")) {
+                    $file = $request->file("new_file.$index");
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
+                }
+
+                // Attach the new Pelatihan to the karyawan with additional fields (only pivot fields)
+                $karyawan->pelatihans()->attach($newPelatihan->id, [
+                    'tanggal_expired' => $request->input("new_tanggal_expired.$index"),
+                    'file' => $filePath,
+                ]);
+            }
         }
 
         // Tambahkan pesan sukses ke session flash
