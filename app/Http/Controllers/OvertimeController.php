@@ -167,6 +167,8 @@ class OvertimeController extends Controller
             $overtimes->status = 'pending';
             $overtimes->level_approve = '1';
             $overtimes->approver_id = $user->karyawan->jabatan->manager_id;
+            $overtimes->updated_by_atasan = $updatedBy;
+            $overtimes->updated_at_atasan = now();
         }
         
         $overtimes->approve($updatedBy);

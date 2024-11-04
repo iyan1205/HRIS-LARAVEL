@@ -20,6 +20,8 @@ class LeaveApplication extends Model
         'total_days',
         'alasan_reject',
         'updated_by',
+        'updated_by_atasan',
+        'updated_at_atasan'
 
     ];
 

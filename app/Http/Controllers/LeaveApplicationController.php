@@ -223,6 +223,8 @@ class LeaveApplicationController extends Controller
             $leaveApplication->level_approve = '1';
             // Update manager_id
             $leaveApplication->manager_id = $user->karyawan->jabatan->manager_id;
+            $leaveApplication->updated_by_atasan = $updatedBy;
+            $leaveApplication->updated_at_atasan = now();
         }
     
         // Menyetujui aplikasi cuti
@@ -259,7 +261,6 @@ class LeaveApplicationController extends Controller
         $alasan_reject = $request->input('alasan_reject');
         $leaveApplication->alasan_reject = $alasan_reject;
 
-        // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
            // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
         if ($leaveApplication->status == 'approved' && $leaveApplication->leavetype->kategori_cuti == 'CUTI TAHUNAN') {
             // Find the user's leave balance record

@@ -19,6 +19,8 @@ class Overtime extends Model
         'approver_id',
         'level_approve',
         'updated_by',
+        'updated_by_atasan',
+        'updated_at_atasan',
 
     ];
 

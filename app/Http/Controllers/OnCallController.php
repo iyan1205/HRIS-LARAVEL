@@ -157,6 +157,8 @@ class OnCallController extends Controller
             $oncalls->status = 'pending';
             $oncalls->level_approve = '1';
             $oncalls->approver_id = $user->karyawan->jabatan->manager_id;
+            $oncalls->updated_by_atasan = $updatedBy;
+            $oncalls->updated_at_atasan = now();
         }
         
 
