@@ -95,4 +95,10 @@ class User extends Authenticatable implements MustVerifyEmail
         ->sortBy(fn($user) => $user->karyawan->name)
         ->pluck('karyawan.name', 'id');
     }
+
+    public static function countByRole($role)
+    {
+        return self::role($role)->count();
+    }
+
 }

@@ -83,4 +83,9 @@ class Karyawan extends Authenticatable
                     ->withPivot('tanggal_expired', 'file')
                     ->withTimestamps();
     }
+
+    public static function countByStatus($status)
+    {
+        return self::where('status', $status)->count();
+    }
 }
