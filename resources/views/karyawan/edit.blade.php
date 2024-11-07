@@ -400,8 +400,8 @@
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                         @enderror
-                                        </div>
                                         <hr style="border: 2px solid #000;">
+                                        </div>
                                         @endforeach
                                     </div>
                                 
