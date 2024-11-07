@@ -13,6 +13,7 @@ use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -185,7 +186,8 @@ class KaryawanController extends Controller
             'resign_id' => 'nullable',
             'new_pelatihan.*' => 'nullable|string|max:255|unique:pelatihans,name',
             'new_tanggal_expired.*' => 'nullable|date',
-            'new_file.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'new_file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for PDF files
+            'file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for other files as well
 
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
@@ -242,30 +244,39 @@ class KaryawanController extends Controller
         $pelatihanData = [];
         if ($request->has('pelatihan')) {
             foreach ($request->input('pelatihan') as $pelatihanId) {
+                // Get the existing file path for this pelatihan
+                $pelatihanRelation = $karyawan->pelatihans()->find($pelatihanId);
+                $existingFile = $pelatihanRelation ? $pelatihanRelation->pivot->file : null;
+
                 $pelatihanData[$pelatihanId] = [
                     'tanggal_expired' => $request->input("tanggal_expired.$pelatihanId"),
-                    'file' => null,
-                ];
-                // Handle file upload
+                    'file' => $existingFile, // Retain the existing file path if it exists
+                ]; // Find the pelatihan relation
+
+                // If a new file is uploaded, replace the old one
                 if ($request->hasFile("file.$pelatihanId")) {
+                    // Delete the old file if it exists
+                    if ($existingFile && Storage::disk('public')->exists($existingFile)) {
+                        Storage::disk('public')->delete($existingFile);
+                    }
+
+                    // Store the new file and update the file path
                     $file = $request->file("file.$pelatihanId");
                     $filename = time() . '_' . $file->getClientOriginalName();
                     $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
-                    $pelatihanData[$pelatihanId]['file'] = $filePath;
+                    $pelatihanData[$pelatihanId]['file'] = $filePath; // Update with the new file path
                 }
             }
         }
-        // Sync pelatihan with additional details (expiration date and file)
         $karyawan->pelatihans()->sync($pelatihanData);
-                // Handle new pelatihan inputs
-        // If new pelatihan names are provided, create new pelatihan entries
+
+        // Handling new pelatihan entries
         if ($request->has('new_pelatihan')) {
             foreach ($request->input('new_pelatihan') as $index => $newPelatihanName) {
-                // Create the new Pelatihan
                 $newPelatihan = Pelatihan::create([
                     'name' => $newPelatihanName,
                 ]);
-                // Handle file upload
+
                 $filePath = null;
                 if ($request->hasFile("new_file.$index")) {
                     $file = $request->file("new_file.$index");
@@ -273,7 +284,7 @@ class KaryawanController extends Controller
                     $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
                 }
 
-                // Attach the new Pelatihan to the karyawan with additional fields (only pivot fields)
+                // Attach the new Pelatihan entry with optional file and expiration date
                 $karyawan->pelatihans()->attach($newPelatihan->id, [
                     'tanggal_expired' => $request->input("new_tanggal_expired.$index"),
                     'file' => $filePath,

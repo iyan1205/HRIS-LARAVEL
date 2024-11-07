@@ -68,7 +68,7 @@ class LeaveApplication extends Model
     {
         return self::select(
                 'leave_applications.id', 'leave_applications.created_at', 
-                'karyawans.name', 'karyawans.nik', 
+                'karyawans.name AS nama_karyawan', 'karyawans.nik', 
                 'jabatans.name AS jabatan', 
                 'leave_applications.start_date', 'leave_applications.end_date', 
                 'leave_applications.status', 'leave_applications.updated_by', 

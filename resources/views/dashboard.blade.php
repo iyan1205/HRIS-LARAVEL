@@ -108,23 +108,25 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Employee Name</th>
+                        <th>Nama Karyawan</th>
                         <th>NIK</th>
                         <th>Position</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Leave Type</th>
+                        <th>Jenis</th>
+                        <th>Kategori</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($leaveApplicationsToday as $application)
                         <tr>
                             <td>{{ $application->id }}</td>
-                            <td>{{ $application->name }}</td>
+                            <td>{{ $application->nama_karyawan }}</td>
                             <td>{{ $application->nik }}</td>
                             <td>{{ $application->jabatan }}</td>
                             <td>{{ $application->start_date }}</td>
                             <td>{{ $application->end_date }}</td>
+                            <td>{{ $application->name }}</td>
                             <td>{{ $application->kategori_cuti }}</td>
                         </tr>
                     @endforeach

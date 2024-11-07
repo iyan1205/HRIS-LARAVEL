@@ -117,7 +117,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="alasan_reject{{ $oncall->id }}">Alasan Reject:</label>
-                        <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" required></textarea>
+                        <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" maxlength="500" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

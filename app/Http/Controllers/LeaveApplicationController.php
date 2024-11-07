@@ -24,7 +24,7 @@ class LeaveApplicationController extends Controller
         $this->middleware('permission:tambah cuti', ['only' => ['create', 'store']]);
         $this->middleware('permission:edit cuti', ['only' => ['edit','update','cancel']]);
         $this->middleware('permission:delete cuti', ['only' => ['destroy']]);
-        $this->middleware('permission:approve cuti', ['only' => ['approve', 'reject']]);
+        $this->middleware('permission:approve cuti', ['only' => ['approve']]);
     }
         
     public function index()
@@ -277,7 +277,7 @@ class LeaveApplicationController extends Controller
 
         $message = 'Pengajuan cuti Tidak Disetujui.';
         Session::flash('successAdd', $message);
-        return redirect()->route('approval-cuti');
+        return redirect()->back();
 
     }
     /**
@@ -500,7 +500,36 @@ class LeaveApplicationController extends Controller
         return view('cuti.search_results', compact('results', 'status'));
     }
     
-    // Tambahkan method ini di LeaveApplicationController
+    public function cancel_approve(Request $request, $id) {
+        $user = Auth::user();
+        $updatedBy = $user->name;
+
+        $leaveApplication = LeaveApplication::findOrFail($id);
+        // Set nilai alasan reject
+        $alasan_reject = $request->input('alasan_reject');
+        $leaveApplication->alasan_reject = $alasan_reject;
+
+           // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
+        if ($leaveApplication->status == 'approved' && 
+            $leaveApplication->leavetype->kategori_cuti == 'CUTI TAHUNAN' || $leaveApplication->leave_type_id == 2 ) {
+            // Find the user's leave balance record
+            $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->first();
+            if ($leaveBalance) {
+                // Add total_days of the rejected leave back to saldo_cuti
+                $leaveBalance->saldo_cuti += $leaveApplication->total_days;
+                $leaveBalance->save();
+            }
+        }
+
+        $leaveApplication->reject($updatedBy);
+        $leaveApplication->save();
+
+        $message = 'Pengajuan cuti Dibatalkan.';
+        Session::flash('successAdd', $message);
+        return redirect()->route('btn-sc.cuti');
+
+    }
+
     public function getPendingCount()
     {
         /** @var App\Models\User */
