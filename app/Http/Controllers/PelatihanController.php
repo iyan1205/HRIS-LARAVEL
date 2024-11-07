@@ -6,6 +6,7 @@ use App\Models\Pelatihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use setasign\Fpdi\Fpdi;
 
 class PelatihanController extends Controller
 {
@@ -56,14 +57,46 @@ class PelatihanController extends Controller
         return redirect()->route('pelatihan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function viewCertificate($file)
     {
-        //
+        $path = storage_path('app/public/pelatihan_files/' . $file);
+        if (file_exists($path)) {
+            // Create a new FPDI instance
+            $pdf = new FPDI();
+            
+            // Set the source file (the existing PDF)
+            $pageCount = $pdf->setSourceFile($path);
+            
+            // Loop through each page
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                // Import each page to get dimensions
+                $templateId = $pdf->importPage($pageNo);
+                $size = $pdf->getTemplateSize($templateId);
+                
+                // Determine orientation and size for exact match
+                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+                
+                // Use the imported page as a template with its original dimensions
+                $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
+                
+                // Add watermark to each page
+                $pdf->SetFont('Arial', 'B', 50);
+                $pdf->SetTextColor(200, 200, 200); // Light gray color
+                
+                // Position the watermark at the center of the page
+                $pdf->SetXY($size['width'] / 2 - 40, $size['height'] / 2);
+                $pdf->Text($size['width'] / 2 - 40, $size['height'] / 2, 'RS HAMORI');
+            }
+    
+            // Output the PDF inline
+            $pdf->Output('I', 'certificate_with_watermark.pdf');
+            exit;
+        }
+        return abort(404); // If file does not exist
     }
 
+    
     /**
      * Show the form for editing the specified resource.
      */

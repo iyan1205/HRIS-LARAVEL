@@ -89,6 +89,55 @@
     
                     </div>
                     <!-- /.row (main row) -->
+                     <!-- TO DO List -->
+                    {{-- <div class="card">
+                        <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>
+                            Data Cuti Hari ini
+                        </h3>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                        <ul class="todo-list" data-widget="todo-list">
+                            @if($leaveApplicationsToday->isEmpty())
+                                <p>Tidak Ada Karyawan Cuti Hari ini.</p>
+                            @else
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nama Karyawan</th>
+                                            <th>NIK</th>
+                                            <th>Position</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Jenis</th>
+                                            <th>Kategori</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($leaveApplicationsToday as $application)
+                                            <tr>
+                                                <td>{{ $application->id }}</td>
+                                                <td>{{ $application->nama_karyawan }}</td>
+                                                <td>{{ $application->nik }}</td>
+                                                <td>{{ $application->jabatan }}</td>
+                                                <td>{{ $application->start_date }}</td>
+                                                <td>{{ $application->end_date }}</td>
+                                                <td>{{ $application->name }}</td>
+                                                <td>{{ $application->kategori_cuti }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                        </ul>
+                        </div>
+                        <!-- /.card-body -->
+                    </div> --}}
+              <!-- /.card -->
                 </div><!-- /.container-fluid -->
             </section>
         @else

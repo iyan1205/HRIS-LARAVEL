@@ -20,9 +20,9 @@ class HomeController extends Controller
 
     public function index()
     {
-        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
-        $jumlahKaryawanResign = Karyawan::where('status', 'resign')->count();
-        $karyawanCount = User::role('karyawan')->count();
+        $jumlahKaryawanAktif = Karyawan::countByStatus('active');
+        $jumlahKaryawanResign = Karyawan::countByStatus('resign');
+        $karyawanCount = User::countByRole('karyawan');
         $pengajuanReject = 0;
         $pengajuanApproved = 0;
         $lemburpending = 0;
@@ -31,41 +31,25 @@ class HomeController extends Controller
         $oncallpending = 0;
         $oncallrejected = 0;
         $oncallapproved = 0;
+        $leaveApplicationsToday = 0;
 
         if(Auth::check()){
             /** @var App\Models\User */
             $users = Auth::user();
+            $userId = auth()->id();
         if ($users->hasRole(['Super-Admin', 'admin'])) {
             $pengajuanCuti = LeaveApplication::where('status', 'pending')->count();
-            
+            $leaveApplicationsToday = LeaveApplication::getApplicationsStartingToday();
         }else{
-            $pengajuanCuti = LeaveApplication::where('status', 'pending')
-            ->where('user_id', auth()->id())
-            ->count();
-            $pengajuanReject = LeaveApplication::where('status', 'rejected')
-            ->where('user_id', auth()->id())
-            ->count();
-            $pengajuanApproved = LeaveApplication::where('status', 'approved')
-            ->where('user_id', auth()->id())
-            ->count();
-            $lemburpending = Overtime::where('status', 'pending')
-            ->where('user_id', auth()->id())
-            ->count();
-            $lemburrejected = Overtime::where('status', 'rejected')
-            ->where('user_id', auth()->id())
-            ->count();
-            $lemburapproved = Overtime::where('status', 'approved')
-            ->where('user_id', auth()->id())
-            ->count();
-            $oncallpending = OnCall::where('status', 'pending')
-            ->where('user_id', auth()->id())
-            ->count();
-            $oncallrejected = OnCall::where('status', 'rejected')
-            ->where('user_id', auth()->id())
-            ->count();
-            $oncallapproved = OnCall::where('status', 'approved')
-            ->where('user_id', auth()->id())
-            ->count();
+            $pengajuanCuti = LeaveApplication::countByStatusAndUser('pending', $userId);
+            $pengajuanReject = LeaveApplication::countByStatusAndUser('rejected', $userId);
+            $pengajuanApproved = LeaveApplication::countByStatusAndUser('approved', $userId);
+            $lemburpending = Overtime::countByStatusAndUser('pending', $userId);
+            $lemburrejected = Overtime::countByStatusAndUser('rejected', $userId);
+            $lemburapproved = Overtime::countByStatusAndUser('approved', $userId);
+            $oncallpending = OnCall::countByStatusAndUser('pending', $userId);
+            $oncallrejected = OnCall::countByStatusAndUser('rejected', $userId);
+            $oncallapproved = OnCall::countByStatusAndUser('approved', $userId);
         }
 
     }
@@ -73,7 +57,7 @@ class HomeController extends Controller
             'jumlahKaryawanAktif','jumlahKaryawanResign','karyawanCount',
             'pengajuanCuti','pengajuanReject', 'pengajuanApproved',
             'lemburpending','lemburrejected','lemburapproved',
-            'oncallpending','oncallrejected','oncallapproved'
+            'oncallpending','oncallrejected','oncallapproved','leaveApplicationsToday',
         ));
     }
 

@@ -23,6 +23,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        @can('cancel_approve')
+                        <div class="card-header">
+                            <a href="{{ route('oncall.ol') }}" class="btn btn-danger mb-3">Cancel Approve</a>
+                        </div>
+                        @endcan
                         <div class="card-body">
                             <table class="table table-bordered table-hover" id="allTable">
                                 <thead>
@@ -112,7 +117,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="alasan_reject{{ $oncall->id }}">Alasan Reject:</label>
-                        <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" required></textarea>
+                        <textarea class="form-control" id="alasan_reject{{ $oncall->id }}" name="alasan_reject" rows="3" maxlength="500" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

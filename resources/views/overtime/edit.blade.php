@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Keterangan</label>
-                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required >{{ $overtimes->keterangan }}</textarea>
+                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." maxlength="500" required >{{ $overtimes->keterangan }}</textarea>
                                         </div>
 
                                     </div>
