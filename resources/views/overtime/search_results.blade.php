@@ -42,6 +42,8 @@
                                             <th>Total Jam</th>
                                             <th>Keterangan</th>
                                             <th>Status</th>
+                                            <th>Tgl Approve SPV</th>
+                                            <th>Tgl Approve Manajer</th>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved' )
                                             <th>updated by</th>
                                             @endif
@@ -58,6 +60,8 @@
                                             <td>{{ $result->interval }}</td>
                                             <td>{{ $result->keterangan }}</td>
                                             <td>{{ $result->status }}</td>
+                                            <td>{{ $result->updated_at_atasan }}</td>
+                                            <td>{{ $result->updated_at }}</td>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif

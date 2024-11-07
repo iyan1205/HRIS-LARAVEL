@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
         Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
         Route::put('/pengajuan-cuti/{id}/cancel', [LeaveApplicationController::class, 'cancel'])->name('leave-application.cancel');    
+        Route::put('/pengajuan-cuti/{id}/cancel_approve', [LeaveApplicationController::class, 'cancel_approve'])->name('cuti.cancel_approve');    
         Route::get('/pengajuan-cuti/edit/{kategori}', [LeaveApplicationController::class, 'getLeaveTypes']);
 
         // Saldo

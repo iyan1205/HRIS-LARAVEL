@@ -69,7 +69,7 @@
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form id="rejectForm{{ $cuti->id }}" action="{{ route('leave-application.reject', $cuti->id) }}" method="POST">
+                                                <form id="rejectForm{{ $cuti->id }}" action="{{ route('cuti.cancel_approve', $cuti->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-body">
@@ -81,6 +81,7 @@
                                                     <input type="hidden" value="{{ $cuti->user_id }}">
                                                     <input type="hidden" value="{{ $cuti->status }}">
                                                     <input type="hidden" value="{{ $cuti->leavetype->kategori_cuti }}">
+                                                    <input type="hidden" value="{{ $cuti->leave_type_id }}">
                                                     <div class="modal-footer justify-content-between">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <button type="submit" class="btn btn-danger">Ya, Reject</button>

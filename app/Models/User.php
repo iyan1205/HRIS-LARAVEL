@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'image',
+        'email_verified_at'
     ];
 
     /**
@@ -94,4 +95,10 @@ class User extends Authenticatable implements MustVerifyEmail
         ->sortBy(fn($user) => $user->karyawan->name)
         ->pluck('karyawan.name', 'id');
     }
+
+    public static function countByRole($role)
+    {
+        return self::role($role)->count();
+    }
+
 }

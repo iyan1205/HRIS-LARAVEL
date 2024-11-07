@@ -18,6 +18,8 @@ class OnCall extends Model
         'approver_id',
         'level_approve',
         'updated_by',
+        'updated_by_atasan',
+        'updated_at_atasan',
 
     ];
     
@@ -42,6 +44,15 @@ class OnCall extends Model
         $this->status = 'rejected';
         $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
         $this->save();
+    }
+
+    public static function countByStatusAndUser($status, $userId = null)
+    {
+        $query = self::where('status', $status);
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+        return $query->count();
     }
     
 }

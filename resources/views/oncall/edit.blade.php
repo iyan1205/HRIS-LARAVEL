@@ -98,7 +98,7 @@
                                         
                                         <div class="form-group">
                                             <label>Keterangan</label>
-                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." required>{{ $oncalls->keterangan }}</textarea>
+                                            <textarea name="keterangan" class="form-control" rows="3" placeholder="Keterangan ..." maxlength="500" required>{{ $oncalls->keterangan }}</textarea>
                                         </div>
 
                                     </div>

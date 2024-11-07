@@ -903,7 +903,7 @@ $(document).ready(function() {
             <div class="form-group pelatihan-group" id="pelatihan-` + id + `-details">
                 <!-- Edit Nama Pelatihan -->
                 <label for="name_` + id + `">Nama Pelatihan untuk ` + pelatihanName + `</label>
-                <input type="text" name="nama_pelatihan[` + id + `]" value="` + pelatihanName + `" class="form-control">
+                <input type="text" name="nama_pelatihan[` + id + `]" value="` + pelatihanName + `" class="form-control" disabled>
                 
                 <!-- Tanggal Expired Pelatihan -->
                 <label for="tanggal_expired_` + id + `">Tanggal Expired untuk ` + pelatihanName + `</label>
@@ -911,7 +911,7 @@ $(document).ready(function() {
                 
                 <!-- File Upload Pelatihan -->
                 <label for="file_` + id + `">File Sertifikat untuk ` + pelatihanName + `</label>
-                <input type="file" name="file[` + id + `]" class="form-control">
+                <input type="file" name="file[` + id + `]" class="form-control" accept=".pdf">
                 <hr style="border: 2px solid #000;">
             </div>
         `;
@@ -929,11 +929,11 @@ $(document).ready(function() {
                 <label for="new_tanggal_expired[]">Tanggal Expired Pelatihan Baru</label>
                 <input type="date" name="new_tanggal_expired[]" class="form-control mb-2 new-expired">
                 <label for="new_file[]">File Sertifikat Pelatihan Baru</label>
-                <input type="file" name="new_file[]" class="form-control mb-2 new-file">
+                <input type="file" name="new_file[]" class="form-control mb-2 new-file" accept=".pdf">
                 <!-- Cancel button to remove the new pelatihan div -->
                 <button type="button" class="btn btn-danger remove-pelatihan-btn">Batal</button>
+                <hr style="border: 2px solid #000;">
             </div>
-            <hr style="border: 2px solid #000;">
         `;
         $('#new-pelatihan-container').append(newPelatihanFields);
     });

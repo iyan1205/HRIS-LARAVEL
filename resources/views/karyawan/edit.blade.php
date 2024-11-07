@@ -383,7 +383,7 @@
                                         <div class="form-group pelatihan-group" id="pelatihan-{{ $pelatihan->id }}-details">
                                             <!-- Edit Nama Pelatihan -->
                                             <label for="name_{{ $pelatihan->id }}">Nama Pelatihan untuk {{ $pelatihan->name }}</label>
-                                            <input type="text" name="nama_pelatihan[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->name ?? $pelatihan->name }}" class="form-control">
+                                            <input type="text" name="nama_pelatihan[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->name ?? $pelatihan->name }}" class="form-control" disabled>
                                 
                                             <!-- Tanggal Expired Pelatihan -->
                                             <label for="tanggal_expired_{{ $pelatihan->id }}">Tanggal Expired untuk {{ $pelatihan->name }}</label>
@@ -392,9 +392,14 @@
                                             <!-- File Upload Pelatihan -->
                                             <label for="file_{{ $pelatihan->id }}">File Sertifikat untuk {{ $pelatihan->name }}</label>
                                             @if ($pelatihan->pivot->file)
-                                                <a href="{{ Storage::url($pelatihan->pivot->file) }}" target="_blank">Lihat file saat ini</a>
+                                                <a href="{{ Storage::url($pelatihan->pivot->file) }}" target="_blank" >Lihat file saat ini</a>
                                             @endif
-                                            <input type="file" name="file[{{ $pelatihan->id }}]" class="form-control">
+                                            <input type="file" name="file[{{ $pelatihan->id }}]" class="form-control" accept=".pdf">
+                                            @error('file.*')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
                                         </div>
                                         <hr style="border: 2px solid #000;">
                                         @endforeach

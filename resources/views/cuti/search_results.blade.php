@@ -39,10 +39,13 @@
                                             <th>Jabatan</th>
                                             <th>Kategori Cuti</th>
                                             <th>Jenis Cuti</th>
+                                            <th>Tanggal Pengajuan</th>
                                             <th>Tanggal Awal</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Total Hari</th>
                                             <th>Status</th>
+                                            <th>Tgl Approve SPV</th>
+                                            <th>Tgl Approve Manajer</th>
                                             @if($status == '' || $status == 'rejected')
                                             <th>updated by</th>
                                             @endif
@@ -59,10 +62,13 @@
                                             <td>{{ $result->nama_jabatan }}</td>
                                             <td>{{ $result->kategori }}</td>
                                             <td>{{ $result->leave_type }}</td>
+                                            <td>{{ $result->created_at }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->total_days }} Hari</td>
                                             <td>{{ $result->status }}</td>
+                                            <td>{{ $result->updated_at_atasan }}</td>
+                                            <td>{{ $result->updated_at }}</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
