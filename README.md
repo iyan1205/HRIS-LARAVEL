@@ -6,7 +6,7 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 ## FITUR
 - [X] Manajemen Karyawan
 - [X] Manajemen Kontrak Kerja
-- [X] Manajemen User/Pengguna [Role And Permission](https://github.com/spatie/laravel-permission.git)
+- [X] Manajemen User/Pengguna [Spatie Role And Permission](https://github.com/spatie/laravel-permission.git)
 - [X] Manajemen Jabatan
 - [X] Karir History
 - [X] Promosi, Mutasi, dan Demosi

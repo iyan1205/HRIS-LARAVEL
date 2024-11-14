@@ -274,13 +274,23 @@
         </li>
         @endcan
 
-        {{-- <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('attendance.index') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('attendance.index') }}" target="_blank" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
                     Kehadiran
                 </p>
             </a>
-        </li> --}}
+        </li>
+        @role('admin')
+        <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('attendance.laporan') }}" target="_blank" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                   Laporan Kehadiran
+                </p>
+            </a>
+        </li>
+        @endrole
     </ul>
 </nav>
