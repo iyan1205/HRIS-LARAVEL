@@ -5,56 +5,91 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class AttendanceController extends Controller
 {
-    public function getTodayAttendance(Request $request)
+    public function getTodayAttendance()
     {
-        $user = Auth::user();
-        $attendances = Attendance::where('user_id', $user->id)
-        ->whereDate('created_at', Carbon::today())
-        ->latest()
-        ->first();
-        return response()->json($attendances);
+         // Cek apakah user sudah check-in dan belum check-out
+         $attendance = Attendance::where('user_id', Auth::id())
+         ->whereNull('jam_keluar')
+         ->latest()
+         ->first();
+        return response()->json($attendance);
     }
     
 
-    public function store(Request $request)
+    public function checkIn(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'foto' => 'required|image|mimes:jpg,jpeg', 
-            'status' => 'required|in:hadir,pulang',
-            'jam' => 'required|date_format:H:i'
-        ]);
+        $path = null; // Initialize path variable
     
-        // Simpan file foto jika ada
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('photos/attendance'), $filename); // Simpan file di folder 'uploads'
-        } else {
-            $filename = null; // Jika tidak ada file, set ke null
+        if ($request->file('foto_jam_masuk')) {
+            $manager = new ImageManager(new Driver());
+            $name_img = hexdec(uniqid()) . '.' . $request->file('foto_jam_masuk')->getClientOriginalExtension();
+            $img = $manager->read($request->file('foto_jam_masuk'));
+            $img->resize(200, 200);
+            $img->save(storage_path('app/public/attendance/' . $name_img));
+            $path = 'attendance/' . $name_img;
         }
     
-        // Buat data ke dalam tabel Attendance
-        $attendance = Attendance::create([
-            'user_id' => $request->input('user_id'),
-            'tanggal' => $request->input('tanggal'),
-            'foto' => $filename, // Simpan nama file foto
-            'status' => $request->input('status'),
-            'jam' => $request->input('jam')
+        Attendance::create([
+            'user_id' => Auth::id(),
+            'jam_masuk' => now(),
+            'foto_jam_masuk' => $path,
+            'status' => 'hadir',
         ]);
     
-        // Respons JSON
         return response()->json([
-            'message' => 'Attendance created successfully',
-            'data' => $attendance
-        ], 201);
+            'success' => true,
+            'message' => 'Berhasil Check-in',
+            'data' => [
+                'jam_masuk' => now(),
+                'foto_jam_masuk' => $path,
+            ]
+        ], 200);
+    }
+    
+    public function checkOut(Request $request)
+    {
+        $path = null; // Initialize path variable
+    
+        if ($request->file('foto_jam_keluar')) {
+            $manager = new ImageManager(new Driver());
+            $name_img = hexdec(uniqid()) . '.' . $request->file('foto_jam_keluar')->getClientOriginalExtension();
+            $img = $manager->read($request->file('foto_jam_keluar'));
+            $img->resize(200, 200);
+            $img->save(storage_path('app/public/attendance/' . $name_img));
+            $path = 'attendance/' . $name_img;
+        }
+    
+        $attendance = Attendance::where('user_id', Auth::id())
+                                 ->whereNull('jam_keluar')
+                                 ->first();
+    
+        if ($attendance) {
+            $attendance->update([
+                'jam_keluar' => now(),
+                'foto_jam_keluar' => $path,
+                'status' => 'pulang',
+            ]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Check-out berhasil.',
+                'data' => [
+                    'jam_keluar' => now(),
+                    'foto_jam_keluar' => $path,
+                ]
+            ], 200);
+        }
+    
+        return response()->json([
+            'success' => false,
+            'message' => 'Data absensi tidak ditemukan.',
+        ], 404);
     }
     
 

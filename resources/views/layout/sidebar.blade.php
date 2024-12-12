@@ -273,21 +273,22 @@
             </ul>
         </li>
         @endcan
-
+        @role('karyawan')
         <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('attendance.index') }}" target="_blank" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+            <a href="{{ route('attendance.list') }}" class="nav-link {{ request()->is('attendance/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
-                    Kehadiran
+                    Absensi
                 </p>
             </a>
         </li>
+        @endrole
         @role('admin')
         <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('attendance.laporan') }}" target="_blank" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+            <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
-                   Laporan Kehadiran
+                   Laporan Absensi
                 </p>
             </a>
         </li>

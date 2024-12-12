@@ -679,6 +679,19 @@
                     }
                 ]
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
+
+            $("#lap_absensi").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export to Excel',
+                    filename: 'Laporan_Absensi_' + today, // Nama file ekspor
+                }
+            ]
+        }).buttons().container().appendTo('#lap_absensi_wrapper .col-md-6:eq(0)');
         });
     </script>
 <!-- TAMBAH/EDIT cuti -->
