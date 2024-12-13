@@ -119,6 +119,9 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
+            'nomer_sip' => $request->input('nomer_sip'),
+            'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
+            'exp_sip' => $request->input('exp_sip'),
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
 
@@ -233,6 +236,10 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
+            'nomer_sip' => $request->input('nomer_sip'),
+            'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
+            'exp_sip' => $request->input('exp_sip'),
+
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
 

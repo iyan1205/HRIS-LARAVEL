@@ -469,8 +469,25 @@
                                         @error('cert_profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
-
                                     </div>
+                                    <div class="form-group">
+                                        <label for="no sip" class="form-label">Nomer SIP</label>
+                                        <input type="text" class="form-control" id="nomer_sip"
+                                            value="{{ old('nomer_sip') }}" placeholder="Nomer SIP" name="nomer_sip">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tgl_terbit_sip" class="form-label">Tanggal Terbit SIP</label>
+                                        <input type="date" class="form-control" id="tgl_terbit_sip"
+                                            value="{{ old('tgl_terbit_sip') }}" placeholder="Nomer SIP" name="tgl_terbit_sip">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="expired sip" class="form-label">Masa Berlaku SIP</label>
+                                        <input type="date" class="form-control" id="exp_sip"
+                                            value="{{ old('exp_sip') }}" name="exp_sip">
+                                    </div>
+
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div> {{-- col --}}
