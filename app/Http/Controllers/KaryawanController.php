@@ -256,7 +256,6 @@ class KaryawanController extends Controller
             'nomer_sip' => $request->input('nomer_sip'),
             'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
             'exp_sip' => $request->input('exp_sip'),
-
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
 
