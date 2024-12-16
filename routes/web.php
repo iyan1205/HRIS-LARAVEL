@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     });
   
     // Master Karyawan Routes
+
     Route::prefix('master')->group(function () {
         Route::get('/karyawan/active', [KaryawanController::class, 'index'])->name('karyawan');
         Route::get('/karyawan/active/create', [KaryawanController::class, 'create'])->name('karyawan.create');
@@ -83,8 +84,9 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/karyawan/active/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
         Route::put('/karyawan/active/update/{id}/pendidikan', [KaryawanController::class, 'update'])->name('karyawan.update.pendidikan');
         Route::delete('/karyawan/active/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
-
+        Route::delete('/karyawan/{karyawanId}/kontrak/{kontrakId}', [KaryawanController::class, 'destroyKontrak'])->name('karyawan.kontrak.destroy');
         Route::get('/karyawan/resign', [KaryawanController::class, 'resign'])->name('resign');
+
     });
 
     // Organisasi Routes
@@ -171,8 +173,6 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
-    
-
 
     Route::prefix('Lembur')->group( function() {
         // Overtime
@@ -232,14 +232,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
-});
-
 // Menghitung jumlah pengajuan realtime
 Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
 Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
 Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
-
-
+});
 
 require __DIR__ . '/auth.php';

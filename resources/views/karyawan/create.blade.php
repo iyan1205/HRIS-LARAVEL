@@ -166,28 +166,6 @@
                                         @enderror
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="tgl_kontrak1" class="form-label">Tanggal Masuk Dinas</label>
-                                        <input type="date" class="form-control" id="tgl_kontrak1" name="tgl_kontrak1" value="{{ old('tgl_kontrak1') }}"
-                                            required>
-                                        @error('tgl_kontrak1')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="akhir_kontrak1" class="form-label">Masa Kontrak</label>
-                                        <input type="date" class="form-control" id="akhir_kontrak1" name="akhir_kontrak1"
-                                            value="{{ old('akhir_kontrak1') }}" required>
-                                        @error('akhir_kontrak1')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
-
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div> {{-- col --}}
@@ -381,9 +359,62 @@
                                             name="nomer_ijazah">
                                     </div>
 
-                                </div> {{-- card-body --}}
-                            </div> {{-- card-primary --}}
+                                </div> 
+                            </div>
                         </div>
+                        <!-- /.Kontrak Karyawan -->
+                        <div class="col-md-6">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Kontrak Karyawan <span class="red-star">*</span></h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Edit">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="kontrak-container">
+                                    <!-- Kontrak pertama -->
+                                    <div class="form-group kontrak">
+                                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                        <input type="date" class="form-control" id="tanggal_mulai"
+                                            name="kontrak[0][tanggal_mulai]" value="{{ old('kontrak.0.tanggal_mulai') }}" required>
+                                        @error('kontrak.0.tanggal_mulai')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group kontrak">
+                                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                        <input type="date" class="form-control" id="tanggal_selesai"
+                                            name="kontrak[0][tanggal_selesai]" value="{{ old('kontrak.0.tanggal_selesai') }}" required>
+                                        @error('kontrak.0.tanggal_selesai')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group kontrak">
+                                        <label for="deskripsi_kontrak" class="form-label">Deskripsi Kontrak</label>
+                                        <input type="text" class="form-control" id="deskripsi_kontrak"
+                                            name="kontrak[0][deskripsi_kontrak]" value="{{ old('kontrak.0.deskripsi_kontrak') }}">
+                                        @error('kontrak.0.deskripsi_kontrak')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <!-- Tombol Tambah Kontrak -->
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-success" id="add-kontrak-btn">
+                                        Tambah Kontrak
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- /.Pelatihan -->
                         <div class="col-md-6">
                             <div class="card card-primary collapsed-card">
@@ -469,8 +500,25 @@
                                         @error('cert_profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
-
                                     </div>
+                                    <div class="form-group">
+                                        <label for="no sip" class="form-label">Nomer SIP</label>
+                                        <input type="text" class="form-control" id="nomer_sip"
+                                            value="{{ old('nomer_sip') }}" placeholder="Nomer SIP" name="nomer_sip">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tgl_terbit_sip" class="form-label">Tanggal Terbit SIP</label>
+                                        <input type="date" class="form-control" id="tgl_terbit_sip"
+                                            value="{{ old('tgl_terbit_sip') }}" placeholder="Nomer SIP" name="tgl_terbit_sip">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="expired sip" class="form-label">Masa Berlaku SIP</label>
+                                        <input type="date" class="form-control" id="exp_sip"
+                                            value="{{ old('exp_sip') }}" name="exp_sip">
+                                    </div>
+
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div> {{-- col --}}
@@ -487,4 +535,25 @@
             </div> <!-- /.container-fluid -->
         </section> <!-- /.content -->
     </div> <!-- /.content-wrapper -->
+    <script>
+        let kontrakCount = 1;
+    
+        document.getElementById('add-kontrak-btn').addEventListener('click', function () {
+            const container = document.getElementById('kontrak-container');
+            const template = `
+                <div class="form-group kontrak">
+                    <label for="tanggal_mulai_${kontrakCount}">Tanggal Mulai</label>
+                    <input type="date" class="form-control" id="tanggal_mulai_${kontrakCount}" name="kontrak[${kontrakCount}][tanggal_mulai]" required>
+                    
+                    <label for="tanggal_selesai_${kontrakCount}">Tanggal Selesai</label>
+                    <input type="date" class="form-control" id="tanggal_selesai_${kontrakCount}" name="kontrak[${kontrakCount}][tanggal_selesai]" required>
+                    
+                    <label for="deskripsi_kontrak_${kontrakCount}">Deskripsi Kontrak</label>
+                    <input type="text" class="form-control" id="deskripsi_kontrak_${kontrakCount}" name="kontrak[${kontrakCount}][deskripsi_kontrak]">
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', template);
+            kontrakCount++;
+        });
+    </script>
 @endsection

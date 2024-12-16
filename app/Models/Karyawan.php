@@ -66,7 +66,6 @@ class Karyawan extends Authenticatable
         return $this->hasOne(Pendidikan::class, 'karyawan_id');
     }
 
-
     public function tambahPendidikan($data)
     {
         return $this->pendidikan()->create($data);
@@ -88,4 +87,11 @@ class Karyawan extends Authenticatable
     {
         return self::where('status', $status)->count();
     }
+    
+    public function kontrak()
+    {
+        return $this->hasMany(KaryawanKontrak::class);
+    }
+    
+
 }

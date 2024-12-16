@@ -19,8 +19,7 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('karyawan.update', ['id' => $karyawan->id]) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('karyawan.update', ['id' => $karyawan->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -352,6 +351,48 @@
                             </div>
                             <!-- /.card -->
                         </div>
+                        <!-- /.Kontrak Karyawan -->
+                        <div class="col-md-6">
+                            <div class="card card-success collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Pelatihan</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="kontrak-container">
+                                    @foreach ($karyawan->kontrak as $index => $kontrak)
+                                        <div class="form-group kontrak">
+                                            <input type="hidden" name="kontrak[{{ $index }}][id_kontrak]" value="{{ $kontrak->id }}">
+                                            <label for="tanggal_mulai_{{ $index }}">Tanggal Mulai</label>
+                                            <input type="date" class="form-control" id="tanggal_mulai_{{ $index }}"
+                                                   name="kontrak[{{ $index }}][tanggal_mulai]"
+                                                   value="{{ old('kontrak.' . $index . '.tanggal_mulai', $kontrak->tanggal_mulai) }}" required>
+                            
+                                            <label for="tanggal_selesai_{{ $index }}">Tanggal Selesai</label>
+                                            <input type="date" class="form-control" id="tanggal_selesai_{{ $index }}"
+                                                   name="kontrak[{{ $index }}][tanggal_selesai]"
+                                                   value="{{ old('kontrak.' . $index . '.tanggal_selesai', $kontrak->tanggal_selesai) }}" required>
+                            
+                                            <label for="deskripsi_kontrak_{{ $index }}">Deskripsi Kontrak</label>
+                                            <input type="text" class="form-control" id="deskripsi_kontrak_{{ $index }}"
+                                                   name="kontrak[{{ $index }}][deskripsi_kontrak]"
+                                                   value="{{ old('kontrak.' . $index . '.deskripsi_kontrak', $kontrak->deskripsi_kontrak) }}">
+                                        </div>
+                                       
+                                    @endforeach
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-success" id="add-kontrak-btn">Tambah Kontrak</button>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        
                         <!-- /.Pelatihan -->
                         <div class="col-md-6">
                             <div class="card card-success collapsed-card">
@@ -437,14 +478,12 @@
                                             STR</label>
                                         <input type="text" class="form-control" id="nomer_str" value="{{ $karyawan->pendidikan->nomer_str }}"
                                             placeholder="Nomer STR" name="nomer_str">
-
                                     </div>
 
                                     <div class="form-group">
                                         <label for="expired str" class="form-label">Masa Berlaku STR</label>
                                         <input type="date" class="form-control" id="exp_str" value="{{ $karyawan->pendidikan->exp_str }}"
                                             name="exp_str">
-
                                     </div>
 
                                     <div class="form-group">
@@ -454,7 +493,6 @@
                                         @error('profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
-
                                     </div>
 
                                     <div class="form-group">
@@ -466,7 +504,21 @@
                                         @error('cert_profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label for="no sip" class="form-label">Nomer SIP</label>
+                                        <input type="text" class="form-control" id="nomer_sip" placeholder="Nomer SIP" name="nomer_sip" value="{{ $karyawan->pendidikan->nomer_sip }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tgl_terbit_sip" class="form-label">Tanggal Terbit SIP</label>
+                                        <input type="date" class="form-control" id="tgl_terbit_sip" placeholder="Nomer SIP" name="tgl_terbit_sip" value="{{ $karyawan->pendidikan->tgl_terbit_sip }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="expired sip" class="form-label">Masa Berlaku SIP</label>
+                                        <input type="date" class="form-control" id="exp_sip" name="exp_sip" value="{{ $karyawan->pendidikan->exp_sip }}">
                                     </div>
                                 </div> <!-- /.card-body -->
                             </div> <!-- /.card -->
@@ -479,6 +531,15 @@
                         </div>
                     </div>
                 </form>
+                <!-- Form untuk Hapus Kontrak -->
+                @foreach ($karyawan->kontrak as $index => $kontrak)
+                    <form action="{{ route('karyawan.kontrak.destroy', ['karyawanId' => $karyawan->id, 'kontrakId' => $kontrak->id_kontrak]) }}"
+                        method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kontrak ini?');">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-danger btn-sm">Hapus Kontrak {{ $index + 1 }}</button>
+                    </form>
+                @endforeach
             </div>
         </section> <!-- /.content -->
     </div> <!-- /.container-wrapper -->
@@ -492,5 +553,32 @@
                 resignForm.style.display = 'none';
             }
         });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let kontrakCount = {{ $karyawan->kontrak->count() }};
+        const kontrakContainer = document.getElementById('kontrak-container');
+
+        document.getElementById('add-kontrak-btn').addEventListener('click', function () {
+            const newKontrak = `
+                <div class="form-group kontrak">
+                    <label for="tanggal_mulai_${kontrakCount}">Tanggal Mulai</label>
+                    <input type="date" class="form-control" id="tanggal_mulai_${kontrakCount}"
+                        name="kontrak[${kontrakCount}][tanggal_mulai]" required>
+
+                    <label for="tanggal_selesai_${kontrakCount}">Tanggal Selesai</label>
+                    <input type="date" class="form-control" id="tanggal_selesai_${kontrakCount}"
+                        name="kontrak[${kontrakCount}][tanggal_selesai]" required>
+
+                    <label for="deskripsi_kontrak_${kontrakCount}">Deskripsi Kontrak</label>
+                    <input type="text" class="form-control" id="deskripsi_kontrak_${kontrakCount}"
+                        name="kontrak[${kontrakCount}][deskripsi_kontrak]">
+                </div>
+            `;
+            kontrakContainer.insertAdjacentHTML('beforeend', newKontrak);
+            kontrakCount++;
+        });
+    });
+
     </script>
 @endsection

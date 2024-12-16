@@ -77,9 +77,9 @@ class KaryawanController extends Controller
             'telepon' => 'required',
             'npwp' => 'required',
             'status_karyawan' => 'required', //kontrak_atau_tetap
-            'tgl_kontrak1' => 'required', //tglmasukdinas
-            'akhir_kontrak1' => 'required',
-
+            'kontrak.*.tanggal_mulai' => 'required|date', // Validasi array kontrak
+            'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
+            'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -106,9 +106,7 @@ class KaryawanController extends Controller
             'telepon' => $request->input('telepon'),
             'status_ktp' => $request->input('status_ktp'),
             'npwp' => $request->input('npwp'),
-            'tgl_kontrak1' => $request->input('tgl_kontrak1'),
-            'akhir_kontrak1' => $request->input('akhir_kontrak1'),
-            // Tambahkan kolom lain yang perlu disimpan
+           
         ]);
 
         $pendidikan = new Pendidikan([
@@ -120,7 +118,9 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
-            //Tambahkan kolom lain di sini jika diperlukan
+            'nomer_sip' => $request->input('nomer_sip'),
+            'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
+            'exp_sip' => $request->input('exp_sip'),
         ]);
 
         $karyawan->pendidikan()->save($pendidikan);
@@ -129,6 +129,18 @@ class KaryawanController extends Controller
         if ($request->has('pelatihan')) {
             $karyawan->pelatihans()->attach($request->pelatihan);
         }
+
+        // Tambahkan kontrak karyawan
+        if ($request->has('kontrak')) {
+            foreach ($request->input('kontrak') as $kontrakData) {
+                $karyawan->kontrak()->create([
+                    'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                    'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                    'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                ]);
+            }
+        }
+
         // Tambahkan session flash message
         $message = 'Karyawan berhasil ditambahkan';
         Session::flash('successAdd', $message);
@@ -147,7 +159,7 @@ class KaryawanController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $karyawan = Karyawan::with('pendidikan')->find($id);
+        $karyawan = Karyawan::with('pendidikan' , 'kontrak')->findOrFail($id);
         $pelatihans = Pelatihan::all();
         $users = User::pluck('name', 'id');
         $departemens = Departemen::pluck('name', 'id');
@@ -184,11 +196,14 @@ class KaryawanController extends Controller
             'status' => 'nullable', // aktif atau resign
             'tgl_resign' => 'nullable',
             'resign_id' => 'nullable',
+            'kontrak.*.id_kontrak' => 'nullable|exists:karyawan_kontrak,id_kontrak',
+            'kontrak.*.tanggal_mulai' => 'required|date',
+            'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
+            'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
             'new_pelatihan.*' => 'nullable|string|max:255|unique:pelatihans,name',
             'new_tanggal_expired.*' => 'nullable|date',
             'new_file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for PDF files
             'file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for other files as well
-
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -238,6 +253,10 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
+            'nomer_sip' => $request->input('nomer_sip'),
+            'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
+            'exp_sip' => $request->input('exp_sip'),
+
             //Tambahkan kolom lain di sini jika diperlukan
         ]);
 
@@ -292,6 +311,38 @@ class KaryawanController extends Controller
             }
         }
 
+        // Update kontrak karyawan
+        // Ambil semua ID kontrak yang disediakan dalam input
+        $kontrakIds = array_filter(array_column($request->input('kontrak', []), 'id_kontrak'));  // Ganti 'id_kontrak'
+
+        // Hapus kontrak yang tidak ada di input
+        $karyawan->kontrak()->whereNotIn('id_kontrak', $kontrakIds)->delete();  // Ganti 'id_kontrak'
+
+        // Update atau buat kontrak baru hanya jika ada perubahan
+        foreach ($request->input('kontrak', []) as $kontrakData) {
+            if (isset($kontrakData['id_kontrak'])) {
+                // Update kontrak yang sudah ada hanya jika ada perubahan
+                $kontrak = $karyawan->kontrak()->find($kontrakData['id_kontrak']);
+                if ($kontrak && (
+                    $kontrak->tanggal_mulai != $kontrakData['tanggal_mulai'] ||
+                    $kontrak->tanggal_selesai != $kontrakData['tanggal_selesai'] ||
+                    $kontrak->deskripsi_kontrak != $kontrakData['deskripsi_kontrak']
+                )) {
+                    $kontrak->update([
+                        'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                        'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                        'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                    ]);
+                }
+            } else {
+                // Tambahkan kontrak baru hanya jika belum ada
+                $karyawan->kontrak()->create([
+                    'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                    'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                    'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                ]);
+            }
+        }
         // Tambahkan pesan sukses ke session flash
         $message = 'Data karyawan berhasil diperbarui';
         Session::flash('successAdd', $message);
@@ -317,4 +368,28 @@ class KaryawanController extends Controller
         
         return redirect()->route('karyawan');
     }
+
+    public function destroyKontrak($karyawanId, $kontrakId)
+    {
+        // Cari karyawan berdasarkan ID
+        $karyawan = Karyawan::findOrFail($karyawanId);
+    
+        // Cari kontrak berdasarkan ID kontrak
+        $kontrak = $karyawan->kontrak()->where('id_kontrak', $kontrakId)->first();
+    
+        if ($kontrak) {
+            // Hapus kontrak
+            $kontrak->delete();
+            // Berikan pesan sukses
+            Session::flash('successAdd', 'Kontrak berhasil dihapus.');
+        } else {
+            // Jika kontrak tidak ditemukan
+            Session::flash('error', 'Kontrak tidak ditemukan.');
+        }
+    
+        // Redirect kembali ke halaman edit karyawan
+        return redirect()->route('karyawan.edit', $karyawanId);
+    }
+    
+    
 }
