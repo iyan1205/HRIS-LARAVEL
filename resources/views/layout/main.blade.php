@@ -857,7 +857,7 @@ $(document).ready(function() {
     
 </script>
 @endrole
-    
+
 </body>
 
 </html>

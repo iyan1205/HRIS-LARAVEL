@@ -83,7 +83,8 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
         Route::put('/update/{id}/pendidikan', [KaryawanController::class, 'update'])->name('karyawan.update.pendidikan');
         Route::delete('/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
-
+         // Menambahkan route untuk menghapus kontrak karyawan
+        Route::delete('/karyawan/{karyawanId}/kontrak/{kontrakId}', [KaryawanController::class, 'destroyKontrak'])->name('karyawan.kontrak.destroy');
         Route::get('/resign', [KaryawanController::class, 'resign'])->name('resign');
     });
 
