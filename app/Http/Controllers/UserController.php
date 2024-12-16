@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::get();
+        $users = User::orderBy('created_at', 'desc')->get();
         return view('user.index', compact('users'));
     }
 
@@ -41,6 +41,7 @@ class UserController extends Controller
             'password' => 'required',
             'roles' => 'required|array',
             'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+            'email_verified_at' => 'required'
         ]);
         if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
@@ -48,7 +49,7 @@ class UserController extends Controller
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
         $data['roles'] = $request->roles;
-
+        $data['email_verified_at'] = $request->email_verified_at;
         $user = User::create($data);
 
         $user->syncRoles($request->roles);

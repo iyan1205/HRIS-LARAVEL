@@ -78,7 +78,14 @@ class Karyawan extends Authenticatable
 
     public function pelatihans()
     {
-        return $this->belongsToMany(Pelatihan::class)->withTimestamps();
+        return $this->belongsToMany(Pelatihan::class)
+                    ->withPivot('tanggal_expired', 'file')
+                    ->withTimestamps();
+    }
+
+    public static function countByStatus($status)
+    {
+        return self::where('status', $status)->count();
     }
     
     public function kontrak()

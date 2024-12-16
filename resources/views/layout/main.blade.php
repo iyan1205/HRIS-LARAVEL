@@ -73,6 +73,19 @@
             }
 
     </style>
+    <style>
+        /* Add styles to change the background color to gray */
+        body {
+            background-color: #f8f9fa; /* Light gray background for the entire body */
+        }
+    
+        .certificate-viewer {
+            background-color: #d3d3d3; /* Gray background for the certificate viewer */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 @php
     $user = Auth::user();
@@ -823,7 +836,9 @@ $(document).ready(function() {
         }
     });
 </script>
-@role('karyawan')
+
+@role('Super-Admin|karyawan')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateBadge(url, badgeId, dataKey) {
@@ -853,11 +868,82 @@ $(document).ready(function() {
             updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
         }, 5000); // Update every minute
     });
-
-    
 </script>
 @endrole
 
+<script>
+    // Show input fields when pelatihan is selected
+    $('#pelatihan').on('change', function() {
+        var selected = $(this).val();
+        $('.pelatihan-group').hide(); // Hide all
+        selected.forEach(function(id) {
+            if ($('#pelatihan-' + id + '-details').length) {
+                // Show existing pelatihan details
+                $('#pelatihan-' + id + '-details').show();
+            } else {
+                // Add new pelatihan details if not already present
+                addPelatihanDetails(id);
+            }
+        });
+    });
+
+    // Initially show fields for already selected pelatihan
+    $(document).ready(function() {
+        var selected = $('#pelatihan').val();
+        selected.forEach(function(id) {
+            if ($('#pelatihan-' + id + '-details').length) {
+                $('#pelatihan-' + id + '-details').show(); // Show existing selected on load
+            }
+        });
+    });
+
+    // Function to add new pelatihan details dynamically
+    function addPelatihanDetails(id) {
+        var pelatihanName = $('#pelatihan option[value="' + id + '"]').text().trim(); // Get selected pelatihan name
+        var pelatihanDetails = `
+            <div class="form-group pelatihan-group" id="pelatihan-` + id + `-details">
+                <!-- Edit Nama Pelatihan -->
+                <label for="name_` + id + `">Nama Pelatihan untuk ` + pelatihanName + `</label>
+                <input type="text" name="nama_pelatihan[` + id + `]" value="` + pelatihanName + `" class="form-control" disabled>
+                
+                <!-- Tanggal Expired Pelatihan -->
+                <label for="tanggal_expired_` + id + `">Tanggal Expired untuk ` + pelatihanName + `</label>
+                <input type="date" name="tanggal_expired[` + id + `]" class="form-control">
+                
+                <!-- File Upload Pelatihan -->
+                <label for="file_` + id + `">File Sertifikat untuk ` + pelatihanName + `</label>
+                <input type="file" name="file[` + id + `]" class="form-control" accept=".pdf">
+                <hr style="border: 2px solid #000;">
+            </div>
+        `;
+        $('#pelatihan-details').append(pelatihanDetails);
+    }
+
+    // Add new Pelatihan input field
+    $('#add-pelatihan').on('click', function() {
+        // Set the flag to true when new pelatihan is added
+        $('#add_pelatihan_flag').val('true');
+
+        var newPelatihanFields = `
+            <div class="form-group new-pelatihan-div">
+                <input type="text" name="new_pelatihan[]" class="form-control mb-2 new-pelatihan" placeholder="Nama Pelatihan Baru" required>
+                <label for="new_tanggal_expired[]">Tanggal Expired Pelatihan Baru</label>
+                <input type="date" name="new_tanggal_expired[]" class="form-control mb-2 new-expired">
+                <label for="new_file[]">File Sertifikat Pelatihan Baru</label>
+                <input type="file" name="new_file[]" class="form-control mb-2 new-file" accept=".pdf">
+                <!-- Cancel button to remove the new pelatihan div -->
+                <button type="button" class="btn btn-danger remove-pelatihan-btn">Batal</button>
+                <hr style="border: 2px solid #000;">
+            </div>
+        `;
+        $('#new-pelatihan-container').append(newPelatihanFields);
+    });
+
+    // Function to remove the new pelatihan fieldset
+    $(document).on('click', '.remove-pelatihan-btn', function() {
+        $(this).closest('.new-pelatihan-div').remove();
+    });
+</script>
 </body>
 
 </html>

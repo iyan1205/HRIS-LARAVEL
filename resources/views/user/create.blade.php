@@ -67,7 +67,7 @@
                                             </div>
                                         @endforeach
                                         </div>
-                                        
+                                        <input type="hidden" name="email_verified_at" id="emailVerifiedAt">
                                     </div>
                                     <!-- /.card-body -->
 
@@ -85,4 +85,17 @@
     </div><!-- /.container-fluid -->
     </section>
     </div>
+    <script>
+        // Set the current date and time in 'YYYY-MM-DD HH:MM:SS' format
+        const now = new Date();
+        const formattedDateTime = now.getFullYear() + '-' +
+            String(now.getMonth() + 1).padStart(2, '0') + '-' +
+            String(now.getDate()).padStart(2, '0') + ' ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0') + ':' +
+            String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('emailVerifiedAt').value = formattedDateTime;
+        </script>
+        
 @endsection

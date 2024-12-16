@@ -405,7 +405,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" id="pelatihan-container">
                                     <div class="form-group">
                                         <label for="pelatihan">Pelatihan</label>
                                         <div class="select2-purple">
@@ -418,12 +418,43 @@
                                             @endforeach
                                             </select>
                                         </div>
-                                        @error('units')
+                                    </div>
+                                    <div id="pelatihan-details">
+                                        @foreach($karyawan->pelatihans as $pelatihan)
+                                        <div class="form-group pelatihan-group" id="pelatihan-{{ $pelatihan->id }}-details">
+                                            <!-- Edit Nama Pelatihan -->
+                                            <label for="name_{{ $pelatihan->id }}">Nama Pelatihan untuk {{ $pelatihan->name }}</label>
+                                            <input type="text" name="nama_pelatihan[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->name ?? $pelatihan->name }}" class="form-control" disabled>
+                                
+                                            <!-- Tanggal Expired Pelatihan -->
+                                            <label for="tanggal_expired_{{ $pelatihan->id }}">Tanggal Expired untuk {{ $pelatihan->name }}</label>
+                                            <input type="date" name="tanggal_expired[{{ $pelatihan->id }}]" value="{{ $pelatihan->pivot->tanggal_expired ?? '' }}" class="form-control">
+                                
+                                            <!-- File Upload Pelatihan -->
+                                            <label for="file_{{ $pelatihan->id }}">File Sertifikat untuk {{ $pelatihan->name }}</label>
+                                            @if ($pelatihan->pivot->file)
+                                                <a href="{{ Storage::url($pelatihan->pivot->file) }}" target="_blank" >Lihat file saat ini</a>
+                                            @endif
+                                            <input type="file" name="file[{{ $pelatihan->id }}]" class="form-control" accept=".pdf">
+                                            @error('file.*')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                         @enderror
+                                        <hr style="border: 2px solid #000;">
+                                        </div>
+                                        @endforeach
                                     </div>
+                                
+                                    <!-- Button to Add New Pelatihan -->
+                                <button type="button" id="add-pelatihan" class="btn btn-primary">Pelatihan Baru</button>
+
+                                <!-- Hidden field to track if the user adds a new pelatihan -->
+                                <input type="hidden" name="add_pelatihan" value="false" id="add_pelatihan_flag">
+
+                                <div  class="card-body"  id="new-pelatihan-container">
+                                    <!-- Form elements for new pelatihan will be dynamically added here -->
+                                </div>
                                 </div>
                                 <!-- /.card-body -->
                             </div>

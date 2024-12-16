@@ -72,20 +72,21 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     });
   
     // Master Karyawan Routes
-    Route::prefix('master-karyawan')->group(function () {
-        Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan');
-        Route::get('/create', [KaryawanController::class, 'create'])->name('karyawan.create');
-        Route::post('/store', [KaryawanController::class, 'store'])->name('karyawan.store');
-        Route::post('/storePendidikan', [KaryawanController::class, 'storePendidikan'])->name('karyawan.storePendidikan');
-        Route::get('/detail', [KaryawanController::class, 'detail'])->name('karyawan.detail');
 
-        Route::get('/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
-        Route::put('/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
-        Route::put('/update/{id}/pendidikan', [KaryawanController::class, 'update'])->name('karyawan.update.pendidikan');
-        Route::delete('/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
-         // Menambahkan route untuk menghapus kontrak karyawan
+    Route::prefix('master')->group(function () {
+        Route::get('/karyawan/active', [KaryawanController::class, 'index'])->name('karyawan');
+        Route::get('/karyawan/active/create', [KaryawanController::class, 'create'])->name('karyawan.create');
+        Route::post('/karyawan/active/store', [KaryawanController::class, 'store'])->name('karyawan.store');
+        Route::post('/karyawan/active/storePendidikan', [KaryawanController::class, 'storePendidikan'])->name('karyawan.storePendidikan');
+        Route::get('/karyawan/active/detail', [KaryawanController::class, 'detail'])->name('karyawan.detail');
+
+        Route::get('/karyawan/active/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
+        Route::put('/karyawan/active/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
+        Route::put('/karyawan/active/update/{id}/pendidikan', [KaryawanController::class, 'update'])->name('karyawan.update.pendidikan');
+        Route::delete('/karyawan/active/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
         Route::delete('/karyawan/{karyawanId}/kontrak/{kontrakId}', [KaryawanController::class, 'destroyKontrak'])->name('karyawan.kontrak.destroy');
-        Route::get('/resign', [KaryawanController::class, 'resign'])->name('resign');
+        Route::get('/karyawan/resign', [KaryawanController::class, 'resign'])->name('resign');
+
     });
 
     // Organisasi Routes
@@ -131,11 +132,16 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
 
+    Route::get('/view-certificate/{file}', [PelatihanController::class, 'viewCertificate'])->name('view.certificate');
+
     Route::prefix('Cuti')->group(function () {
         // Pengajuan Cuti Route
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
         Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
         Route::get('/pengajuan-cuti/riwayat-cuti', [LeaveApplicationController::class, 'riwayat'])->name('riwayat-cuti');
+
+        Route::get('/approval-cuti/cancel', [LeaveApplicationController::class, 'searchcuti'])->name('btn-sc.cuti');
+        Route::get('/approval-cuti/cancel/search', [LeaveApplicationController::class, 'searchapprove'])->name('search-approve');
         
         Route::get('/laporan-cuti', [LeaveApplicationController::class, 'laporan'])->name('laporan-cuti');
         Route::get('/laporan-cuti/search', [LeaveApplicationController::class, 'search'])->name('laporan-search');
@@ -150,6 +156,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/pengajuan-cuti/{id}/approve', [LeaveApplicationController::class, 'approve'])->name('leave-application.approve');
         Route::put('/pengajuan-cuti/{id}/reject', [LeaveApplicationController::class, 'reject'])->name('leave-application.reject');    
         Route::put('/pengajuan-cuti/{id}/cancel', [LeaveApplicationController::class, 'cancel'])->name('leave-application.cancel');    
+        Route::put('/pengajuan-cuti/{id}/cancel_approve', [LeaveApplicationController::class, 'cancel_approve'])->name('cuti.cancel_approve');    
         Route::get('/pengajuan-cuti/edit/{kategori}', [LeaveApplicationController::class, 'getLeaveTypes']);
 
         // Saldo
@@ -164,17 +171,17 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     
     //Json
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
-
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
-    
-
 
     Route::prefix('Lembur')->group( function() {
         // Overtime
         Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
         Route::get('/approval-overtime', [OvertimeController::class, 'approval'])->name('approval-overtime');
         Route::get('/overtime/riwayat-overtime', [OvertimeController::class, 'riwayat'])->name('overtime.riwayat');
+
+        Route::get('/approval-overtime/cancel', [OvertimeController::class, 'searchlembur'])->name('overtime.sl');
+        Route::get('/approval-overtime/cancel/search', [OvertimeController::class, 'searchapprove'])->name('search.al');
 
         Route::get('/laporan-overtime', [OvertimeController::class, 'laporan'])->name('laporan-lembur');
         Route::get('/laporan-overtime/search', [OvertimeController::class, 'search'])->name('overtime-search');
@@ -198,6 +205,9 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/approval-oncall', [OnCallController::class, 'approval'])->name('approval-oncall');
         Route::get('/oncall/riwayat-oncall', [OnCallController::class, 'riwayat'])->name('oncall.riwayat');
         
+        Route::get('/approval-oncall/cancel', [OnCallController::class, 'searchoncall'])->name('oncall.ol');
+        Route::get('/approval-oncall/cancel/search', [OnCallController::class, 'searchapprove'])->name('oncall-so');
+
         Route::get('/laporan-oncall', [OnCallController::class, 'laporan'])->name('laporan-oncall');
         Route::get('/laporan-oncall/search', [OnCallController::class, 'search'])->name('oncall-search');
 
@@ -222,14 +232,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
-});
-
 // Menghitung jumlah pengajuan realtime
 Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
 Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
 Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
-
-
+});
 
 require __DIR__ . '/auth.php';

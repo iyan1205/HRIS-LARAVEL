@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jabatan;
 use App\Models\Overtime;
 use App\Models\User;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -166,6 +167,8 @@ class OvertimeController extends Controller
             $overtimes->status = 'pending';
             $overtimes->level_approve = '1';
             $overtimes->approver_id = $user->karyawan->jabatan->manager_id;
+            $overtimes->updated_by_atasan = $updatedBy;
+            $overtimes->updated_at_atasan = now();
         }
         
         $overtimes->approve($updatedBy);
@@ -284,6 +287,51 @@ class OvertimeController extends Controller
     {
         //
     }
+    
+    public function searchlembur(User $user) {
+        /** @var App\Models\User */
+        $authUser = Auth::user();
+
+        if ($authUser->hasRole('admin')) {
+            $users = $user->activeKaryawan() // Using the injected User instance
+                ->get()
+                ->sortBy(fn($user) => $user->karyawan->name)
+                ->mapWithKeys(fn($user) => [$user->id => $user->karyawan->name]);
+        } else {
+            $karyawan = Karyawan::where('user_id', $authUser->id)->firstOrFail(); 
+             $users = $user->getActiveUsersByDepartment($karyawan->departemen_id); 
+        }
+        return view('overtime.searchlembur', compact('users'));
+    }
+
+    public function searchapprove(Request $request) {
+        $users = $request->input('user_id');
+        $startDate = $request->input('start_date');
+
+        $query = Overtime::select(
+                'overtimes.*',
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan'
+            )
+            ->join('users', 'overtimes.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->where('overtimes.status', 'approved');
+
+            if ($users) {
+                $query->where('users.id', $users);
+            }
+        
+            if ($startDate) {
+                $query->whereRaw('DATE(overtimes.start_date) = ?', [$startDate]);
+            }
+        
+            $results = $query->get();
+
+        return view('overtime.results_approve', compact('results'));
+    }
+
 
     public function laporan()
     {
@@ -318,9 +366,15 @@ class OvertimeController extends Controller
 
     public function getOverCount()
     {
+        /** @var App\Models\User */
         $users = Auth::user();
-        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-        $countOvertime = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->count();  
+        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
+            // Admin and superadmin see all pending 
+            $countOvertime = Overtime::where('status', 'pending')->count();
+        } else {
+            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+            $countOvertime = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->count(); 
+        } 
         return response()->json(['countOvertime' => $countOvertime]); // Mengubah 'countovertime' menjadi 'overCount'
     }
     
