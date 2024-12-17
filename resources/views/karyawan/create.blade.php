@@ -556,4 +556,5 @@
             kontrakCount++;
         });
     </script>
+    
 @endsection

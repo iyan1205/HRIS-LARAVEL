@@ -581,4 +581,5 @@
     });
 
     </script>
+    
 @endsection
