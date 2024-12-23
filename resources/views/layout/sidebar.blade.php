@@ -293,5 +293,16 @@
             </a>
         </li>
         @endrole
+        @role('Super-Admin')
+        <li class="nav-item {{ request()->is('attendance/history_penarikan') ? 'menu-open' : '' }}">
+            <a href="{{ route('list.report.history') }}" class="nav-link {{ request()->is('attendance/history_penarikan') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-history"></i>
+                <p>
+                    Penarikan Absensi
+                </p>
+            </a>
+        </li>
+        @endrole
     </ul>
+    
 </nav>

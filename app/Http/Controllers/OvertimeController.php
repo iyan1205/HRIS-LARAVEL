@@ -6,6 +6,7 @@ use App\Models\Jabatan;
 use App\Models\Overtime;
 use App\Models\User;
 use App\Models\Karyawan;
+use App\Models\ReportHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -342,6 +343,14 @@ class OvertimeController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
+
+        ReportHistory::create([
+            'user_id' => Auth::id(), // Jika user login
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'ip_address' => $request->ip(),
+            'name' => 'Pengajuan Lembur'    
+        ]);
 
         $query = Overtime::select(
                 'overtimes.*',

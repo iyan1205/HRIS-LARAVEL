@@ -129,5 +129,10 @@ class AttendanceController extends Controller
         // Tampilkan view dengan hasil pencarian
         return view('attendance.list-laporan', compact('attendance', 'startDate', 'endDate'));
     }
-    
+
+    public function report_history_absensi(){
+        $reporthistory = ReportHistory::with('user')->get();
+
+        return view('attendance.report-history', compact('reporthistory'));
+    }    
 }
