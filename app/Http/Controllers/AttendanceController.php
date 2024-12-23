@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\ReportHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -107,10 +108,19 @@ class AttendanceController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-    
+
         // Ambil data berdasarkan rentang tanggal
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+
+        ReportHistory::create([
+            'user_id' => Auth::id(), // Jika user login
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'ip_address' => $request->ip(),
+            'name' => 'Absensi'    
+        ]);
+
         $attendance = Attendance::with('user.karyawan.jabatan') // Eager load relasi
         ->whereBetween('created_at', [$startDate, $endDate])
         ->orderBy('created_at', 'desc')
