@@ -38,9 +38,10 @@
                                     <tr>
                                         <th style="width: 10px">No</th>
                                         <th>Nama Lengkap</th>
-                                        <th>Tanggal</th>
-                                        <th>Jam Masuk</th>
-                                        <th>Jam Keluar</th>
+                                        <th>Tanggal dan Jam Masuk</th>
+                                        {{-- <th>Foto Masuk</th> --}}
+                                        <th>Tanggal dan Jam Keluar</th>
+                                        {{-- <th>Foto Keluar</th> --}}
                                         <th>Total Jam</th>
                                     </tr>
                                 </thead>
@@ -49,9 +50,12 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $attendance->user->karyawan->name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($attendance->created_at)->translatedFormat('l, j F Y') }}</td>
-                                        <td>{{ $attendance->jam_masuk }}</td>
-                                        <td>{{ $attendance->jam_keluar }}</td>
+                                        <td>{{ $attendance->created_at->format('d/m/Y H:i:s') }}</td>
+                                        {{-- <td><img src="{{ asset('storage/' . $attendance->foto_jam_masuk) }}"> </td> --}}
+                                        <td>
+                                            {{ $attendance->updated_at == $attendance->created_at ? ' ' : $attendance->updated_at->format('d/m/Y H:i:s') }}
+                                        </td>
+                                        {{-- <td><img src="{{ asset('storage/' . $attendance->foto_jam_keluar) }}" alt=""> --}}
                                         <td> @if ($attendance->total_duration === 'Tidak absen pulang')
                                             <span class="badge badge-danger">{{ $attendance->total_duration }}</span>
                                         @else

@@ -47,10 +47,10 @@
                 <p class="text-xl font-bold">Anda sudah Check In</p>
                 <form action="{{ route('attendance.checkOut') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <label for="jam_keluar" class="block text-base font-medium text-gray-100">Jam Keluar</label>
                         <input type="text" id="jam_keluar" name="jam_keluar" class="text-base px-2 py-2 rounded text-center no-border" readonly>
-                    </div>
+                    </div> --}}
                     <div class="mb-6">
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center relative">
                             <!-- Ikon Kamera -->

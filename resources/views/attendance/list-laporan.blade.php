@@ -30,17 +30,15 @@
                                         <table class="table table-bordered table-hover" id="lap_absensi">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>No</th>
                                                     <th>Nama Lengkap</th>
                                                     <th>NIK</th>
                                                     <th>Jabatan</th>
                                                     <th>Departemen</th>
                                                     <th>Unit</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Jam Check-In</th>
-                                                    <th>Jam Check-Out</th>
+                                                    <th>Tanggal dan Jam Masuk</th>
+                                                    <th>Tanggal dan Jam Keluar</th>
                                                     <th>Total Jam</th>
-                                                    <th>Tanggal Check-Out</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -52,9 +50,8 @@
                                                     <td>{{ $record->user->karyawan->jabatan->name ?? 'Tidak Diketahui' }}</td>
                                                     <td>{{ $record->user->karyawan->departemen->name ?? 'Tidak Diketahui' }}</td>
                                                     <td>{{ $record->user->karyawan->unit->name ?? 'Tidak Diketahui' }}</td>
-                                                    <td>{{ $record->created_at->format('d-m-Y') }}</td>
-                                                    <td>{{ $record->created_at->format('H:i:s') }}</td>
-                                                    <td>{{ $record->updated_at ? $record->updated_at->format('H:i:s') : '-' }}</td>
+                                                    <td>{{ $record->created_at->format('d/m/Y H:i:s') }}</td>
+                                                    <td>{{ $record->updated_at == $record->created_at ? ' ' : $record->updated_at->format('d/m/Y H:i:s') }}</td>
                                                     <td>
                                                         @if ($record->total_duration === 'Tidak absen pulang')
                                                             <span class="badge badge-danger">{{ $record->total_duration }}</span>
@@ -62,7 +59,6 @@
                                                             {{ $record->total_duration }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ $record->updated_at->format('d-m-Y') }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
