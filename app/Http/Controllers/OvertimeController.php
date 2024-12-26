@@ -387,5 +387,9 @@ class OvertimeController extends Controller
         return response()->json(['countOvertime' => $countOvertime]); // Mengubah 'countovertime' menjadi 'overCount'
     }
     
+    public function report_history_lembur(){
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Lembur')->get();
+        return view('overtime.report-history', compact('reporthistory'));
+    }
 
 }

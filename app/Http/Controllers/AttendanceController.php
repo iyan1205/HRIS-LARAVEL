@@ -33,7 +33,6 @@ class AttendanceController extends Controller
             $path = 'attendance/'.$name_img;
         }
 
-
         Attendance::create([
             'user_id' => Auth::id(),
             'jam_masuk' => now(),
@@ -131,8 +130,7 @@ class AttendanceController extends Controller
     }
 
     public function report_history_absensi(){
-        $reporthistory = ReportHistory::with('user')->get();
-
+        $reporthistory = ReportHistory::with('user')->where('name','Absensi')->get();
         return view('attendance.report-history', compact('reporthistory'));
     }    
 }

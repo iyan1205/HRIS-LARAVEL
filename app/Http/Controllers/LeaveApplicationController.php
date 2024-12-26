@@ -553,6 +553,10 @@ class LeaveApplicationController extends Controller
         return response()->json(['pendingCount' => $pendingCount]);
     }
 
+    public function report_history_cuti(){
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Cuti')->get();
 
+        return view('cuti.report-history', compact('reporthistory'));
+    } 
 
 }

@@ -153,11 +153,4 @@
     <!-- /.content -->
 </div>
 
-<script>
-    // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
-    $(document).on('click', '.approveBtn', function () {
-        var cutiId = $(this).data('cuti-id');
-        $('#approveForm' + cutiId).submit();
-    });
-</script>
 @endsection

@@ -294,13 +294,40 @@
         </li>
         @endrole
         @role('Super-Admin')
-        <li class="nav-item {{ request()->is('attendance/history_penarikan') ? 'menu-open' : '' }}">
-            <a href="{{ route('list.report.history') }}" class="nav-link {{ request()->is('attendance/history_penarikan') ? 'active' : '' }}">
+        
+        <li class="nav-item {{ request()->is('riwayat_penarikan/*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('riwayat_penarikan/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-history"></i>
-                <p>
-                    Penarikan Absensi
+                <p>Riwayat Penarikan
+                    <i class="fas fa-angle-left right"></i>
                 </p>
             </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('list.report.history') }}" class="nav-link {{ request()->is('riwayat_penarikan/absensi*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Absensi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.history.cuti') }}" class="nav-link {{ request()->is('riwayat_penarikan/cuti*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Cuti</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.history.lembur') }}" class="nav-link {{ request()->is('riwayat_penarikan/lembur*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Lembur</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('report.history.oncall') }}" class="nav-link {{ request()->is('riwayat_penarikan/oncall*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Oncall</p>
+                    </a>
+                </li>
+            </ul>
         </li>
         @endrole
     </ul>

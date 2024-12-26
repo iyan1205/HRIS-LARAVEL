@@ -373,4 +373,9 @@ class OnCallController extends Controller
         return response()->json(['countOncall' => $countOncall]);
     }
     
+    public function report_history_oncall(){
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan OnCall')->get();
+        return view('oncall.report-history', compact('reporthistory'));
+    }
+
 }

@@ -313,10 +313,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="tanggal_lahir" class="form-label">Tanggal
-                                            Lahir</label>
-                                        <input type="date" class="form-control" id="inputTanggallahir"
-                                            name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+                                        <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                                        <input type="date" class="form-control" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+                                            
                                         @error('tanggal_lahir')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
