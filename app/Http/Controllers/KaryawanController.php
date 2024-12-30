@@ -8,6 +8,7 @@ use App\Models\Karyawan;
 use App\Models\LeaveBalance;
 use App\Models\Pelatihan;
 use App\Models\Pendidikan;
+use App\Models\PromosiJabatan;
 use App\Models\ResignReason;
 use App\Models\Unit;
 use App\Models\User;
@@ -26,15 +27,52 @@ class KaryawanController extends Controller
         $this->middleware('permission:edit karyawan', ['only' => ['edit','update']]);
         $this->middleware('permission:delete karyawan', ['only' => ['destroy']]);
     }
-    
+
+    public function index2(Request $request)
+    {
+        // Ambil query pencarian dan jumlah data per halaman dari input
+        $search = $request->input('search');
+        $entries = $request->input('entries', 10); // Default 10 entries
+
+        // Ambil karyawan dengan pencarian di semua kolom yang relevan
+        $karyawans = Karyawan::where('status', 'active')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhereHas('departemen', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('jabatan', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->orderBy('nik', 'desc')
+            ->with(['pelatihans', 'jabatan', 'departemen']) // Pastikan relasi tersedia
+            ->paginate($entries);
+
+        // Ambil data departemen dan jabatan untuk dropdown (jika diperlukan untuk filter lain)
+        $departemens = Departemen::orderBy('name', 'asc')->pluck('name', 'id');
+        $jabatans = Jabatan::orderBy('name', 'asc')->pluck('name', 'id');
+
+        // Hitung jumlah karyawan aktif
+        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
+
+        // Return view dengan data
+        return view('karyawan.newindex', compact('karyawans', 'jabatans', 'departemens', 'jumlahKaryawanAktif', 'search', 'entries'));
+    }
+
     public function index()
     {
         $karyawans = Karyawan::where('status', 'active')
         ->orderBy('nik', 'desc')
         ->with('pelatihans')
         ->get();
-        $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
-        return view('karyawan.index', compact('karyawans', 'jumlahKaryawanAktif'));
+        $jabatans = Jabatan::whereNotIn('level', ['Staff'])
+        ->orderBy('name', 'asc')
+        ->pluck('name', 'id');
+        $jumlahKaryawanAktif = Karyawan::where('status', 'active')
+        ->count();
+        return view('karyawan.index', compact('karyawans','jabatans','jumlahKaryawanAktif'));
     }
 
     public function resign()
@@ -300,10 +338,6 @@ class KaryawanController extends Controller
         return redirect()->route('karyawan');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $data = Karyawan::find($id);
@@ -317,4 +351,40 @@ class KaryawanController extends Controller
         
         return redirect()->route('karyawan');
     }
+
+    public function promosi(Request $request, $id)
+    {
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id', 
+            'jabatan_id' => 'required|exists:jabatans,id',  
+            'jabatan_sekarang' => 'required',
+            'jabatan_promosi' => 'required',
+            'tanggal_promosi' => 'required|date',  
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+        $karyawan = Karyawan::findOrFail($id);
+        $jabatanSekarang = $karyawan->jabatan->name;  // Current position
+        $jabatanPromosi = Jabatan::where('id', $request->jabatan_id)->value('name') ?? 'Tidak Diketahui';
+        $karyawan->update([
+            'jabatan_id' => $request->jabatan_id,
+        ]);
+        PromosiJabatan::create([
+            'user_id' => $karyawan->user_id,  // Make sure this is correct based on your schema
+            'jabatan_sekarang' => $jabatanSekarang,
+            'jabatan_promosi' => $jabatanPromosi,
+            'tanggal_promosi' => $request->input('tanggal_promosi'),
+        ]);
+    
+        // Flash success message
+        $message = 'Promosi Jabatan Berhasil Dibuat';
+        Session::flash('successAdd', $message);
+    
+        // Redirect to the list of employees
+        return redirect()->route('karyawan');
+    }
+    
 }

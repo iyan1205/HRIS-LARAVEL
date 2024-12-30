@@ -85,6 +85,9 @@
             border-radius: 8px;
             border: 1px solid #ccc;
         }
+        .select2-container {
+            z-index: 9999 !important;
+        }
     </style>
 </head>
 @php
@@ -270,25 +273,25 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success')) //Login
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Berhasil',
-                text: '{{ session('success') }}',
-            });
-        </script>
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Login Berhasil',
+            text: '{{ session('success') }}',
+        });
+    </script>
     @endif
     @if (session('successAdd'))
-        <script>
-            Swal.fire({
-                position: "top",
-                icon: "success",
-                title: "{{ session('successAdd') }}",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        </script>
+    <script>
+        Swal.fire({
+            position: "top",
+            icon: "success",
+            title: "{{ session('successAdd') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
     @endif
 
     @role('karyawan')
