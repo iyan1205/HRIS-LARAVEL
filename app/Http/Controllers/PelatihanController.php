@@ -143,6 +143,14 @@ class PelatihanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = Pelatihan::find($id);
+
+        if ($data) {
+            $data->delete();
+        }
+
+        $message = 'Pelatihan Berhasil Dihapus';
+        Session::flash('successAdd', $message);
+        return redirect()->route('pelatihan');
     }
 }
