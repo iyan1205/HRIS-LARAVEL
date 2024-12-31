@@ -8,6 +8,7 @@ use App\Models\LeaveBalance;
 use App\Models\LeaveType;
 use App\Models\User;
 use App\Models\Karyawan;
+use App\Models\ReportHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -476,7 +477,15 @@ class LeaveApplicationController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
-    
+
+        ReportHistory::create([
+            'user_id' => Auth::id(), // Jika user login
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'ip_address' => $request->ip(),
+            'name' => 'Pengajuan Cuti'    
+        ]);
+
         $query = LeaveApplication::select(
                 'leave_applications.*',
                 'leave_types.name as leave_type', 'leave_types.kategori_cuti as kategori',
@@ -494,7 +503,7 @@ class LeaveApplicationController extends Controller
         if ($status) {
             $query->where('leave_applications.status', $status);
         }
-    
+        
         $results = $query->get();
         
         return view('cuti.search_results', compact('results', 'status'));
@@ -544,6 +553,10 @@ class LeaveApplicationController extends Controller
         return response()->json(['pendingCount' => $pendingCount]);
     }
 
+    public function report_history_cuti(){
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Cuti')->get();
 
+        return view('cuti.report-history', compact('reporthistory'));
+    } 
 
 }

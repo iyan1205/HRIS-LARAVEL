@@ -129,12 +129,4 @@
     </div>
 </div>
 @endforeach
-
-<script>
-    // Script untuk menangani pengiriman formulir ketika tombol "Ya, Approve" diklik
-    $(document).on('click', '.approveBtn', function() {
-        var overtimeId = $(this).data('overtime-id');
-        $('#approveForm' + overtimeId).submit();
-    });
-</script>
 @endsection

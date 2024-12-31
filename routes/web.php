@@ -232,13 +232,26 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/list', [AttendanceController::class, 'list_attendance'])->name('attendance.list');
+    Route::get('/attendance/find', [AttendanceController::class, 'find_attendance'])->name('attendance.find');
+    Route::get('/attendance/laporan', [AttendanceController::class, 'laporan'])->name('attendance.laporan');
+    Route::get('/attendance/laporan/find', [AttendanceController::class, 'find_attendance_report'])->name('attendance.find.report');
+    Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    
+    Route::get('/riwayat_penarikan/absensi', [AttendanceController::class, 'report_history_absensi'])->name('list.report.history');
+    Route::get('/riwayat_penarikan/cuti', [LeaveApplicationController::class, 'report_history_cuti'])->name('report.history.cuti');
+    Route::get('/riwayat_penarikan/lembur', [OvertimeController::class, 'report_history_lembur'])->name('report.history.lembur');
+    Route::get('/riwayat_penarikan/oncall', [OnCallController::class, 'report_history_oncall'])->name('report.history.oncall');
+    
+    // Menghitung jumlah pengajuan realtime
+    Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
+    Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
+    Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
 });
 
-// Menghitung jumlah pengajuan realtime
-Route::get('/api/pending-count', [LeaveApplicationController::class, 'getPendingCount'])->name('api.pending-count');
-Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
-Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
+
 
 
 

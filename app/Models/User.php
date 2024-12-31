@@ -101,4 +101,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return self::role($role)->count();
     }
 
-}
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+   }

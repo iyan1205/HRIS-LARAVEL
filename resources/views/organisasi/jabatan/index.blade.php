@@ -36,6 +36,7 @@
                                     <tr>
                                         <th style="width: 10px">No</th>
                                         <th>Nama Jabatan</th>
+                                        <th style="width: 10px">Id</th>
                                         <th>Level Jabatan</th>
                                         <th>Level Approve Cuti</th>
                                         <th>Action</th>
@@ -46,6 +47,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $jabatan->name }}</td>
+                                        <td>{{ $jabatan->id }}</td>
                                         <td>{{ $jabatan->level }}</td>
                                         <td>{{ $jabatan->level_approve }} Tahap</td>
                                         <td class="project-actions text-right">

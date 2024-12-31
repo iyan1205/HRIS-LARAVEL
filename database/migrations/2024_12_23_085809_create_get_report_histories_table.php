@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('report_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->time('jam_masuk')->nullable();
-            $table->string('foto_jam_masuk')->nullable(); 
-            $table->time('jam_keluar')->nullable();
-            $table->string('foto_jam_keluar')->nullable();
-            $table->enum('status',['hadir','pulang'])->default('hadir');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->string('ip_address')->nullable();
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('report_histories');
     }
 };

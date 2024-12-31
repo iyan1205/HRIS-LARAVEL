@@ -6,6 +6,7 @@ use App\Models\Jabatan;
 use App\Models\OnCall;
 use App\Models\User;
 use App\Models\Karyawan;
+use App\Models\ReportHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -328,6 +329,14 @@ class OnCallController extends Controller
         $endDate = $request->input('end_date');
         $status = $request->input('status');
 
+        ReportHistory::create([
+            'user_id' => Auth::id(), // Jika user login
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'ip_address' => $request->ip(),
+            'name' => 'Pengajuan OnCall'    
+        ]);
+
         $query = OnCall::select(
                 'on_calls.*',
                 'users.name as user_name',
@@ -364,4 +373,9 @@ class OnCallController extends Controller
         return response()->json(['countOncall' => $countOncall]);
     }
     
+    public function report_history_oncall(){
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan OnCall')->get();
+        return view('oncall.report-history', compact('reporthistory'));
+    }
+
 }
