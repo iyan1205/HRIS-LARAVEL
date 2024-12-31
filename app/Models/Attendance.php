@@ -16,6 +16,8 @@ class Attendance extends Model
         'foto_jam_masuk',
         'jam_keluar',
         'foto_jam_keluar',
+        'device_info',
+        'ip_address',
         'status', // hadir, pulang
     ];
 

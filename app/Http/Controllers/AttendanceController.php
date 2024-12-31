@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Jenssegers\Agent\Agent;
 
 class AttendanceController extends Controller
 {
@@ -32,10 +33,20 @@ class AttendanceController extends Controller
             $img->save(storage_path('app/public/attendance/'.$name_img));
             $path = 'attendance/'.$name_img;
         }
+        $ipAddress = $request->ip();
 
+        // Parsing informasi perangkat menggunakan library Jenssegers Agent
+        $agent = new Agent();
+        $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
+        $platform = $agent->platform(); // Contoh: Windows, iOS, Android
+        $browser = $agent->browser();   // Contoh: Chrome, Safari
+
+        $deviceInfo = "{$deviceType} | {$platform} | {$browser}";
         Attendance::create([
             'user_id' => Auth::id(),
             'jam_masuk' => now(),
+            'ip_address' => $ipAddress,
+            'device_info' => $deviceInfo,
             'foto_jam_masuk' => $path,
             'status' => 'hadir',
         ]);
@@ -55,6 +66,15 @@ class AttendanceController extends Controller
             $img->save(storage_path('app/public/attendance/' . $name_img)); // Save to correct storage path
             $path = 'attendance/' . $name_img;
         }
+        $ipAddress = $request->ip();
+
+        // Parsing informasi perangkat menggunakan library Jenssegers Agent
+        $agent = new Agent();
+        $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
+        $platform = $agent->platform(); // Contoh: Windows, iOS, Android
+        $browser = $agent->browser();   // Contoh: Chrome, Safari
+
+        $deviceInfo = "{$deviceType} | {$platform} | {$browser}";
 
         $attendance = Attendance::where('user_id', Auth::id())
                                 ->whereNull('jam_keluar')
@@ -64,6 +84,8 @@ class AttendanceController extends Controller
             $attendance->update([
                 'jam_keluar' => now(),
                 'foto_jam_keluar' => $path,
+                'ip_address' => $ipAddress,
+                'device_info' => $deviceInfo,
                 'status' => 'pulang',
             ]);
 
