@@ -283,16 +283,17 @@
             </a>
         </li>
         @endrole
-        @role('admin')
+        @can('laporan_absen')
         <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
             <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
-                   Laporan Absensi
+                    Laporan Absensi
                 </p>
             </a>
         </li>
-        @endrole
+        @endcan
+
         @role('Super-Admin')
         
         <li class="nav-item {{ request()->is('riwayat_penarikan/*') ? 'menu-open' : '' }}">
