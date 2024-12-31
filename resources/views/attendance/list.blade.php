@@ -42,6 +42,8 @@
                                         {{-- <th>Foto Masuk</th> --}}
                                         <th>Tanggal dan Jam Keluar</th>
                                         {{-- <th>Foto Keluar</th> --}}
+                                        {{-- <th>Ip</th>
+                                        <th>device</th> --}}
                                         <th>Total Jam</th>
                                     </tr>
                                 </thead>
@@ -56,6 +58,8 @@
                                             {{ $attendance->updated_at == $attendance->created_at ? ' ' : $attendance->updated_at->format('d/m/Y H:i:s') }}
                                         </td>
                                         {{-- <td><img src="{{ asset('storage/' . $attendance->foto_jam_keluar) }}" alt=""> --}}
+                                        {{-- <td>{{ $attendance->ip_address }}</td>
+                                        <td>{{ $attendance->device_info }}</td> --}}
                                         <td> @if ($attendance->total_duration === 'Tidak absen pulang')
                                             <span class="badge badge-danger">{{ $attendance->total_duration }}</span>
                                         @else

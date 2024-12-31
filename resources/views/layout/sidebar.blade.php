@@ -285,7 +285,7 @@
         @endrole
         @can('laporan_absen')
         <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance') ? 'active' : '' }}">
+            <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
                     Laporan Absensi
