@@ -31,6 +31,9 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <button type="button" onclick="handleClose()" class="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none">
+            <i class="fas fa-times text-xl"></i>
+        </button>
         <div class="text-center mb-6">
             <div class="inline-flex items-center bg-teal-500 text-white px-4 py-2 rounded-full">
                 <i class="fas fa-calendar-alt mr-2"></i>
@@ -70,7 +73,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" id="checkOutButton" class="border border-black px-4 py-2 rounded">Check Out</button>
+                    <button type="submit" id="checkOutButton" class="bg-teal-500 text-white px-20 py-2 rounded">Check Out</button>
                     <div id="checkOutLoadingSpinner" class="hidden mt-4 text-center">
                         <div class="flex items-center justify-center">
                             <svg class="animate-spin h-6 w-6 text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -195,6 +198,10 @@
         });
     }
 });
+function handleClose() {
+        // Mencoba menutup tab
+        window.close();
+    }
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {

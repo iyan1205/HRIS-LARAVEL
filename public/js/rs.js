@@ -311,18 +311,12 @@ $(document).ready(function() {
                 ]
             }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
 
-            $("#lap_absensi").DataTable({
+            $("#laporan2").DataTable({
             "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    text: 'Export to Excel',
-                    filename: 'Laporan_Absensi_' + today, // Nama file ekspor
-                }
-            ]
-        }).buttons().container().appendTo('#lap_absensi_wrapper .col-md-6:eq(0)');
+            "lengthChange": true,
+            "autoWidth": true,
+           
+        }).buttons().container().appendTo('#laporan2_wrapper .col-md-6:eq(0)');
 
         // Menampilkan kalkulasi waktu Initialize datetime pickers
         $('#start_dateover').datetimepicker({

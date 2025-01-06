@@ -236,7 +236,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/list', [AttendanceController::class, 'list_attendance'])->name('attendance.list');
     Route::get('/attendance/find', [AttendanceController::class, 'find_attendance'])->name('attendance.find');
     Route::get('/attendance/laporan', [AttendanceController::class, 'laporan'])->name('attendance.laporan');
-    Route::get('/attendance/laporan/find', [AttendanceController::class, 'find_attendance_report'])->name('attendance.find.report');
+    Route::post('/attendance/laporan/find', [AttendanceController::class, 'find_attendance_report'])->name('attendance.find.report');
+    Route::get('/attendance/report/download', [AttendanceController::class, 'download_attendance_report'])->name('download_attendance_report');
     Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
     Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
     
