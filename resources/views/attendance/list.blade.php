@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ route('attendance.index') }}" target="_blank" class="btn btn-primary mb-3">Buat Absensi</a>
+                            <a href="{{ route('attendance.index') }}" class="btn btn-primary mb-3">Buat Absensi</a>
                             <button type="button" class="btn btn-secondary mb-3" data-toggle="modal" data-target="#searchModal">
                                 Cari Absensi
                             </button>
