@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Jenssegers\Agent\Agent;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -18,8 +19,10 @@ class AttendanceController extends Controller
                                 ->whereNull('jam_keluar')
                                 ->latest()
                                 ->first();
-
-        return view('attendance.index', compact('attendance'));
+        $totalAttendanceToday = Attendance::where('user_id', Auth::id())
+        ->whereDate('created_at', Carbon::today())
+        ->count();
+        return view('attendance.index', compact('attendance','totalAttendanceToday'));
     }
 
     public function checkIn(Request $request)
@@ -51,7 +54,7 @@ class AttendanceController extends Controller
             'status' => 'hadir',
         ]);
 
-        return redirect()->route('attendance.index')->with('success', 'Berhasil Check-in');
+        return redirect()->route('attendance.list')->with('successAdd', 'Berhasil Check-in');
     }
 
     public function checkOut(Request $request)
@@ -89,10 +92,10 @@ class AttendanceController extends Controller
                 'status' => 'pulang',
             ]);
 
-            return redirect()->route('attendance.index')->with('success', 'Check-out berhasil.');
+            return redirect()->route('attendance.list')->with('successAdd', 'Check-out berhasil.');
         }
 
-        return redirect()->route('attendance.index')->with('error', 'Data absensi tidak ditemukan.');
+        return redirect()->route('attendance.list')->with('error', 'Data absensi tidak ditemukan.');
     }
 
     public function list_attendance() {

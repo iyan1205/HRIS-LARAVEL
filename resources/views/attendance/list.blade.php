@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ route('attendance.index') }}" target="_blank" class="btn btn-primary mb-3">Buat Absensi</a>
+                            <a href="{{ route('attendance.index') }}" class="btn btn-primary mb-3">Buat Absensi</a>
                             <button type="button" class="btn btn-secondary mb-3" data-toggle="modal" data-target="#searchModal">
                                 Cari Absensi
                             </button>
@@ -39,11 +39,7 @@
                                         <th style="width: 10px">No</th>
                                         <th>Nama Lengkap</th>
                                         <th>Tanggal dan Jam Masuk</th>
-                                        {{-- <th>Foto Masuk</th> --}}
                                         <th>Tanggal dan Jam Keluar</th>
-                                        {{-- <th>Foto Keluar</th> --}}
-                                        {{-- <th>Ip</th>
-                                        <th>device</th> --}}
                                         <th>Total Jam</th>
                                     </tr>
                                 </thead>
@@ -53,13 +49,9 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $attendance->user->karyawan->name }}</td>
                                         <td>{{ $attendance->created_at->format('d/m/Y H:i:s') }}</td>
-                                        {{-- <td><img src="{{ asset('storage/' . $attendance->foto_jam_masuk) }}"> </td> --}}
                                         <td>
                                             {{ $attendance->updated_at == $attendance->created_at ? ' ' : $attendance->updated_at->format('d/m/Y H:i:s') }}
                                         </td>
-                                        {{-- <td><img src="{{ asset('storage/' . $attendance->foto_jam_keluar) }}" alt=""> --}}
-                                        {{-- <td>{{ $attendance->ip_address }}</td>
-                                        <td>{{ $attendance->device_info }}</td> --}}
                                         <td> @if ($attendance->total_duration === 'Tidak absen pulang')
                                             <span class="badge badge-danger">{{ $attendance->total_duration }}</span>
                                         @else

@@ -31,6 +31,11 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <a href="{{ route('attendance.list') }}" 
+        class="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none">
+         <i class="fas fa-times text-xl"></i>
+        </a>
+     
         <div class="text-center mb-6">
             <div class="inline-flex items-center bg-teal-500 text-white px-4 py-2 rounded-full">
                 <i class="fas fa-calendar-alt mr-2"></i>
@@ -44,13 +49,10 @@
         </div>
         @if($attendance)
             <div class="text-center mb-6">
-                <p class="text-xl font-bold">Anda sudah Check In</p>
+                <p class="text-xl font-bold">Data kehadiran aktif ditemukan:</p>
+                <p>Total Kehadiran Hari Ini: {{ $totalAttendanceToday }}</p> <br>
                 <form action="{{ route('attendance.checkOut') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    {{-- <div class="mb-4">
-                        <label for="jam_keluar" class="block text-base font-medium text-gray-100">Jam Keluar</label>
-                        <input type="text" id="jam_keluar" name="jam_keluar" class="text-base px-2 py-2 rounded text-center no-border" readonly>
-                    </div> --}}
                     <div class="mb-6">
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center relative">
                             <!-- Ikon Kamera -->
@@ -70,7 +72,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" id="checkOutButton" class="border border-black px-4 py-2 rounded">Check Out</button>
+                    <button type="submit" id="checkOutButton" class="bg-teal-500 text-white px-20 py-2 rounded">Check Out</button>
                     <div id="checkOutLoadingSpinner" class="hidden mt-4 text-center">
                         <div class="flex items-center justify-center">
                             <svg class="animate-spin h-6 w-6 text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -84,7 +86,8 @@
             </div>
         @else
             <div class="text-center mb-6">
-                <p class="text-xl font-bold">Anda belum Check In</p> <br>
+                <p class="text-xl font-bold">Belum ada data kehadiran aktif.</p>
+                <p>Total Kehadiran Hari Ini: {{ $totalAttendanceToday }}</p> <br>
                 <form action="{{ route('attendance.checkIn') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
