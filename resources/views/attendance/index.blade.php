@@ -30,7 +30,7 @@
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
         <a href="{{ route('attendance.list') }}" 
         class="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none">
          <i class="fas fa-times text-xl"></i>
