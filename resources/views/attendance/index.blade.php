@@ -30,7 +30,7 @@
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
         <a href="{{ route('attendance.list') }}" 
         class="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none">
          <i class="fas fa-times text-xl"></i>
@@ -140,8 +140,10 @@
                     <div>
                         <p>Hari ini</p>
                         <p class="text-lg font-semibold">
-                            {{ \Carbon\Carbon::parse($attendance->jam_masuk)->diffInHours(\Carbon\Carbon::parse($attendance->jam_keluar)) }} Jam
-                            {{ \Carbon\Carbon::parse($attendance->jam_masuk)->diffInMinutes(\Carbon\Carbon::parse($attendance->jam_keluar)) % 60 }} Menit</p>
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInDays(now()) }} Hari
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInHours(now()) % 24 }} Jam
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInMinutes(now()) % 60 }} Menit
+                        </p>
                     </div>
                     <div class="border-l-2 border-gray-300 mx-4"></div>
                     <div>
@@ -230,41 +232,4 @@
 });
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/compress.js@1.0.0/dist/compress.min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const inputFile = document.getElementById('foto_jam_masuk');
-        const maxSize = 500 * 1024; // Maksimal ukuran file 500 KB
-
-        if (inputFile) {
-            inputFile.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const compress = new Compress();
-                    compress.compress([file], {
-                        size: 1, // Ukuran maksimal dalam MB (1 MB di sini)
-                        quality: 0.75, // Kualitas kompresi (0-1)
-                        maxWidth: 1024, // Lebar gambar maksimal
-                        maxHeight: 1024, // Tinggi gambar maksimal
-                        resize: true,
-                    }).then((results) => {
-                        const compressedFile = results[0];
-                        const compressedBlob = Compress.convertBase64ToFile(compressedFile.data, compressedFile.ext);
-                        const formData = new FormData();
-                        formData.append('foto_jam_masuk', compressedBlob);
-
-                        // Gantilah input file dengan gambar yang sudah terkompresi
-                        const fileInput = document.getElementById('foto_jam_masuk');
-                        const newFile = new File([compressedBlob], file.name, { type: file.type });
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(newFile);
-                        fileInput.files = dataTransfer.files;
-                    });
-                }
-            });
-        }
-    });
-</script>
-
 </html>
