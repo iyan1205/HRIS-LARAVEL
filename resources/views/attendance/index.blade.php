@@ -140,8 +140,9 @@
                     <div>
                         <p>Hari ini</p>
                         <p class="text-lg font-semibold">
-                            {{ \Carbon\Carbon::parse($attendance->jam_masuk)->diffInHours(\Carbon\Carbon::parse($attendance->jam_keluar)) }} Jam
-                            {{ \Carbon\Carbon::parse($attendance->jam_masuk)->diffInMinutes(\Carbon\Carbon::parse($attendance->jam_keluar)) % 60 }} Menit</p>
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInDays(now()) }} Hari
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInHours(now()) % 24 }} Jam
+                            {{ \Carbon\Carbon::parse($attendance->created_at)->diffInMinutes(now()) % 60 }} Menit
                     </div>
                     <div class="border-l-2 border-gray-300 mx-4"></div>
                     <div>

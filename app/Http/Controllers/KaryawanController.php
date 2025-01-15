@@ -40,7 +40,7 @@ class KaryawanController extends Controller
     public function resign()
     {
         $resigns = Karyawan::where('status', 'resign')
-        ->orderBy('tgl_resign', 'asc')
+        ->orderBy('tgl_resign', 'desc')
         ->get();
         return \view('karyawan.resign', compact('resigns'));
     }
