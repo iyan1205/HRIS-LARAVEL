@@ -122,7 +122,8 @@ class LeaveApplicationController extends Controller
         
          // Periksa apakah jenis cuti memerlukan pengecekan saldo
         $leaveType = LeaveType::find($request->input('leave_type_id'));
-        if ($leaveType->cek_saldo) {
+
+        if ($leaveType->cek_saldo == 0) {
             // Memeriksa saldo cuti pengguna
             $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
 
