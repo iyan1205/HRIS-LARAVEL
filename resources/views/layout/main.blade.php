@@ -270,7 +270,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success')) //Login
+    @if (session('success'))
         <script>
             Swal.fire({
                 icon: 'success',
