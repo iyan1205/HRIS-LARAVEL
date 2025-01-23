@@ -206,7 +206,7 @@
         @yield('content')
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2024 <a href="https://rs-hamori.co.id">Rumah Sakit HAMORI</a>.</strong>
+            <strong>Copyright &copy; 2025 <a href="https://rs-hamori.co.id">Rumah Sakit HAMORI</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 0.0.2
@@ -270,7 +270,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('lte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Page specific script SweetAlert2-->
-    @if (session('success')) //Login
+    @if (session('success'))
         <script>
             Swal.fire({
                 icon: 'success',
