@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Karyawan;
 use App\Models\LeaveApplication;
-use App\models\Overtime;
-use App\models\OnCall;
+use App\Models\Overtime;
+use App\Models\OnCall;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
