@@ -19,6 +19,9 @@ class Pendidikan extends Model
         'exp_str',
         'profesi',
         'cert_profesi',
+        'nomer_sip',
+        'tgl_terbit_sip' ,
+        'exp_sip',
     ];
 
     protected $hidden = [

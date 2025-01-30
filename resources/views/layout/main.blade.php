@@ -870,6 +870,7 @@ $(document).ready(function() {
     });
 </script>
 @endrole
+
 <script>
     // Show input fields when pelatihan is selected
     $('#pelatihan').on('change', function() {
@@ -943,7 +944,6 @@ $(document).ready(function() {
         $(this).closest('.new-pelatihan-div').remove();
     });
 </script>
-
 </body>
 
 </html>
