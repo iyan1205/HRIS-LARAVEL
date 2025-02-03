@@ -335,33 +335,25 @@
                                         @enderror
                                     </div>
                                     @foreach ($karyawan->kontrak as $index => $kontrak)
-                                        <div class="form-group kontrak">
-                                            <label for="deskripsi_kontrak_{{ $index }}">Deskripsi Kontrak</label>
-                                            <select class="form-control select2bs4" id="deskripsi_kontrak_{{ $index }}"
-                                                name="kontrak[{{ $index }}][deskripsi_kontrak]" required>
-                                                <option value="" disabled selected>Pilih Kontrak</option>
-                                                <option value="Kontrak Pertama" {{ $kontrak->deskripsi_kontrak == 'Kontrak Pertama' ? 'selected' : '' }}>Kontrak Pertama</option>
-                                                <option value="Kontrak Kedua" {{ $kontrak->deskripsi_kontrak == 'Kontrak Kedua' ? 'selected' : '' }}>Kontrak Kedua</option>
-                                                <option value="Kontrak Ketiga" {{ $kontrak->deskripsi_kontrak == 'Kontrak Ketiga' ? 'selected' : '' }}>Kontrak Ketiga</option>
-                                                <option value="Kontrak Keempat" {{ $kontrak->deskripsi_kontrak == 'Kontrak Keempat' ? 'selected' : '' }}>Kontrak Keempat</option>
-                                            </select>
-
-                                            <input type="hidden" name="kontrak[{{ $index }}][id]" value="{{ $kontrak->id }}">
-                                            <label for="tanggal_mulai_{{ $index }}">Tanggal Mulai</label>
-                                            <input type="date" class="form-control" id="tanggal_mulai_{{ $index }}"
-                                                   name="kontrak[{{ $index }}][tanggal_mulai]"
-                                                   value="{{ old('kontrak.' . $index . '.tanggal_mulai', $kontrak->tanggal_mulai) }}" required>
-                            
-                                            <label for="tanggal_selesai_{{ $index }}">Tanggal Selesai</label>
-                                            <input type="date" class="form-control" id="tanggal_selesai_{{ $index }}"
-                                                   name="kontrak[{{ $index }}][tanggal_selesai]"
-                                                   value="{{ old('kontrak.' . $index . '.tanggal_selesai', $kontrak->tanggal_selesai) }}" required>
-                                            <!-- Tombol Hapus -->
-                                            <button type="button" class="btn btn-danger btn-sm mt-2 remove-kontrak-btn"
+                                    <div class="form-group kontrak">
+                                                                        
+                                        <input type="hidden" name="kontrak[{{ $index }}][id]" value="{{ $kontrak->id }}">
+                                        <label for="tanggal_mulai_{{ $index }}">Tanggal Mulai - {{ $kontrak->deskripsi_kontrak }}</label>
+                                        <input type="date" class="form-control" id="tanggal_mulai_{{ $index }}"
+                                               name="kontrak[{{ $index }}][tanggal_mulai]"
+                                               value="{{ old('kontrak.' . $index . '.tanggal_mulai', $kontrak->tanggal_mulai) }}" required>
+                                
+                                        <label for="tanggal_selesai_{{ $index }}">Tanggal Selesai</label>
+                                        <input type="date" class="form-control" id="tanggal_selesai_{{ $index }}"
+                                               name="kontrak[{{ $index }}][tanggal_selesai]"
+                                               value="{{ old('kontrak.' . $index . '.tanggal_selesai', $kontrak->tanggal_selesai) }}" required>
+                                
+                                        <!-- Tombol Hapus -->
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-kontrak-btn"
                                             data-index="{{ $index }}" data-id="{{ $kontrak->id }}">Hapus</button>
-                                        </div>
-                                       
-                                    @endforeach
+                                    </div>
+                                @endforeach
+                                
                                 </div>
                                 <div class="card-footer">
                                     <button type="button" class="btn btn-success" id="add-kontrak-btn">Tambah Kontrak</button>
@@ -588,57 +580,84 @@
     </script>
  <script>
     document.addEventListener('DOMContentLoaded', function () {
-        let kontrakCount = {{ $karyawan->kontrak->count() }};
-        const kontrakContainer = document.getElementById('kontrak-container');
+    let kontrakCount = {{ $karyawan->kontrak->count() }};
+    const kontrakContainer = document.getElementById('kontrak-container');
+    function checkDuplicate() {
+        let selectedValues = [];
+        let isDuplicate = false;
 
-        // Fungsi untuk menambahkan kontrak baru
-        document.getElementById('add-kontrak-btn').addEventListener('click', function () {
-            const newIndex = kontrakCount++;
-            const newKontrak = `
-                <div class="form-group kontrak" id="kontrak_${newIndex}">
-                     <label for="deskripsi_kontrak_${newIndex}">Deskripsi Kontrak</label>
-                    <select class="form-control select2bs4" id="deskripsi_kontrak_${newIndex}"
-                        name="kontrak[${newIndex}][deskripsi_kontrak]" required>
-                        <option value="Kontrak Pertama">Kontrak Pertama</option>
-                        <option value="Kontrak Kedua">Kontrak Kedua</option>
-                        <option value="Kontrak Ketiga">Kontrak Ketiga</option>
-                        <option value="Kontrak Keempat">Kontrak Keempat</option>
-                    </select>
-                    
-                    <label for="tanggal_mulai_${newIndex}">Tanggal Mulai</label>
-                    <input type="date" class="form-control" id="tanggal_mulai_${newIndex}"
-                        name="kontrak[${newIndex}][tanggal_mulai]" required>
-
-                    <label for="tanggal_selesai_${newIndex}">Tanggal Selesai</label>
-                    <input type="date" class="form-control" id="tanggal_selesai_${newIndex}"
-                        name="kontrak[${newIndex}][tanggal_selesai]" required>
-
-                    <!-- Tombol Hapus -->
-                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-kontrak-btn"
-                        data-index="${newIndex}">Batal</button>
-                </div>
-            `;
-            kontrakContainer.insertAdjacentHTML('beforeend', newKontrak);
-        });
-        // Menambahkan event untuk tombol hapus
-        kontrakContainer.addEventListener('click', function (e) {
-            if (e.target && e.target.matches('.remove-kontrak-btn')) {
-                const kontrakDiv = e.target.closest('.kontrak');
-
-                // Jika kontrak baru (belum ada di database), cukup hapus dari tampilan
-                if (e.target.dataset.new === "true") {
-                    kontrakDiv.remove();
-                } else {
-                    // Jika kontrak ada di database, hapus dari form dengan menyembunyikannya
-                    const id = e.target.dataset.id;
-                    if (id) {
-                        // Tambahkan hidden input untuk menghapus di backend
-                        kontrakDiv.insertAdjacentHTML('beforeend', `<input type="hidden" name="kontrak_hapus[]" value="${id}">`);
-                        kontrakDiv.style.display = 'none';
-                    }
-                }
+        document.querySelectorAll('select[name^="kontrak["]').forEach(select => {
+            if (selectedValues.includes(select.value)) {
+                isDuplicate = true;
+                select.classList.add('is-invalid');
+            } else {
+                select.classList.remove('is-invalid');
+                selectedValues.push(select.value);
             }
         });
+
+        return isDuplicate;
+    }
+    // Fungsi untuk menambahkan kontrak baru
+    document.getElementById('add-kontrak-btn').addEventListener('click', function () {
+        const newIndex = kontrakCount++;
+        const newKontrak = `
+            <div class="form-group kontrak" id="kontrak_${newIndex}">
+                <label for="deskripsi_kontrak_${newIndex}">Deskripsi Kontrak</label>
+                <select class="form-control select2bs4" id="deskripsi_kontrak_${newIndex}"
+                    name="kontrak[${newIndex}][deskripsi_kontrak]" required>
+                    <option value="Kontrak Pertama">Kontrak Pertama</option>
+                    <option value="Kontrak Kedua">Kontrak Kedua</option>
+                    <option value="Kontrak Ketiga">Kontrak Ketiga</option>
+                    <option value="Kontrak Keempat">Kontrak Keempat</option>
+                </select>
+                
+                <label for="tanggal_mulai_${newIndex}">Tanggal Mulai</label>
+                <input type="date" class="form-control" id="tanggal_mulai_${newIndex}"
+                    name="kontrak[${newIndex}][tanggal_mulai]" required>
+
+                <label for="tanggal_selesai_${newIndex}">Tanggal Selesai</label>
+                <input type="date" class="form-control" id="tanggal_selesai_${newIndex}"
+                    name="kontrak[${newIndex}][tanggal_selesai]" required>
+
+                <!-- Tombol Batal untuk kontrak baru -->
+                <button type="button" class="btn btn-warning btn-sm mt-2 remove-kontrak-btn"
+                    data-new="true">Batal</button>
+            </div>
+        `;
+        kontrakContainer.insertAdjacentHTML('beforeend', newKontrak);
     });
+
+     // Cek Duplikasi saat Pilihan diubah
+     kontrakContainer.addEventListener('change', function (e) {
+        if (e.target && e.target.matches('.kontrak-select')) {
+            if (checkDuplicate()) {
+                e.target.closest('.kontrak').querySelector('.duplicate-warning').classList.remove('d-none');
+            } else {
+                e.target.closest('.kontrak').querySelector('.duplicate-warning').classList.add('d-none');
+            }
+        }
+    });
+
+    // Menambahkan event untuk tombol hapus/batal
+    kontrakContainer.addEventListener('click', function (e) {
+        if (e.target && e.target.matches('.remove-kontrak-btn')) {
+            const kontrakDiv = e.target.closest('.kontrak');
+
+            if (e.target.dataset.new === "true") {
+                // Jika kontrak baru (belum ada di database), cukup hapus dari tampilan
+                kontrakDiv.remove();
+            } else {
+                // Jika kontrak ada di database, sembunyikan dan tambahkan input hidden untuk hapus di backend
+                const id = e.target.dataset.id;
+                if (id) {
+                    kontrakDiv.insertAdjacentHTML('beforeend', `<input type="hidden" name="kontrak_hapus[]" value="${id}">`);
+                    kontrakDiv.style.display = 'none';
+                }
+            }
+        }
+    });
+});
+
 </script>
 @endsection

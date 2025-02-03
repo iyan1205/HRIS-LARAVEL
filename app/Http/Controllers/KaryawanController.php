@@ -165,182 +165,157 @@ class KaryawanController extends Controller
         return view('karyawan.edit', compact('karyawan','pelatihans', 'users', 'departemens', 'units', 'jabatans', 'resignReasons'));
     }
 
-    public function update(Request $request, $id)
-    {
-        // Validasi input dari formulir
-        $validator = Validator::make($request->all(), [
-            'name' => 'nullable|string|max:255',
-            'nik' => 'nullable|numeric|digits:4|unique:karyawans,nik,'.$id,
-            'user_id' => 'nullable',
-            'departemen_id' => 'nullable',
-            'jabatan_id' => 'nullable',
-            'unit_id' => 'nullable',
-            'nomer_ktp' => 'nullable',
-            'tempat_lahir' => 'nullable',
-            'tanggal_lahir' => 'nullable',
-            'alamat_ktp' => 'nullable',
-            'gender' => 'nullable',
-            'institusi' => 'nullable',
-            'pendidikan_terakhir' => 'nullable',
-            'tahun_lulus' => 'nullable',
-            'status_ktp' => 'nullable',
-            'telepon' => 'nullable',
-            'npwp' => 'nullable',
-            'status_karyawan' => 'nullable', // kontrak_atau_tetap
-            'tgl_kontrak1' => 'nullable', // tglmasukdinas
-            'akhir_kontrak1' => 'nullable',
-            'status' => 'nullable', // aktif atau resign
-            'tgl_resign' => 'nullable',
-            'resign_id' => 'nullable',
-            'new_pelatihan.*' => 'nullable|string|max:255|unique:pelatihans,name',
-            'new_tanggal_expired.*' => 'nullable|date',
-            'new_file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for PDF files
-            'file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for other files as well
-            'kontrak.*.id' => 'nullable|exists:kontrak_karyawan,id',
-            'kontrak.*.tanggal_mulai' => 'required|date',
-            'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
-            'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
-            // Tambahkan aturan validasi sesuai kebutuhan
-        ]);
+    
+public function update(Request $request, $id)
+{
+    // Validasi input dari formulir
+    $validator = Validator::make($request->all(), [
+        'name' => 'nullable|string|max:255',
+        'nik' => 'nullable|numeric|digits:4|unique:karyawans,nik,'.$id,
+        'user_id' => 'nullable',
+        'departemen_id' => 'nullable',
+        'jabatan_id' => 'nullable',
+        'unit_id' => 'nullable',
+        'nomer_ktp' => 'nullable',
+        'tempat_lahir' => 'nullable',
+        'tanggal_lahir' => 'nullable|date',
+        'alamat_ktp' => 'nullable',
+        'gender' => 'nullable',
+        'institusi' => 'nullable',
+        'pendidikan_terakhir' => 'nullable',
+        'tahun_lulus' => 'nullable|numeric',
+        'status_ktp' => 'nullable',
+        'telepon' => 'nullable',
+        'npwp' => 'nullable',
+        'status_karyawan' => 'nullable',
+        'tgl_kontrak1' => 'nullable|date',
+        'akhir_kontrak1' => 'nullable|date|after_or_equal:tgl_kontrak1',
+        'status' => 'nullable',
+        'tgl_resign' => 'nullable|date',
+        'resign_id' => 'nullable',
+        
+        'new_pelatihan.*' => 'nullable|string|max:255|unique:pelatihans,name',
+        'new_tanggal_expired.*' => 'nullable|date',
+        'new_file.*' => 'nullable|file|mimes:pdf|max:2048',
+        'file.*' => 'nullable|file|mimes:pdf|max:2048',
 
-        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator);
-        }
-
-        // Cari karyawan yang akan diperbarui
-        $karyawan = Karyawan::findOrFail($id);
-
-        // Perbarui data karyawan
-        $karyawan->update([
-            'user_id' => $request->input('user_id'),
-            'name' => $request->input('name'),
-            'nik' => $request->input('nik'),
-            'status_karyawan' => $request->input('status_karyawan'),
-            'status' => $request->input('status'),
-            'tgl_resign' => $request->input('tgl_resign'),
-            'resign_id' => $request->input('resign_id'),
-            'nomer_ktp' => $request->input('nomer_ktp'),
-            'tempat_lahir' => $request->input('tempat_lahir'),
-            'tanggal_lahir' => $request->input('tanggal_lahir'),
-            'alamat_ktp' => $request->input('alamat_ktp'),
-            'gender' => $request->input('gender'),
-            'status_ktp' => $request->input('status_ktp'),
-            'telepon' => $request->input('telepon'),
-            'npwp' => $request->input('npwp'),
-            'departemen_id' => $request->input('departemen_id'),
-            'jabatan_id' => $request->input('jabatan_id'),
-            'unit_id' => $request->input('unit_id'),
-            // Tambahkan kolom lain yang perlu disimpan
-        ]);
-
-        // Perbarui data pendidikan karyawan
-        $pendidikan = $karyawan->pendidikan;
-        $pendidikan->update([
-            'institusi' => $request->input('institusi'),
-            'pendidikan_terakhir' => $request->input('pendidikan_terakhir'),
-            'tahun_lulus' => $request->input('tahun_lulus'),
-            'nomer_ijazah' => $request->input('nomer_ijazah'),
-            'nomer_str' => $request->input('nomer_str'),
-            'exp_str' => $request->input('exp_str'),
-            'profesi' => $request->input('profesi'),
-            'cert_profesi' => $request->input('cert_profesi'),
-            //Tambahkan kolom lain di sini jika diperlukan
-        ]);
-
-        $pelatihanData = [];
-        if ($request->has('pelatihan')) {
-            foreach ($request->input('pelatihan') as $pelatihanId) {
-                // Get the existing file path for this pelatihan
-                $pelatihanRelation = $karyawan->pelatihans()->find($pelatihanId);
-                $existingFile = $pelatihanRelation ? $pelatihanRelation->pivot->file : null;
-
-                $pelatihanData[$pelatihanId] = [
-                    'tanggal_expired' => $request->input("tanggal_expired.$pelatihanId"),
-                    'file' => $existingFile, // Retain the existing file path if it exists
-                ]; // Find the pelatihan relation
-
-                // If a new file is uploaded, replace the old one
-                if ($request->hasFile("file.$pelatihanId")) {
-                    // Delete the old file if it exists
-                    if ($existingFile && Storage::disk('public')->exists($existingFile)) {
-                        Storage::disk('public')->delete($existingFile);
-                    }
-
-                    // Store the new file and update the file path
-                    $file = $request->file("file.$pelatihanId");
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
-                    $pelatihanData[$pelatihanId]['file'] = $filePath; // Update with the new file path
+        'kontrak.*.id' => 'nullable|exists:kontrak_karyawan,id',
+        'kontrak.*.tanggal_mulai' => 'required|date',
+        'kontrak.*.tanggal_selesai' => [
+            'required',
+            'date',
+            function ($attribute, $value, $fail) use ($request) {
+                $index = explode('.', $attribute)[1];
+                $tanggalMulai = $request->input("kontrak.$index.tanggal_mulai");
+                if ($tanggalMulai && $value < $tanggalMulai) {
+                    $fail("Tanggal selesai harus setelah atau sama dengan tanggal mulai.");
                 }
-            }
-        }
-
-        $karyawan->pelatihans()->sync($pelatihanData);
-        // Handling new pelatihan entries
-        if ($request->has('new_pelatihan')) {
-            foreach ($request->input('new_pelatihan') as $index => $newPelatihanName) {
-                $newPelatihan = Pelatihan::create([
-                    'name' => $newPelatihanName,
-                ]);
-
-                $filePath = null;
-                if ($request->hasFile("new_file.$index")) {
-                    $file = $request->file("new_file.$index");
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
+            },
+        ],
+        'kontrak.*.deskripsi_kontrak' => [
+            'nullable',
+            'string',
+            'max:255',
+            function ($attribute, $value, $fail) use ($request) {
+                $descriptions = array_column($request->input('kontrak', []), 'deskripsi_kontrak');
+                if (count(array_filter($descriptions)) !== count(array_unique(array_filter($descriptions)))) {
+                    $fail("Deskripsi kontrak tidak boleh sama.");
                 }
+            },
+        ],
+    ]);
 
-                // Attach the new Pelatihan entry with optional file and expiration date
-                $karyawan->pelatihans()->attach($newPelatihan->id, [
-                    'tanggal_expired' => $request->input("new_tanggal_expired.$index"),
-                    'file' => $filePath,
-                ]);
-            }
-        }
-
-       // Update kontrak karyawan
-        $kontrakIds = array_filter(array_column($request->input('kontrak', []), 'id')); // Ambil ID kontrak yang ada
-
-        // Hapus kontrak yang tidak ada di input (hapus kontrak yang dihapus oleh user)
-        $karyawan->kontrak()->whereNotIn('id', $kontrakIds)->delete(); // Menghapus kontrak yang tidak ada di dalam array `kontrak`
-
-        // Proses kontrak yang dikirimkan
-        foreach ($request->input('kontrak', []) as $kontrakData) {
-            // Pastikan ada `deskripsi_kontrak` dan validasinya
-            if (isset($kontrakData['deskripsi_kontrak'])) {
-                if (isset($kontrakData['id'])) {
-                    // Update kontrak yang sudah ada jika ada perubahan
-                    $kontrak = $karyawan->kontrak()->find($kontrakData['id']);
-                    if ($kontrak && (
-                        $kontrak->tanggal_mulai != $kontrakData['tanggal_mulai'] ||
-                        $kontrak->tanggal_selesai != $kontrakData['tanggal_selesai'] ||
-                        $kontrak->deskripsi_kontrak != $kontrakData['deskripsi_kontrak']
-                    )) {
-                        $kontrak->update([
-                            'tanggal_mulai' => $kontrakData['tanggal_mulai'],
-                            'tanggal_selesai' => $kontrakData['tanggal_selesai'],
-                            'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
-                        ]);
-                    }
-                } else {
-                    // Tambahkan kontrak baru jika tidak ada ID (untuk kontrak baru)
-                    $karyawan->kontrak()->create([
-                        'tanggal_mulai' => $kontrakData['tanggal_mulai'],
-                        'tanggal_selesai' => $kontrakData['tanggal_selesai'],
-                        'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
-                    ]);
-                }
-            }
-        }
-
-        // Tambahkan pesan sukses ke session flash
-        $message = 'Data karyawan berhasil diperbarui';
-        Session::flash('successAdd', $message);
-
-        // Redirect ke halaman tertentu atau tampilkan pesan sukses
-        return redirect()->route('karyawan');
+    // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
+    if ($validator->fails()) {
+        return redirect()->back()->withInput()->withErrors($validator);
     }
+
+    // Cari karyawan yang akan diperbarui
+    $karyawan = Karyawan::findOrFail($id);
+
+    // Perbarui data karyawan
+    $karyawan->update($request->only([
+        'user_id', 'name', 'nik', 'status_karyawan', 'status', 'tgl_resign', 'resign_id',
+        'nomer_ktp', 'tempat_lahir', 'tanggal_lahir', 'alamat_ktp', 'gender',
+        'status_ktp', 'telepon', 'npwp', 'departemen_id', 'jabatan_id', 'unit_id'
+    ]));
+
+    // Perbarui data pendidikan karyawan jika ada
+    if ($karyawan->pendidikan) {
+        $karyawan->pendidikan->update($request->only([
+            'institusi', 'pendidikan_terakhir', 'tahun_lulus', 'nomer_ijazah',
+            'nomer_str', 'exp_str', 'profesi', 'cert_profesi'
+        ]));
+    }
+
+    // Update pelatihan
+    $pelatihanData = [];
+    if ($request->has('pelatihan')) {
+        foreach ($request->input('pelatihan') as $pelatihanId) {
+            $pelatihanRelation = $karyawan->pelatihans()->find($pelatihanId);
+            $existingFile = $pelatihanRelation ? $pelatihanRelation->pivot->file : null;
+
+            $pelatihanData[$pelatihanId] = [
+                'tanggal_expired' => $request->input("tanggal_expired.$pelatihanId"),
+                'file' => $existingFile,
+            ];
+
+            if ($request->hasFile("file.$pelatihanId")) {
+                if ($existingFile && Storage::disk('public')->exists($existingFile)) {
+                    Storage::disk('public')->delete($existingFile);
+                }
+                $file = $request->file("file.$pelatihanId");
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
+                $pelatihanData[$pelatihanId]['file'] = $filePath;
+            }
+        }
+    }
+    $karyawan->pelatihans()->sync($pelatihanData);
+
+    // Menambahkan pelatihan baru jika ada
+    if ($request->has('new_pelatihan')) {
+        foreach ($request->input('new_pelatihan') as $index => $newPelatihanName) {
+            $newPelatihan = Pelatihan::create(['name' => $newPelatihanName]);
+
+            $filePath = null;
+            if ($request->hasFile("new_file.$index")) {
+                $file = $request->file("new_file.$index");
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('pelatihan_files', $filename, 'public');
+            }
+
+            $karyawan->pelatihans()->attach($newPelatihan->id, [
+                'tanggal_expired' => $request->input("new_tanggal_expired.$index"),
+                'file' => $filePath,
+            ]);
+        }
+    }
+
+    // Update kontrak
+    $kontrakIds = array_filter(array_column($request->input('kontrak', []), 'id'));
+    $karyawan->kontrak()->whereNotIn('id', $kontrakIds)->delete();
+
+    foreach ($request->input('kontrak', []) as $kontrakData) {
+        if (!empty($kontrakData['deskripsi_kontrak'])) {
+            if (!empty($kontrakData['id'])) {
+                $kontrak = $karyawan->kontrak()->find($kontrakData['id']);
+                if ($kontrak) {
+                    $kontrak->update($kontrakData);
+                }
+            } else {
+                $karyawan->kontrak()->create($kontrakData);
+            }
+        }
+    }
+
+    if ($request->has('kontrak_hapus')) {
+        $karyawan->kontrak()->whereIn('id', $request->kontrak_hapus)->delete();
+    }
+
+    Session::flash('successAdd', 'Data karyawan berhasil diperbarui');
+    return redirect()->route('karyawan');
+}
 
 
     /**
