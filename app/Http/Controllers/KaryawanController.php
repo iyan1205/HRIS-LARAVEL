@@ -77,8 +77,9 @@ class KaryawanController extends Controller
             'telepon' => 'required',
             'npwp' => 'required',
             'status_karyawan' => 'required', //kontrak_atau_tetap
-            'tgl_kontrak1' => 'required', //tglmasukdinas
-            'akhir_kontrak1' => 'required',
+            'kontrak.*.tanggal_mulai' => 'required|date', // Validasi array kontrak
+            'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
+            'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
 
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
@@ -106,9 +107,6 @@ class KaryawanController extends Controller
             'telepon' => $request->input('telepon'),
             'status_ktp' => $request->input('status_ktp'),
             'npwp' => $request->input('npwp'),
-            'tgl_kontrak1' => $request->input('tgl_kontrak1'),
-            'akhir_kontrak1' => $request->input('akhir_kontrak1'),
-            // Tambahkan kolom lain yang perlu disimpan
         ]);
 
         $pendidikan = new Pendidikan([
@@ -120,7 +118,6 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
-            //Tambahkan kolom lain di sini jika diperlukan
         ]);
 
         $karyawan->pendidikan()->save($pendidikan);
@@ -128,6 +125,17 @@ class KaryawanController extends Controller
         // Menambahkan pelatihan karyawan
         if ($request->has('pelatihan')) {
             $karyawan->pelatihans()->attach($request->pelatihan);
+        }
+
+        // Tambahkan kontrak karyawan
+        if ($request->has('kontrak')) {
+            foreach ($request->input('kontrak') as $kontrakData) {
+                $karyawan->kontrak()->create([
+                    'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                    'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                    'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                ]);
+            }
         }
         // Tambahkan session flash message
         $message = 'Karyawan berhasil ditambahkan';
@@ -188,7 +196,10 @@ class KaryawanController extends Controller
             'new_tanggal_expired.*' => 'nullable|date',
             'new_file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for PDF files
             'file.*' => 'nullable|file|mimes:pdf|max:2048', // 2 MB limit for other files as well
-
+            'kontrak.*.id' => 'nullable|exists:kontrak_karyawan,id',
+            'kontrak.*.tanggal_mulai' => 'required|date',
+            'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
+            'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -206,10 +217,6 @@ class KaryawanController extends Controller
             'name' => $request->input('name'),
             'nik' => $request->input('nik'),
             'status_karyawan' => $request->input('status_karyawan'),
-            'tgl_kontrak1' => $request->input('tgl_kontrak1'),
-            'akhir_kontrak1' => $request->input('akhir_kontrak1'),
-            'tgl_kontrak2' => $request->input('tgl_kontrak2'),
-            'akhir_kontrak2' => $request->input('akhir_kontrak2'),
             'status' => $request->input('status'),
             'tgl_resign' => $request->input('tgl_resign'),
             'resign_id' => $request->input('resign_id'),
@@ -268,8 +275,8 @@ class KaryawanController extends Controller
                 }
             }
         }
-        $karyawan->pelatihans()->sync($pelatihanData);
 
+        $karyawan->pelatihans()->sync($pelatihanData);
         // Handling new pelatihan entries
         if ($request->has('new_pelatihan')) {
             foreach ($request->input('new_pelatihan') as $index => $newPelatihanName) {
@@ -289,6 +296,41 @@ class KaryawanController extends Controller
                     'tanggal_expired' => $request->input("new_tanggal_expired.$index"),
                     'file' => $filePath,
                 ]);
+            }
+        }
+
+       // Update kontrak karyawan
+        $kontrakIds = array_filter(array_column($request->input('kontrak', []), 'id')); // Ambil ID kontrak yang ada
+
+        // Hapus kontrak yang tidak ada di input (hapus kontrak yang dihapus oleh user)
+        $karyawan->kontrak()->whereNotIn('id', $kontrakIds)->delete(); // Menghapus kontrak yang tidak ada di dalam array `kontrak`
+
+        // Proses kontrak yang dikirimkan
+        foreach ($request->input('kontrak', []) as $kontrakData) {
+            // Pastikan ada `deskripsi_kontrak` dan validasinya
+            if (isset($kontrakData['deskripsi_kontrak'])) {
+                if (isset($kontrakData['id'])) {
+                    // Update kontrak yang sudah ada jika ada perubahan
+                    $kontrak = $karyawan->kontrak()->find($kontrakData['id']);
+                    if ($kontrak && (
+                        $kontrak->tanggal_mulai != $kontrakData['tanggal_mulai'] ||
+                        $kontrak->tanggal_selesai != $kontrakData['tanggal_selesai'] ||
+                        $kontrak->deskripsi_kontrak != $kontrakData['deskripsi_kontrak']
+                    )) {
+                        $kontrak->update([
+                            'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                            'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                            'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                        ]);
+                    }
+                } else {
+                    // Tambahkan kontrak baru jika tidak ada ID (untuk kontrak baru)
+                    $karyawan->kontrak()->create([
+                        'tanggal_mulai' => $kontrakData['tanggal_mulai'],
+                        'tanggal_selesai' => $kontrakData['tanggal_selesai'],
+                        'deskripsi_kontrak' => $kontrakData['deskripsi_kontrak'],
+                    ]);
+                }
             }
         }
 
