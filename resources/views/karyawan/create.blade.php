@@ -142,52 +142,6 @@
                                         @enderror
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="status_karyawan">Status Karyawan</label>
-                                        <select class="form-control" name="status_karyawan" id="">
-                                            <option selected value="">Pilih Status Karyawan </option>
-                                            <option value="kontrak" {{ old('status_karyawan') == 'kontrak' ? 'selected' : '' }}>
-                                                Kontrak
-                                            </option>
-                                            <option value="kartap" {{ old('status_karyawan') == 'kartap' ? 'selected' : '' }}>
-                                                Karyawan Tetap
-                                            </option>
-                                            <option value="fulltime" {{ old('status_karyawan') == 'fulltime' ? 'selected' : '' }}>
-                                                Fulltime
-                                            </option>
-                                            <option value="parttime" {{ old('status_karyawan') == 'parttime' ? 'selected' : '' }}>
-                                                Parttime
-                                            </option>
-                                        </select>
-                                        @error('status_karyawan')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="tgl_kontrak1" class="form-label">Tanggal Masuk Dinas</label>
-                                        <input type="date" class="form-control" id="tgl_kontrak1" name="tgl_kontrak1" value="{{ old('tgl_kontrak1') }}"
-                                            required>
-                                        @error('tgl_kontrak1')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="akhir_kontrak1" class="form-label">Masa Kontrak</label>
-                                        <input type="date" class="form-control" id="akhir_kontrak1" name="akhir_kontrak1"
-                                            value="{{ old('akhir_kontrak1') }}" required>
-                                        @error('akhir_kontrak1')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
-
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div> {{-- col --}}
@@ -383,6 +337,78 @@
                                 </div> {{-- card-body --}}
                             </div> {{-- card-primary --}}
                         </div>
+                         <!-- /.Kontrak Karyawan -->
+                         <div class="col-md-6">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Kontrak Karyawan <span class="red-star">*</span></h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Edit">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="kontrak-container">
+                                    <div class="form-group">
+                                        <label for="status_karyawan">Status Karyawan</label>
+                                        <select class="form-control select2bs4" name="status_karyawan" id="">
+                                            <option selected value="">Pilih Status Karyawan </option>
+                                            <option value="kontrak" {{ old('status_karyawan') == 'kontrak' ? 'selected' : '' }}>
+                                                Kontrak
+                                            </option>
+                                            <option value="kartap" {{ old('status_karyawan') == 'kartap' ? 'selected' : '' }}>
+                                                Karyawan Tetap
+                                            </option>
+                                            <option value="fulltime" {{ old('status_karyawan') == 'fulltime' ? 'selected' : '' }}>
+                                                Fulltime
+                                            </option>
+                                            <option value="parttime" {{ old('status_karyawan') == 'parttime' ? 'selected' : '' }}>
+                                                Parttime
+                                            </option>
+                                        </select>
+                                        @error('status_karyawan')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <!-- Kontrak pertama -->
+                                    <div class="form-group kontrak">
+                                        <label for="deskripsi_kontrak_0" class="form-label">Deskripsi Kontrak</label>
+                                        <select class="form-control select2bs4" id="deskripsi_kontrak_0" 
+                                            name="kontrak[0][deskripsi_kontrak]" required>
+                                            <option value="Kontrak Pertama" selected>Kontrak Pertama</option>
+                                        </select>
+                                        @error('kontrak.0.deskripsi_kontrak')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group kontrak">
+                                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                        <input type="date" class="form-control" id="tanggal_mulai"
+                                            name="kontrak[0][tanggal_mulai]" value="{{ old('kontrak.0.tanggal_mulai') }}" required>
+                                        @error('kontrak.0.tanggal_mulai')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group kontrak">
+                                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                        <input type="date" class="form-control" id="tanggal_selesai"
+                                            name="kontrak[0][tanggal_selesai]" value="{{ old('kontrak.0.tanggal_selesai') }}" required>
+                                        @error('kontrak.0.tanggal_selesai')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- /.Pelatihan -->
                         <div class="col-md-6">
                             <div class="card card-primary collapsed-card">
@@ -486,4 +512,5 @@
             </div> <!-- /.container-fluid -->
         </section> <!-- /.content -->
     </div> <!-- /.content-wrapper -->
+    
 @endsection
