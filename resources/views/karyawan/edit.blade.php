@@ -128,60 +128,7 @@
                                             </small>
                                         @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="tgl_kontrak1">Tanggal Masuk Dinas</label>
-                                        <input type="date" class="form-control" id="tgl_kontrak1" name="tgl_kontrak1"
-                                            value="{{ old('tgl_kontrak1', $karyawan->tgl_kontrak1) }}">
-                                        @error('tgl_kontrak1')
-                                            <small class="text-danger"> {{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="akhir_kontrak1">Masa Akhir Kontrak Ke 1</label>
-                                        <input type="date" class="form-control" id="akhir_kontrak1" name="akhir_kontrak1"
-                                            value="{{ old('akhir_kontrak1', $karyawan->akhir_kontrak1) }}">
-                                        @error('akhir_kontrak1')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tgl_kontrak2">Kontrak Ke 2</label>
-                                        <input type="date" class="form-control" id="tgl_kontrak2" name="tgl_kontrak2"
-                                            value="{{ old('tgl_kontrak2', $karyawan->tgl_kontrak2) }}">
-                                        @error('tgl_kontrak2')
-                                            <small class="text-danger"> {{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="akhir_kontrak2">Masa Akhir Kontrak Ke 2</label>
-                                        <input type="date" class="form-control" id="akhir_kontrak2" name="akhir_kontrak2"
-                                            value="{{ old('akhir_kontrak2', $karyawan->akhir_kontrak2) }}">
-                                        @error('akhir_kontrak2')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status_karyawan">Status Karyawan</label>
-                                        <select class="form-control" name="status_karyawan" id="">
-                                            <option value="kontrak" {{ $karyawan->status_karyawan == 'kontrak' ? 'selected' : '' }}>
-                                                Kontrak
-                                            </option>
-                                            <option value="kartap" {{ $karyawan->status_karyawan == 'kartap' ? 'selected' : '' }}>
-                                                Karyawan Tetap
-                                            </option>
-                                            <option value="fulltime" {{ $karyawan->status_karyawan == 'fulltime' ? 'selected' : '' }}>
-                                                Fulltime
-                                            </option>
-                                            <option value="parttime" {{ $karyawan->status_karyawan == 'parttime' ? 'selected' : '' }}>
-                                                Parttime
-                                            </option>
-                                        </select>
-                                        @error('status_karyawan')
-                                            <small>
-                                                <p class="text-danger">{{ $message }}</p>
-                                            </small>
-                                        @enderror
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="status">Status</label>
                                         <select class="form-control" name="status" id="resignSelect">
@@ -347,6 +294,69 @@
                                         @enderror
                                     </div>
     
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.Kontrak Karyawan -->
+                        <div class="col-md-6">
+                            <div class="card card-success collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Kontrak Karyawan</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="kontrak-container">
+                                    <div class="form-group">
+                                        <label for="status_karyawan">Status Karyawan</label>
+                                        <select class="form-control" name="status_karyawan" id="">
+                                            <option value="kontrak" {{ $karyawan->status_karyawan == 'kontrak' ? 'selected' : '' }}>
+                                                Kontrak
+                                            </option>
+                                            <option value="kartap" {{ $karyawan->status_karyawan == 'kartap' ? 'selected' : '' }}>
+                                                Karyawan Tetap
+                                            </option>
+                                            <option value="fulltime" {{ $karyawan->status_karyawan == 'fulltime' ? 'selected' : '' }}>
+                                                Fulltime
+                                            </option>
+                                            <option value="parttime" {{ $karyawan->status_karyawan == 'parttime' ? 'selected' : '' }}>
+                                                Parttime
+                                            </option>
+                                        </select>
+                                        @error('status_karyawan')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    @foreach ($karyawan->kontrak as $index => $kontrak)
+                                    <div class="form-group kontrak">
+                                                                        
+                                        <input type="hidden" name="kontrak[{{ $index }}][id]" value="{{ $kontrak->id }}">
+                                        <label for="tanggal_mulai_{{ $index }}">Tanggal Mulai - {{ $kontrak->deskripsi_kontrak }}</label>
+                                        <input type="date" class="form-control" id="tanggal_mulai_{{ $index }}"
+                                               name="kontrak[{{ $index }}][tanggal_mulai]"
+                                               value="{{ old('kontrak.' . $index . '.tanggal_mulai', $kontrak->tanggal_mulai) }}" required>
+                                
+                                        <label for="tanggal_selesai_{{ $index }}">Tanggal Selesai</label>
+                                        <input type="date" class="form-control" id="tanggal_selesai_{{ $index }}"
+                                               name="kontrak[{{ $index }}][tanggal_selesai]"
+                                               value="{{ old('kontrak.' . $index . '.tanggal_selesai', $kontrak->tanggal_selesai) }}" required>
+                                
+                                        <!-- Tombol Hapus -->
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-kontrak-btn"
+                                            data-index="{{ $index }}" data-id="{{ $kontrak->id }}">Hapus</button>
+                                    </div>
+                                @endforeach
+                                
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-success" id="add-kontrak-btn">Tambah Kontrak</button>
                                 </div>
                                 <!-- /.card-body -->
                             </div>
@@ -568,4 +578,86 @@
             }
         });
     </script>
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    let kontrakCount = {{ $karyawan->kontrak->count() }};
+    const kontrakContainer = document.getElementById('kontrak-container');
+    function checkDuplicate() {
+        let selectedValues = [];
+        let isDuplicate = false;
+
+        document.querySelectorAll('select[name^="kontrak["]').forEach(select => {
+            if (selectedValues.includes(select.value)) {
+                isDuplicate = true;
+                select.classList.add('is-invalid');
+            } else {
+                select.classList.remove('is-invalid');
+                selectedValues.push(select.value);
+            }
+        });
+
+        return isDuplicate;
+    }
+    // Fungsi untuk menambahkan kontrak baru
+    document.getElementById('add-kontrak-btn').addEventListener('click', function () {
+        const newIndex = kontrakCount++;
+        const newKontrak = `
+            <div class="form-group kontrak" id="kontrak_${newIndex}">
+                <label for="deskripsi_kontrak_${newIndex}">Deskripsi Kontrak</label>
+                <select class="form-control select2bs4" id="deskripsi_kontrak_${newIndex}"
+                    name="kontrak[${newIndex}][deskripsi_kontrak]" required>
+                    <option value="Kontrak Pertama">Kontrak Pertama</option>
+                    <option value="Kontrak Kedua">Kontrak Kedua</option>
+                    <option value="Kontrak Ketiga">Kontrak Ketiga</option>
+                    <option value="Kontrak Keempat">Kontrak Keempat</option>
+                </select>
+                
+                <label for="tanggal_mulai_${newIndex}">Tanggal Mulai</label>
+                <input type="date" class="form-control" id="tanggal_mulai_${newIndex}"
+                    name="kontrak[${newIndex}][tanggal_mulai]" required>
+
+                <label for="tanggal_selesai_${newIndex}">Tanggal Selesai</label>
+                <input type="date" class="form-control" id="tanggal_selesai_${newIndex}"
+                    name="kontrak[${newIndex}][tanggal_selesai]" required>
+
+                <!-- Tombol Batal untuk kontrak baru -->
+                <button type="button" class="btn btn-warning btn-sm mt-2 remove-kontrak-btn"
+                    data-new="true">Batal</button>
+            </div>
+        `;
+        kontrakContainer.insertAdjacentHTML('beforeend', newKontrak);
+    });
+
+     // Cek Duplikasi saat Pilihan diubah
+     kontrakContainer.addEventListener('change', function (e) {
+        if (e.target && e.target.matches('.kontrak-select')) {
+            if (checkDuplicate()) {
+                e.target.closest('.kontrak').querySelector('.duplicate-warning').classList.remove('d-none');
+            } else {
+                e.target.closest('.kontrak').querySelector('.duplicate-warning').classList.add('d-none');
+            }
+        }
+    });
+
+    // Menambahkan event untuk tombol hapus/batal
+    kontrakContainer.addEventListener('click', function (e) {
+        if (e.target && e.target.matches('.remove-kontrak-btn')) {
+            const kontrakDiv = e.target.closest('.kontrak');
+
+            if (e.target.dataset.new === "true") {
+                // Jika kontrak baru (belum ada di database), cukup hapus dari tampilan
+                kontrakDiv.remove();
+            } else {
+                // Jika kontrak ada di database, sembunyikan dan tambahkan input hidden untuk hapus di backend
+                const id = e.target.dataset.id;
+                if (id) {
+                    kontrakDiv.insertAdjacentHTML('beforeend', `<input type="hidden" name="kontrak_hapus[]" value="${id}">`);
+                    kontrakDiv.style.display = 'none';
+                }
+            }
+        }
+    });
+});
+
+</script>
 @endsection

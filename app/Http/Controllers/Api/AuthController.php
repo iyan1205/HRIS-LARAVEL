@@ -18,7 +18,13 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::with('karyawan')->where('email', $request->email)->first();
+       
+        $user = User::with([
+            'karyawan.departemen',
+            'karyawan.unit',
+            'karyawan.jabatan',
+            'karyawan.kontrak'
+        ])->where('email', $request->email)->first();
         
         if (!$user || ! Hash::check($request->password, $user->password)) {
             return response()->json([

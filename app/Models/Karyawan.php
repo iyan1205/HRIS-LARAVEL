@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class Karyawan extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -19,10 +20,6 @@ class Karyawan extends Authenticatable
         'name', //namalengkap
         'nik',
         'status_karyawan', //kontrak_atau_tetap
-        'tgl_kontrak1', //tglmasukdinas
-        'akhir_kontrak1',
-        'tgl_kontrak2',
-        'akhir_kontrak2',
         'status', //active atau resign
         'tgl_resign',
         'resign_id', //alasanresign
@@ -87,5 +84,10 @@ class Karyawan extends Authenticatable
     public static function countByStatus($status)
     {
         return self::where('status', $status)->count();
+    }
+
+    public function kontrak()
+    {
+        return $this->hasMany(KontrakKaryawan::class);
     }
 }
