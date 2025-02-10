@@ -19,13 +19,16 @@ use App\Http\Controllers\Api\AuthController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return $request->user()->load('karyawan.jabatan', 'karyawan.departemen', 'karyawan.kontrak');
 });
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/today', [AttendanceController::class, 'getTodayAttendance']);
-    Route::post('/checkIn', [AttendanceController::class, 'checkIn']);
-    Route::post('/checkout', [AttendanceController::class, 'checkOut']);
+    Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut']);
+    Route::get('/attendance/list', [AttendanceController::class, 'listAttendance']);
+    Route::post('/attendance/find', [AttendanceController::class, 'findAttendance']);
+    Route::get('/attendance/report-history', [AttendanceController::class, 'reportHistory']);
 });
