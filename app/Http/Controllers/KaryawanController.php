@@ -80,7 +80,7 @@ class KaryawanController extends Controller
             'kontrak.*.tanggal_mulai' => 'required|date', // Validasi array kontrak
             'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
             'kontrak.*.deskripsi_kontrak' => 'nullable|string|max:255',
-
+            
             // Tambahkan aturan validasi sesuai kebutuhan
         ]);
 
@@ -118,6 +118,9 @@ class KaryawanController extends Controller
             'exp_str' => $request->input('exp_str'),
             'profesi' => $request->input('profesi'),
             'cert_profesi' => $request->input('cert_profesi'),
+            'nomer_sip' => $request->input('nomer_sip'),
+            'tgl_terbit_sip' => $request->input('tgl_terbit_sip'),
+            'exp_sip' => $request->input('exp_sip'),
         ]);
 
         $karyawan->pendidikan()->save($pendidikan);
@@ -244,7 +247,7 @@ public function update(Request $request, $id)
     if ($karyawan->pendidikan) {
         $karyawan->pendidikan->update($request->only([
             'institusi', 'pendidikan_terakhir', 'tahun_lulus', 'nomer_ijazah',
-            'nomer_str', 'exp_str', 'profesi', 'cert_profesi'
+            'nomer_str', 'exp_str', 'profesi', 'cert_profesi','nomer_sip', 'tgl_terbit_sip', 'exp_sip'
         ]));
     }
 

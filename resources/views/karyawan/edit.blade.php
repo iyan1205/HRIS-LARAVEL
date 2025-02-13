@@ -447,16 +447,12 @@
                                             STR</label>
                                         <input type="text" class="form-control" id="nomer_str" value="{{ $karyawan->pendidikan->nomer_str }}"
                                             placeholder="Nomer STR" name="nomer_str">
-
                                     </div>
-
                                     <div class="form-group">
                                         <label for="expired str" class="form-label">Masa Berlaku STR</label>
-                                        <input type="date" class="form-control" id="exp_str" value="{{ $karyawan->pendidikan->exp_str }}"
+                                        <input type="text" placeholder="expired" class="form-control" id="exp_str" value="{{ $karyawan->pendidikan->exp_str }}"
                                             name="exp_str">
-
                                     </div>
-
                                     <div class="form-group">
                                         <label for="profesi" class="form-label">Profesi</label>
                                         <input type="text" class="form-control" id="profesi"
@@ -464,9 +460,7 @@
                                         @error('profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
-
                                     </div>
-
                                     <div class="form-group">
                                         <label for="cert profesi" class="form-label">Sertifikat
                                             Profesi</label>
@@ -476,7 +470,18 @@
                                         @error('cert_profesi')
                                             <small>{{ $message }}</small>
                                         @enderror
-
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="no sip" class="form-label">Nomer SIP</label>
+                                        <input type="text" class="form-control" id="nomer_sip" placeholder="Nomer SIP" name="nomer_sip" value="{{ $karyawan->pendidikan->nomer_sip }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tgl_terbit_sip" class="form-label">Tanggal Terbit SIP</label>
+                                        <input type="date" class="form-control" id="tgl_terbit_sip" placeholder="Nomer SIP" name="tgl_terbit_sip" value="{{ $karyawan->pendidikan->tgl_terbit_sip }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="expired sip" class="form-label">Masa Berlaku SIP</label>
+                                        <input type="date" class="form-control" id="exp_sip" name="exp_sip" value="{{ $karyawan->pendidikan->exp_sip }}">
                                     </div>
                                 </div> <!-- /.card-body -->
                             </div> <!-- /.card -->
