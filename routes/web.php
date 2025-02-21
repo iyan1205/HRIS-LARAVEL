@@ -226,7 +226,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/logout', [ProfileController::class, 'logout'])->name('logout');
+    Route::get('/logout', [ProfileController::class, 'logout'])->name('logout-web');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

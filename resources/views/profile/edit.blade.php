@@ -41,8 +41,14 @@
                       <ul class="list-group list-group-unbordered mb-3">
                         <li class="list-group-item">
                           <b>Tanggal Masuk :</b> 
-                          {{ Auth::user()->karyawan ? \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') : 'null' }}
-
+                          @role('karyawan')
+                          {{ Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_mulai') 
+                          ? \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_mulai'))->format('d/m/Y') 
+                          : 'Belum Ada Kontrak' 
+                          }}
+                           @else
+                           -
+                           @endrole
                         </li>
                         <li class="list-group-item">
                           <b>Saldo Cuti :</b> {{ optional(Auth::user()->leave_balances)->saldo_cuti ?? '0' }}
@@ -148,18 +154,23 @@
                                 <div class="form-group row">
                                   <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 1</label>
                                   <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="{{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak1)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak1)->format('d/m/Y') }}" readonly>
+                                    <input type="email" class="form-control" name="email" value="{{ Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->first() 
+                                        ? \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_mulai'))->format('d/m/Y') . ' - ' . 
+                                          \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_selesai'))->format('d/m/Y')
+                                        : 'Belum Ada Kontrak' 
+                                    }}
+                                    " readonly>
                                   </div>
                                 </div>
                                 <div class="form-group row">
                                   <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 2</label>
                                   <div class="col-sm-5">
                                     <input type="email" class="form-control" name="email" value="
-                                    @if(Auth::user()->karyawan->tgl_kontrak2 && Auth::user()->karyawan->akhir_kontrak2)
-                                    {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tgl_kontrak2)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse(Auth::user()->karyawan->akhir_kontrak2)->format('d/m/Y') }}
-                                    @else
-                                        Belum Ada Kontrak Ke 2
-                                    @endif
+                                    {{ Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->first() 
+                                    ? \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->value('tanggal_mulai'))->format('d/m/Y') . ' - ' . 
+                                      \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->value('tanggal_selesai'))->format('d/m/Y')
+                                    : 'Belum Ada Kontrak Ke 2' 
+                                }}
                                     " readonly>
                                   </div>
                                 </div>
@@ -248,20 +259,10 @@
                               <input type="email" class="form-control" name="email" value="{{ $user->karyawan->tempat_lahir }} , {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tanggal_lahir)->format('d/m/Y') }}" readonly>
                             </div>
                           </div>
-                          
-                        
                           <div class="form-group row">
                               <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
                               <div class="col-sm-5">
                                 <input type="text" class="form-control" name="gender" value="{{ $user->karyawan->gender === 'P' ? 'Perempuan' : ($user->karyawan->gender === 'L' ? 'Laki - Laki' : 'Gender tidak diketahui') }}" readonly>
-                                  {{-- <div class="form-check">
-                                      <input class="form-check-input" type="radio" id="L" name="gender" value="L" {{ $user->karyawan->gender === 'L' ? 'checked' : '' }} disabled>
-                                      <label class="form-check-label" for="L">Laki - Laki</label>
-                                  </div>
-                                  <div class="form-check">
-                                      <input class="form-check-input" type="radio" id="P" name="gender" value="P" {{ $user->karyawan->gender === 'P' ? 'checked' : '' }} disabled>
-                                      <label class="form-check-label" for="P">Perempuan</label>
-                                  </div> --}}
                               </div>
                           </div>
 
@@ -269,18 +270,6 @@
                             <label class="col-sm-2 col-form-label">Status Perkawinan</label>
                             <div class="col-sm-5">
                               <input type="text" class="form-control" name="gender" value="{{ $user->karyawan->status_ktp === 'Menikah' ? 'Menikah' : ($user->karyawan->status_ktp === 'Belum Menikah' ? 'Belum Menikah' : 'Cerai Hidup') }}" readonly>
-                                {{-- <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $user->karyawan->status_ktp === 'Menikah' ? 'checked' : '' }} disabled >
-                                    <label class="form-check-label" for="Menikah">Menikah</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $user->karyawan->gender === 'Belum Menikah' ? 'checked' : '' }}disabled>
-                                    <label class="form-check-label" for="Belum Menikah">Belum Menikah</label>
-                                </div>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $user->karyawan->gender === 'Cerai Hidup' ? 'checked' : '' }}disabled>
-                                  <label class="form-check-label" for="Cerai Hidup">Cerai Hidup</label>
-                                </div> --}}
                             </div>
                           </div>
                         </div>
@@ -340,6 +329,24 @@
                               <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->cert_profesi }}" readonly>
                             </div>
                           </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer SIP</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_sip }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Tanggal Terbit SIP</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->tgl_terbit_sip }}" readonly>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Masa Berlaku SIP</label>
+                            <div class="col-sm-5">
+                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->exp_sip }}" readonly>
+                            </div>
+                          </div>
 
                         </div>
                         <!-- /.tab-pane -->
@@ -376,9 +383,6 @@
                               </div>
                           </div>
                       </div>
-                      
-                      
-                      
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="gantipassword">
                           <!-- The password -->
