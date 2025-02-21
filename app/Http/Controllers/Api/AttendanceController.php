@@ -23,7 +23,7 @@ class AttendanceController extends Controller
                                           ->whereDate('created_at', Carbon::today())
                                           ->count();
         
-        return response()->json(['attendance' => $attendance, 'totalAttendanceToday' => $totalAttendanceToday]);
+        return response()->json(['attendanceToday' => $attendance, 'totalAttendanceToday' => $totalAttendanceToday]);
     }
 
     public function checkIn(Request $request)
