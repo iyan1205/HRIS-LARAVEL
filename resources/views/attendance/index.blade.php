@@ -156,50 +156,58 @@
     </div>
 </body>
 <script>
-   document.addEventListener('DOMContentLoaded', () => {
-    // Ensure jam_masuk exists before accessing it
+  document.addEventListener('DOMContentLoaded', () => {
     const jamMasukInput = document.getElementById('jam_masuk');
     const jamKeluarInput = document.getElementById('jam_keluar');
 
-    if (jamMasukInput) {
+    // Fungsi untuk mendapatkan waktu saat ini dalam format HH:MM
+    const getCurrentTime = () => {
         const currentDate = new Date();
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        jamMasukInput.value = `${hours}:${minutes}`;
+        return `${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+    };
+
+    if (jamMasukInput) {
+        jamMasukInput.value = getCurrentTime();
     }
 
     if (jamKeluarInput && !jamKeluarInput.value) {
-        const currentDate = new Date();
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        jamKeluarInput.value = `${hours}:${minutes}`;
+        jamKeluarInput.value = getCurrentTime();
     }
 
-    const checkInForm = document.querySelector('form[action="{{ route('attendance.checkIn') }}"]');
+    // Mengambil URL dari Blade dengan JSON encoding
+    const checkInRoute = @json(route('attendance.checkIn'));
+    const checkOutRoute = @json(route('attendance.checkOut'));
+
+    const checkInForm = document.querySelector(`form[action="${checkInRoute}"]`);
     const checkInButton = document.getElementById('checkInButton');
     const checkInLoadingSpinner = document.getElementById('checkInLoadingSpinner');
 
     if (checkInForm) {
-        checkInForm.addEventListener('submit', (event) => {
-            checkInButton.disabled = true;
-            checkInButton.innerText = 'Mengirim...';
-            checkInLoadingSpinner.classList.remove('hidden');
+        checkInForm.addEventListener('submit', () => {
+            if (checkInButton && checkInLoadingSpinner) {
+                checkInButton.disabled = true;
+                checkInButton.innerText = 'Mengirim...';
+                checkInLoadingSpinner.classList.remove('hidden');
+            }
         });
     }
 
     // Check-Out Form Handling
-    const checkOutForm = document.querySelector('form[action="{{ route('attendance.checkOut') }}"]');
+    const checkOutForm = document.querySelector(`form[action="${checkOutRoute}"]`);
     const checkOutButton = document.getElementById('checkOutButton');
     const checkOutLoadingSpinner = document.getElementById('checkOutLoadingSpinner');
 
     if (checkOutForm) {
-        checkOutForm.addEventListener('submit', (event) => {
-            checkOutButton.disabled = true;
-            checkOutButton.innerText = 'Mengirim...';
-            checkOutLoadingSpinner.classList.remove('hidden');
+        checkOutForm.addEventListener('submit', () => {
+            if (checkOutButton && checkOutLoadingSpinner) {
+                checkOutButton.disabled = true;
+                checkOutButton.innerText = 'Mengirim...';
+                checkOutLoadingSpinner.classList.remove('hidden');
+            }
         });
     }
 });
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {

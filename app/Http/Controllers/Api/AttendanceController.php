@@ -28,6 +28,21 @@ class AttendanceController extends Controller
 
     public function checkIn(Request $request)
     {
+        $userId = Auth::id();
+    
+        // Cek apakah user sudah check-in hari ini dengan status 'hadir'
+        $existingAttendance = Attendance::where('user_id', $userId)
+            ->whereDate('jam_masuk', today())
+            ->where('status', 'hadir')
+            ->first();
+    
+        if ($existingAttendance) {
+            return response()->json([
+                'message' => 'Anda sudah check-in hari ini',
+                'attendance' => $existingAttendance
+            ], 400);
+        }
+    
         $path = null;
         if ($request->hasFile('foto_jam_masuk')) {
             $manager = new ImageManager(new Driver());
@@ -37,22 +52,26 @@ class AttendanceController extends Controller
             $img->save(storage_path('app/public/attendance/' . $name_img));
             $path = 'attendance/' . $name_img;
         }
-
+    
         $ipAddress = $request->ip();
         $agent = new Agent();
         $deviceInfo = ($agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop')) . " | " . $agent->platform() . " | " . $agent->browser();
-
+    
         $attendance = Attendance::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'jam_masuk' => now(),
             'ip_address' => $ipAddress,
             'device_info' => $deviceInfo,
             'foto_jam_masuk' => $path,
             'status' => 'hadir',
         ]);
-
-        return response()->json(['message' => 'Berhasil Check-in', 'attendance' => $attendance], 201);
+    
+        return response()->json([
+            'message' => 'Berhasil Check-in',
+            'attendance' => $attendance
+        ], 201);
     }
+    
 
     public function checkOut(Request $request)
     {
