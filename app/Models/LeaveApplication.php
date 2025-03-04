@@ -64,7 +64,7 @@ class LeaveApplication extends Model
         $this->save();
     }
 
-    public static function getApplicationsStartingToday() // Data Cuti Hari ini
+    public static function getApplicationsStartingToday() 
     {
         return self::select(
                 'leave_applications.id', 'leave_applications.created_at', 
@@ -72,7 +72,7 @@ class LeaveApplication extends Model
                 'jabatans.name AS jabatan', 
                 'leave_applications.start_date', 'leave_applications.end_date', 
                 'leave_applications.status', 'leave_applications.updated_by', 
-                'leave_applications.updated_at', 'leave_applications.level_approve', 
+                'leave_applications.updated_at', 'leave_applications.level_approve', 'leave_applications.total_days', 
                 'leave_applications.alasan_reject', 'leave_applications.manager_id', 
                 'leave_types.kategori_cuti', 'leave_types.name',
                 'manajer.name AS atasan_langsung'
