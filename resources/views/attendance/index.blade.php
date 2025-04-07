@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" id="checkOutButton" class="bg-teal-500 text-white px-20 py-2 rounded">Check Out</button>
+                    <button type="submit" id="checkOutButton" class="bg-red-500 text-white px-20 py-2 rounded">Check Out</button>
                     <div id="checkOutLoadingSpinner" class="hidden mt-4 text-center">
                         <div class="flex items-center justify-center">
                             <svg class="animate-spin h-6 w-6 text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -209,35 +209,54 @@
 });
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const inputFile = document.getElementById('foto');
-    const previewImage = document.getElementById('previewImage');
-    const cameraIcon = document.getElementById('cameraIcon');
-    const clearButton = document.getElementById('clearButton');
+        const inputFile = document.getElementById('foto');
+        const previewImage = document.getElementById('previewImage');
+        const cameraIcon = document.getElementById('cameraIcon');
+        const clearButton = document.getElementById('clearButton');
 
-    inputFile.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImage.src = e.target.result; // Tampilkan gambar
-                previewImage.classList.remove('hidden'); // Tampilkan elemen pratinjau
-                cameraIcon.classList.add('hidden'); // Sembunyikan ikon kamera
-                clearButton.classList.remove('hidden'); // Tampilkan tombol clear
-            };
-            reader.readAsDataURL(file); // Membaca file
-        }
+        inputFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                new Compressor(file, {
+                    quality: 0.6,           // Kompres kualitas 60%
+                    maxWidth: 1280,         // Resize lebar maksimum 1280px
+                    maxHeight: 1280,        // Resize tinggi maksimum 1280px
+                    success(result) {
+                        // Tampilkan preview gambar
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewImage.src = e.target.result;
+                            previewImage.classList.remove('hidden');
+                            cameraIcon.classList.add('hidden');
+                            clearButton.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(result);
+
+                        // Replace file di input agar yang dikirim versi compressed
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(result);
+                        inputFile.files = dataTransfer.files;
+                    },
+                    error(err) {
+                        console.error('Compress Error:', err.message);
+                        alert('Gagal mengkompres gambar, coba ulangi.');
+                    }
+                });
+            }
+        });
+
+        // Tombol reset gambar
+        clearButton.addEventListener('click', () => {
+            inputFile.value = '';
+            previewImage.src = '#';
+            previewImage.classList.add('hidden');
+            cameraIcon.classList.remove('hidden');
+            clearButton.classList.add('hidden');
+        });
     });
-
-    clearButton.addEventListener('click', () => {
-        inputFile.value = ''; // Reset input file
-        previewImage.src = '#'; // Reset pratinjau gambar
-        previewImage.classList.add('hidden'); // Sembunyikan elemen pratinjau
-        cameraIcon.classList.remove('hidden'); // Tampilkan kembali ikon kamera
-        clearButton.classList.add('hidden'); // Sembunyikan tombol clear
-    });
-});
-
 </script>
 </html>

@@ -61,9 +61,7 @@
                                                 <td>
                                                 <a data-toggle="modal" data-target="#modal-detail{{  $oncall->id }}" class="btn btn-info btn-sm" title="Keterangan"><i class="fas fa-eye"></i></a>
                                                 @if (is_null($oncall->updated_by))
-                                                    <a href="{{ route('oncall.edit', ['id' => $oncall->id]) }}" class="btn btn-success btn-sm" title="Edit">
-                                                        <i class="fas fa-pencil-alt"></i>
-                                                    </a>
+                                                    <a href="{{ route('oncall.edit', ['id' => $oncall->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                                 @endif
                                                 </td>
                                             </tr>

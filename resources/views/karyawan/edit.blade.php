@@ -25,6 +25,7 @@
                     @method('PUT')
                     <div class="row">
                         <!-- /.Karyawan -->
+                        
                         <div class="col-md-6">
                             <div class="card card-success collapsed-card">
                                 <div class="card-header">
@@ -85,6 +86,7 @@
                                                 <option value="{{ $id }}"
                                                     {{ $karyawan->jabatan_id == $id ? 'selected' : '' }}>
                                                     {{ $name }}
+                                                    
                                                 </option>
                                             @endforeach
                                         </select>

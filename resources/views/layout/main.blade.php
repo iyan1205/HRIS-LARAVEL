@@ -290,6 +290,17 @@
             });
         </script>
     @endif
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            position: "top",
+            icon: "error",
+            title: "{{ session('error') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
+     @endif
 
     @role('karyawan')
     <script>

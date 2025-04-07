@@ -21,23 +21,30 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{ route('departemen') }}"
-                        class="nav-link {{ request()->is('organisasi/departemen') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('organisasi/departemen*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Departemen</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('unit') }}"
-                        class="nav-link {{ request()->is('organisasi/unit') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('organisasi/unit*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Unit</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('jabatan') }}"
-                        class="nav-link {{ request()->is('organisasi/jabatan') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('organisasi/jabatan*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Jabatan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('mobilitas.index') }}"
+                        class="nav-link {{ request()->is('organisasi/mobilitas*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Mobilitas Jabatan</p>
                     </a>
                 </li>
             </ul>
@@ -284,11 +291,19 @@
         </li>
         @endrole
         @can('laporan_absen')
-        <li class="nav-item {{ request()->is('attendance/*') ? 'menu-open' : '' }}">
-            <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance/*') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('attendance/laporan*') ? 'menu-open' : '' }}">
+            <a href="{{ route('attendance.laporan') }}" class="nav-link {{ request()->is('attendance/laporan*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
                     Laporan Absensi
+                </p>
+            </a>
+        </li>
+        <li class="nav-item {{ request()->is('attendance/findby*') ? 'menu-open' : '' }}">
+            <a href="{{ route('attendance.findby') }}" class="nav-link {{ request()->is('attendance/findby*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Cari Absensi
                 </p>
             </a>
         </li>

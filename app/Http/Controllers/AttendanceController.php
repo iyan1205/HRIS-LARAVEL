@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\ReportHistory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -27,7 +28,17 @@ class AttendanceController extends Controller
 
     public function checkIn(Request $request)
     {
-        
+    $userId = Auth::id();
+
+    // Cek apakah user sudah check-in hari ini
+    $existingAttendance = Attendance::where('user_id', $userId)
+        ->whereDate('jam_masuk', today())
+        ->where('status', 'hadir')
+        ->first();
+    
+    if ($existingAttendance) {
+        return redirect()->route('attendance.list')->with('error', 'Anda sudah check-in hari ini.');
+    }
         if($request->file('foto_jam_masuk')){
             $manager = new ImageManager(new Driver());
             $name_img = hexdec(uniqid()).'.'.$request->file('foto_jam_masuk')->getClientOriginalExtension();
@@ -112,14 +123,12 @@ class AttendanceController extends Controller
             'date' => 'required|date',
         ]);
     
-        // Ambil data berdasarkan tanggal
         $date = $request->input('date');
         $attendance = Attendance::where('user_id', Auth::id())
                                 ->whereDate('created_at', $date)
                                 ->orderBy('created_at', 'desc')
                                 ->get();
 
-        // Tampilkan view dengan hasil pencarian
         return view('attendance.list', compact('attendance'));
     }
 
@@ -152,6 +161,34 @@ class AttendanceController extends Controller
     
         // Tampilkan view dengan hasil pencarian
         return view('attendance.list-laporan', compact('attendance', 'startDate', 'endDate'));
+    }
+
+    public function find_by() {
+        $users = User::with('karyawan')->get()->mapWithKeys(function ($user) {
+            return [$user->id => $user->karyawan->name ?? $user->name];
+        });
+        return view('attendance.findby', compact('users'));
+    }
+
+    public function find_attendance_reques(Request $request){
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $userId = $request->input('user_id');
+
+        $attendance = Attendance::with(['user.karyawan.jabatan']) // Eager load relasi
+            ->where('user_id', $userId)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Tampilkan view dengan hasil pencarian
+        return view('attendance.list_find', compact('attendance', 'startDate', 'endDate', 'userId'));
     }
 
     public function report_history_absensi(){

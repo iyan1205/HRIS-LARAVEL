@@ -90,4 +90,10 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(KontrakKaryawan::class);
     }
+
+    public function mobilitas()
+    {
+        return $this->hasOne(Mobilitas::class, 'karyawan_id');
+    }
+    
 }
