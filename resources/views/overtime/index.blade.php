@@ -58,9 +58,7 @@
                                                 <td>
                                                 <a data-toggle="modal" data-target="#modal-detail{{  $overtime->id }}" class="btn btn-info btn-sm" title="Keterangan"><i class="fas fa-eye"></i></a>
                                                 @if (is_null($overtime->updated_by))
-                                                    <a href="{{ route('overtime.edit', ['id' => $overtime->id]) }}" class="btn btn-success btn-sm" title="Edit">
-                                                        <i class="fas fa-pencil-alt"></i>
-                                                    </a>
+                                                    <a href="{{ route('overtime.edit', ['id' => $overtime->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                                 @endif
                                                 </td>
                                             </tr>

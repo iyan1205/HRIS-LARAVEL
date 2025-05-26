@@ -52,10 +52,8 @@
                                         <td>{{ $jabatan->level_approve }} Tahap</td>
                                         <td class="project-actions text-right">
                                             
-                                            <a href="{{ route('jabatan.edit', ['id' => $jabatan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $jabatan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                Hapus</a>
+                                            <a href="{{ route('jabatan.edit', ['id' => $jabatan->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <a data-toggle="modal" data-target="#modal-hapus{{ $jabatan->id }}" class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="modal-hapus{{ $jabatan->id }}">

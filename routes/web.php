@@ -17,6 +17,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\MobilitasJabatanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,15 +86,18 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::delete('/karyawan/active/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete');
 
         Route::get('/karyawan/resign', [KaryawanController::class, 'resign'])->name('resign');
+
+        Route::get('/karyawan/active/mobilitas/{id}', [KaryawanController::class, 'mobilitas'])->name('mobilitas.jabatan');
+        Route::put('/karyawan/active/mobilitas/{id}', [KaryawanController::class, 'mobilitasUpdate'])->name('mobilitas.update');
     });
 
     // Organisasi Routes
     Route::prefix('organisasi')->group(function () {
-    // Departemen
+        // Departemen
         Route::get('/departemen', [DepartemenController::class, 'index'])->name('departemen');
         Route::get('/departemen/create', [DepartemenController::class, 'create'])->name('departemen.create');
         Route::post('/departemen/store', [DepartemenController::class, 'store'])->name('departemen.store');
-    //Proses Departemen
+        //Proses Departemen
         Route::get('/departemen/edit/{id}', [DepartemenController::class, 'edit'])->name('departemen.edit');
         Route::put('/departemen/update/{id}', [DepartemenController::class, 'update'])->name('departemen.update');
         Route::delete('/departemen/delete/{id}', [DepartemenController::class, 'destroy'])->name('departemen.delete');
@@ -101,23 +105,28 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/departemen/datasoft', [DepartemenController::class, 'datasoft'])->name('departemen.datasoft');
         Route::get('/departemen/restore/{id}', [DepartemenController::class, 'restore'])->name('departemen.restore');
 
-    // Unit
+        // Unit
         Route::get('/unit', [UnitController::class, 'index'])->name('unit');
         Route::get('/unit/create', [UnitController::class, 'create'])->name('unit.create');
         Route::post('/unit/store', [UnitController::class, 'store'])->name('unit.store');
-    //Proses Unit
+        //Proses Unit
         Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
         Route::put('/unit/update/{id}', [UnitController::class, 'update'])->name('unit.update');
         Route::delete('/unit/delete/{id}', [UnitController::class, 'destroy'])->name('unit.delete');
 
-    // Jabatan
+        // Jabatan
         Route::get('/jabatan', [JabatanController::class, 'index'])->name('jabatan');
         Route::get('/jabatan/create', [JabatanController::class, 'create'])->name('jabatan.create');
         Route::post('/jabatan/store', [JabatanController::class, 'store'])->name('jabatan.store');
-    //Proses Jabatan
+        //Proses Jabatan
         Route::get('/jabatan/edit/{id}', [JabatanController::class, 'edit'])->name('jabatan.edit');
         Route::put('/jabatan/update/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
         Route::delete('/jabatan/update/{id}', [JabatanController::class, 'destroy'])->name('jabatan.delete');
+        
+        Route::get('/mobilitas', [MobilitasJabatanController::class, 'index'])->name('mobilitas.index');
+        Route::get('/mobilitas/edit/{id}', [MobilitasJabatanController::class, 'edit'])->name('mobilitas.edit');
+        Route::put('/mobilitas/update/{id}', [MobilitasJabatanController::class, 'update'])->name('mobilitas.jabatan.update');
+        
     });
 
 
@@ -171,8 +180,6 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::get('/pengajuan-cuti/create/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
-    
-
 
     Route::prefix('Lembur')->group( function() {
         // Overtime
@@ -237,6 +244,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/find', [AttendanceController::class, 'find_attendance'])->name('attendance.find');
     Route::get('/attendance/laporan', [AttendanceController::class, 'laporan'])->name('attendance.laporan');
     Route::get('/attendance/laporan/find', [AttendanceController::class, 'find_attendance_report'])->name('attendance.find.report');
+    Route::get('/attendance/findby', [AttendanceController::class, 'find_by'])->name('attendance.findby');
+    Route::get('/attendance/findby/search', [AttendanceController::class, 'find_attendance_reques'])->name('attendance.find2');
     Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
     Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
     
@@ -250,9 +259,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/over-count', [OvertimeController::class, 'getOverCount'])->name('api.over-count');
     Route::get('/api/oncall-count', [OnCallController::class, 'getOncallCount'])->name('api.oncall-count');
 });
-
-
-
-
 
 require __DIR__ . '/auth.php';

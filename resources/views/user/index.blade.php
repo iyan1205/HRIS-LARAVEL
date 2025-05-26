@@ -60,11 +60,9 @@
                                                     @endif
                                                 <td class="project-actions text-right">
                                                     <a href="{{ route('user.edit', ['id' => $user->id]) }}"
-                                                        class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                        Edit</a>
+                                                        class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                                     <a data-toggle="modal" data-target="#modal-hapus{{ $user->id }}"
-                                                        class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                        Hapus</a>
+                                                        class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $user->id }}">

@@ -73,11 +73,8 @@
                                                 <td>{{ $permission->name }}</td>
                                                 <td class="project-actions text-right">
                                                     <a href="{{ url('master-users/permissions/'.$permission->uuid.'/edit') }}"
-                                                        class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                        Edit</a>
-                                                    <a data-toggle="modal" data-target="#modal-hapus{{ $permission->uuid }}"
-                                                        class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                        Hapus</a>
+                                                        class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
+                                                    <a data-toggle="modal" data-target="#modal-hapus{{ $permission->uuid }}" class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $permission->uuid }}">

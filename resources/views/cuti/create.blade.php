@@ -32,7 +32,7 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-
+                            
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title">Form Pengajuan</h3>
@@ -73,6 +73,11 @@
                                                 <option value="{{ $id }}">{{ $kategori }}</option>
                                             @endforeach
                                         </select>
+                                        @error('kategori_cuti')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group" id="leave_type_id_container" style="display: none;">
@@ -86,20 +91,30 @@
                                         <div class="col">
                                             <label for="start_date">Tanggal Awal:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" required/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" value="{{ old('start_date') }}" required/>
                                                 <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
+                                            @error('start_date')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                            @enderror
                                         </div>
                                         <div class="col">
                                             <label for="end_date">Tanggal Akhir:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" required/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" value="{{ old('end_date') }}" required/>
                                                 <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
+                                            @error('end_date')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                            @enderror
                                         </div>
                                     </div>
                                     
@@ -108,14 +123,18 @@
                                         <input type="text" class="form-control" id="total_days" disabled/>
                                     </div>
                                     
-
                                     <div class="form-group" id="file_upload_container" style="display: none;">
                                         <label for="file_upload">Upload File <span class="red-star">*</span></label>
                                         <div class="input-group">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
+                                                <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" value="{{ old('file_upload') }}" required>
                                                 <label class="custom-file-label" for="file_upload">Choose file</label>
                                             </div>
+                                            @error('file_upload')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                            @enderror
                                         </div>
                                     </div>
 

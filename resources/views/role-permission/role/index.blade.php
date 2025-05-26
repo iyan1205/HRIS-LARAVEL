@@ -77,11 +77,9 @@
                                                         class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i>
                                                         Add/Edit Role Permission</a>
                                                     <a href="{{ url('master-users/roles/'.$role->uuid.'/edit') }}"
-                                                            class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                            Edit</a>
+                                                            class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                                     <a data-toggle="modal" data-target="#modal-hapus{{ $role->uuid }}"
-                                                        class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                        Hapus</a>
+                                                        class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="modal-hapus{{ $role->uuid }}">

@@ -158,7 +158,8 @@ class LeaveApplicationController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return redirect()->back()->withInput()->withErrors($validator);
+                $message = 'File terlalu besar atau format tidak didukung.';
+                return redirect()->back()->withInput()->with('error', $message);
             }
 
             // Simpan file ke dalam folder file_cuti
@@ -387,7 +388,8 @@ class LeaveApplicationController extends Controller
             ]);
     
             if ($validator->fails()) {
-                return redirect()->back()->withInput()->withErrors($validator);
+                $message = 'File terlalu besar atau format tidak didukung.';
+                return redirect()->back()->withInput()->with('error', $message);
             }
     
             if ($request->hasFile('file_upload')) {

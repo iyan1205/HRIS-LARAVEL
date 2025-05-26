@@ -58,10 +58,10 @@
                             <!-- /.card -->
 
                         </div>
+                    </div>
                 </form>
             </div>
             <!-- /.row -->
+        </section>
     </div><!-- /.container-fluid -->
-    </section>
-    </div>
 @endsection

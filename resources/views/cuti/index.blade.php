@@ -65,7 +65,7 @@
                                                 <td class="project-actions text-right">
                                                     <a data-toggle="modal" data-target="#modal-detail{{ $cuti->id }}" class="btn btn-info btn-sm" title="Detail"><i class="fas fa-eye"></i></a>
                                                     @if (is_null($cuti->updated_by))
-                                                    <a href="{{ route('cuti.edit', ['id' => $cuti->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-pencil-alt"></i> </a>
+                                                    <a href="{{ route('cuti.edit', ['id' => $cuti->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                                     @endif
                                                     {{-- <a data-toggle="modal" data-target="#modal-hapus{{ $cuti->id }}" class="btn btn-danger btn-sm" title="Batal"><i class="fas fa-times-circle"></i></a> --}}
                                                 </td>

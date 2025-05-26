@@ -337,4 +337,61 @@ public function update(Request $request, $id)
         
         return redirect()->route('karyawan');
     }
+
+    public function mobilitas(Request $request, $id)
+    {
+        $karyawan = Karyawan::find($id);
+        $users = User::pluck('name', 'id');
+        $departemens = Departemen::pluck('name', 'id');
+        $units = Unit::pluck('name', 'id');
+        $jabatans = Jabatan::pluck('name', 'id');
+        return view('karyawan.mobilitas', compact('karyawan','users', 'departemens', 'units', 'jabatans'));
+        
+    }
+
+    public function mobilitasUpdate(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'jabatan_sekarang' => 'required|exists:jabatans,id',
+            'jabatan_baru' => 'required|exists:jabatans,id',
+            'departemen_sekarang' => 'required|exists:departemens,id',
+            'departemen_baru' => 'required|exists:departemens,id',
+            'unit_sekarang' => 'required|exists:units,id',
+            'unit_baru' => 'required|exists:units,id',
+
+            'karyawan_id' => 'required',
+            'aspek' => 'required',
+            'tanggal_efektif' => 'required|date',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+    
+        $karyawan = Karyawan::findOrFail($id);
+        // Simpan ID baru di tabel karyawan
+        $karyawan->update([
+            'departemen_id' => $request->input('departemen_baru'),
+            'jabatan_id' => $request->input('jabatan_baru'),
+            'unit_id' => $request->input('unit_baru')
+        ]);
+    
+        $mobilitasData = [
+            'karyawan_id' => $id,
+            'aspek' => $request->input('aspek'),
+            'jabatan_sekarang' =>  Jabatan::find($request->input('jabatan_sekarang'))->name,
+            'jabatan_baru' => Jabatan::find($request->input('jabatan_baru'))->name,
+            'departemen_sekarang' => Departemen::find($request->input('departemen_sekarang'))->name,
+            'departemen_baru' => Departemen::find($request->input('departemen_baru'))->name,
+            'unit_sekarang' => Unit::find($request->input('unit_sekarang'))->name,
+            'unit_baru' => Unit::find($request->input('unit_baru'))->name,
+            'tanggal_efektif' => $request->input('tanggal_efektif')
+        ];
+    
+        $karyawan->mobilitas()->create($mobilitasData);
+    
+        Session::flash('successAdd', 'Data mobilitas jabatan berhasil dibuat');
+        return redirect()->route('karyawan');
+    }
+
 }

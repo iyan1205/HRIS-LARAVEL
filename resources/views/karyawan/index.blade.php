@@ -46,7 +46,7 @@
                                         <th>Email</th>
                                         <th>Jabatan</th>
                                         <th>Departemen</th>
-                                        <th style="width: 150px">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -59,10 +59,9 @@
                                         <td>{{ $karyawan->jabatan->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
                                         <td class="project-actions text-right">
-                                            <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i>
-                                                Edit</a>
-                                            <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>
-                                                Hapus</a>
+                                            <a href="{{ route('mobilitas.jabatan', ['id' => $karyawan->id]) }}" class="btn btn-info btn-sm" title="Mobilitas Jabatan"><i class="fas fa-arrows-alt"></i></a>
+                                            <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <a data-toggle="modal" data-target="#modal-hapus{{ $karyawan->id }}" class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="modal-hapus{{ $karyawan->id }}">
