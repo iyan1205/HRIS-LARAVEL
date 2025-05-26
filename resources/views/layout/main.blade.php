@@ -301,7 +301,6 @@
         });
     </script>
      @endif
-
     @role('karyawan')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
