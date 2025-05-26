@@ -45,9 +45,10 @@
                                             <th>Total Hari</th>
                                             <th>Status</th>
                                             <th>Tgl Approve SPV</th>
+                                            <th>Nama SPV</th>
                                             <th>Tgl Approve Manajer</th>
                                             @if($status == '' || $status == 'rejected')
-                                            <th>updated by</th>
+                                            <th>Nama Manajer</th>
                                             @endif
                                             @if($status == '' || $status == 'rejected')
                                             <th>Alasan Reject</th>
@@ -68,7 +69,8 @@
                                             <td>{{ $result->total_days }} Hari</td>
                                             <td>{{ $result->status }}</td>
                                             <td>{{ $result->updated_at_atasan }}</td>
-                                            <td>{{ $result->updated_at }}</td>
+                                            <td>{{ $result->updated_by_atasan }}</td>
+                                           <td>{{ $result->created_at  == $result->updated_at ? '-' : $result->updated_at}}</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
