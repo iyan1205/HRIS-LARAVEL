@@ -37,15 +37,17 @@
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
                                             <th>Jabatan</th>
+                                            <th>Tanggal Pengajuan</th>
                                             <th>Tanggal Awal</th>
                                             <th>Tanggal Akhir</th>
                                             <th>Total Jam</th>
                                             <th>Keterangan</th>
                                             <th>Status</th>
                                             <th>Tgl Approve SPV</th>
+                                            <th>Nama SPV</th>
                                             <th>Tgl Approve Manajer</th>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved' )
-                                            <th>updated by</th>
+                                            <th>Nama Manajer</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -55,13 +57,15 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $result->karyawan_name }}</td>
                                             <td>{{ $result->nama_jabatan }}</td>
+                                            <td>{{ $result->created_at }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->interval }}</td>
                                             <td>{{ $result->keterangan }}</td>
                                             <td>{{ $result->status }}</td>
                                             <td>{{ $result->updated_at_atasan }}</td>
-                                            <td>{{ $result->updated_at }}</td>
+                                            <td>{{ $result->updated_by_atasan }}</td>
+                                            <td>{{ $result->created_at  == $result->updated_at ? '-' : $result->updated_at}}</td>
                                             @if($status == '' || $status == 'rejected' || $status == 'approved')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
