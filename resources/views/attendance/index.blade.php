@@ -65,7 +65,7 @@
                             <img id="previewImage" src="#" alt="Pratinjau Gambar" class="hidden w-40 h-40 object-cover rounded-lg shadow-md mt-2">
                     
                             <!-- Input File -->
-                            <input type="file" id="foto" name="foto_jam_keluar" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" capture="environment" required>
+                            <input type="file" id="foto" name="foto_jam_keluar" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" capture="environment" onClick="this.value = null" required>
                     
                             <!-- Tombol Clear -->
                             <button type="button" id="clearButton" class="hidden mt-4 text-red-500 underline text-sm">Clear</button>
@@ -259,4 +259,15 @@
         });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        if (!isMobile) {
+            alert('Halaman ini hanya dapat diakses melalui perangkat mobile.');
+            window.history.back(); // atau: window.location.href = '/'; jika ingin redirect ke home
+        }
+    });
+</script>
+
 </html>
