@@ -36,7 +36,7 @@ class Attendance extends Model
         $hours = intdiv($durationInMinutes, 60);
         $minutes = $durationInMinutes % 60;
     
-        if ($hours >= 12) {
+        if ($hours >= 24) {
             return "Tidak absen pulang";
         }
     

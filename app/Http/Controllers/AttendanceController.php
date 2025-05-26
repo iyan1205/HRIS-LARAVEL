@@ -9,6 +9,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Jenssegers\Agent\Agent;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
@@ -27,7 +28,24 @@ class AttendanceController extends Controller
 
     public function checkIn(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'foto_jam_masuk' => 'nullable|max:20048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+        $userId = Auth::id();
+
+        // Cek apakah user sudah check-in hari ini
+        $existingAttendance = Attendance::where('user_id', $userId)
+            ->whereDate('jam_masuk', today())
+            ->where('status', 'hadir')
+            ->first();
         
+        if ($existingAttendance) {
+            return redirect()->route('attendance.list')->with('error', 'Anda sudah check-in hari ini.');
+        }
         if($request->file('foto_jam_masuk')){
             $manager = new ImageManager(new Driver());
             $name_img = hexdec(uniqid()).'.'.$request->file('foto_jam_masuk')->getClientOriginalExtension();
@@ -59,6 +77,13 @@ class AttendanceController extends Controller
 
     public function checkOut(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'foto_jam_keluar' => 'nullable|max:20048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
         $path = null; // Initialize path variable
 
         if ($request->file('foto_jam_keluar')) {
