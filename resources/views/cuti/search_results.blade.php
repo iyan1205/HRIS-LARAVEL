@@ -70,7 +70,7 @@
                                             <td>{{ $result->status }}</td>
                                             <td>{{ $result->updated_at_atasan }}</td>
                                             <td>{{ $result->updated_by_atasan }}</td>
-                                           <td>{{ $result->created_at }}</td>
+                                           <td>{{ $result->updated_at }}</td>
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->updated_by }}</td>
                                             @endif
