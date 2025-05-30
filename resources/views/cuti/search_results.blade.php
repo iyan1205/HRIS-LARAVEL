@@ -44,14 +44,12 @@
                                             <th>Tanggal Akhir</th>
                                             <th>Total Hari</th>
                                             <th>Status</th>
-                                            <th>Tgl Approve SPV</th>
-                                            <th>Nama SPV</th>
-                                            <th>Tgl Approve Manajer</th>
+                                            <th>Tgl Approve Atasan</th>
+                                            <th>Atasan Langsung</th>
+                                            <th>Tgl Diperbarui</th>
+                                            <th>Diperbarui Oleh</th>
                                             @if($status == '' || $status == 'rejected')
-                                            <th>Nama Manajer</th>
-                                            @endif
-                                            @if($status == '' || $status == 'rejected')
-                                            <th>Alasan Reject</th>
+                                            <th>Alasan Penolakan</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -68,12 +66,10 @@
                                             <td>{{ $result->end_date }}</td>
                                             <td>{{ $result->total_days }} Hari</td>
                                             <td>{{ $result->status }}</td>
-                                            <td>{{ $result->updated_at_atasan }}</td>
-                                            <td>{{ $result->updated_by_atasan }}</td>
-                                           <td>{{ $result->updated_at }}</td>
-                                            @if($status == '' || $status == 'rejected')
+                                            <td>{{ $result->updated_at_atasan ?? $result->updated_at }}</td>
+                                            <td>{{ $result->updated_by_atasan ?? $result->updated_by }}</td>
+                                            <td>{{ !empty($result->updated_by) ? $result->updated_at : '-' }}</td>
                                             <td>{{ $result->updated_by }}</td>
-                                            @endif
                                             @if($status == '' || $status == 'rejected')
                                             <td>{{ $result->alasan_reject }}</td>
                                             @endif

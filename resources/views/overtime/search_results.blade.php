@@ -43,11 +43,12 @@
                                             <th>Total Jam</th>
                                             <th>Keterangan</th>
                                             <th>Status</th>
-                                            <th>Tgl Approve SPV</th>
-                                            <th>Nama SPV</th>
-                                            <th>Tgl Approve Manajer</th>
-                                            @if($status == '' || $status == 'rejected' || $status == 'approved' )
-                                            <th>Nama Manajer</th>
+                                            <th>Tgl Approve Atasan</th>
+                                            <th>Atasan Langsung</th>
+                                            <th>Tgl Diperbarui</th>
+                                            <th>Diperbarui Oleh</th>
+                                            @if($status == '' || $status == 'rejected')
+                                            <th>Alasan Penolakan</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -66,8 +67,9 @@
                                             <td>{{ $result->updated_at_atasan }}</td>
                                             <td>{{ $result->updated_by_atasan }}</td>
                                             <td>{{ $result->updated_at }}</td>
-                                            @if($status == '' || $status == 'rejected' || $status == 'approved')
                                             <td>{{ $result->updated_by }}</td>
+                                            @if($status == '' || $status == 'rejected')
+                                            <td>{{ $result->alasan_reject }}</td>
                                             @endif
                                         </tr>
                                         @endforeach
