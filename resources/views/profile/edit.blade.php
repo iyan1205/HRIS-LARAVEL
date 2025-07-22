@@ -151,29 +151,31 @@
                                 @endif" readonly>
                                   </div>
                                 </div>
-                                <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 1</label>
-                                  <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="{{ Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->first() 
-                                        ? \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_mulai'))->format('d/m/Y') . ' - ' . 
-                                          \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Pertama')->value('tanggal_selesai'))->format('d/m/Y')
-                                        : 'Belum Ada Kontrak' 
-                                    }}
-                                    " readonly>
-                                  </div>
-                                </div>
-                                <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Kontrak Ke 2</label>
-                                  <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="
-                                    {{ Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->first() 
-                                    ? \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->value('tanggal_mulai'))->format('d/m/Y') . ' - ' . 
-                                      \Carbon\Carbon::parse(Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', 'Kontrak Kedua')->value('tanggal_selesai'))->format('d/m/Y')
-                                    : 'Belum Ada Kontrak Ke 2' 
-                                }}
-                                    " readonly>
-                                  </div>
-                                </div>
+                                @php
+                                    $deskripsiKontrakList = [
+                                        'Kontrak Pertama',
+                                        'Kontrak Kedua',
+                                        'Kontrak Ketiga',
+                                        'Kontrak Keempat',
+                                        'Kontrak Kelima'
+                                    ];
+                                @endphp
+
+                                @foreach ($deskripsiKontrakList as $index => $deskripsi)
+                                    @php
+                                        $kontrak = Auth::user()->karyawan->kontrak()->where('deskripsi_kontrak', $deskripsi)->first();
+                                        $tanggal = $kontrak
+                                            ? \Carbon\Carbon::parse($kontrak->tanggal_mulai)->format('d/m/Y') . ' - ' .
+                                              \Carbon\Carbon::parse($kontrak->tanggal_selesai)->format('d/m/Y')
+                                            : 'Belum Ada ' . $deskripsi;
+                                    @endphp
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">{{ $deskripsi }}</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" value="{{ $tanggal }}" readonly>
+                                        </div>
+                                    </div>
+                                @endforeach
 
                                 <div class="form-group row">
                                   <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
