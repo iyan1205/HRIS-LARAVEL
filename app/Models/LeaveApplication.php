@@ -46,22 +46,19 @@ class LeaveApplication extends Model
 
     public function approve($updatedBy)
     {
-        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
-        $this->save();
+        $this->updated_by =  $updatedBy; 
     }
 
     public function cancel($updatedBy)
     {
         $this->status = 'canceled';
-        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
-        $this->save();
+        $this->updated_by =  $updatedBy; 
     }
 
     public function reject($updatedBy)
     {
         $this->status = 'rejected';
-        $this->updated_by =  $updatedBy; // Mengatur updated_by dengan ID pengguna
-        $this->save();
+        $this->updated_by =  $updatedBy; 
     }
 
     public static function getApplicationsStartingToday() 
