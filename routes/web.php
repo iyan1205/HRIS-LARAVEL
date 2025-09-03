@@ -246,8 +246,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/laporan/find', [AttendanceController::class, 'find_attendance_report'])->name('attendance.find.report');
     Route::get('/attendance/findby', [AttendanceController::class, 'find_by'])->name('attendance.findby');
     Route::get('/attendance/findby/search', [AttendanceController::class, 'find_attendance_reques'])->name('attendance.find2');
-    Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
-    Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
     
     Route::get('/riwayat_penarikan/absensi', [AttendanceController::class, 'report_history_absensi'])->name('list.report.history');
     Route::get('/riwayat_penarikan/cuti', [LeaveApplicationController::class, 'report_history_cuti'])->name('report.history.cuti');
