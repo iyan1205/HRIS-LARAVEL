@@ -89,7 +89,7 @@ class AttendanceController extends Controller
 
         if ($request->file('foto_jam_keluar')) {
             $manager = new ImageManager(new Driver()); // No need to pass a driver explicitly
-            $name_img = hexdec(uniqid()) . '.' . $request->file('foto_jam_keluar')->getClientOriginalExtension();
+            $name_img = now()->format('Ymd_His') . '_' . hexdec(uniqid()) . '.' . $request->file('foto_jam_keluar')->getClientOriginalExtension();
             $img = $manager->read($request->file('foto_jam_keluar')); // Correct method for reading and processing image
             $img->resize(200, 200);
             $img->save(storage_path('app/public/attendance/' . $name_img)); // Save to correct storage path
