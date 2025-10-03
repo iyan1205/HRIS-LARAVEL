@@ -50,7 +50,7 @@
                                         @foreach ($leaveApplications as $cuti)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td style="text-align: center;"> <span class="badge bg-info"><b>LA-{{ $cuti->id }}</b></span></td>
+                                                <td style="text-align: center;"> <span class="badge bg-info"> <a href="" data-toggle="modal" data-target="#modal-detail{{ $cuti->id }}"><b>LA-{{ $cuti->id }}</b></a></span></td>
                                                 <td>{{ $cuti->leavetype->kategori_cuti }}</td>
                                                 <td>{{ $cuti->leavetype->name }}</td>
                                                 <td> @if (is_numeric($cuti->leavetype->max_amount) && $cuti->leavetype->max_amount != '-')
@@ -100,6 +100,43 @@
                                                                     <textarea class="form-control" id="alasan_reject{{ $cuti->id }}" name="alasan_reject" rows="3" disabled> {{ $cuti->alasan_reject }}</textarea>
                                                                 </div>
 
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                             <div class="modal fade" id="modal-detail{{ $cuti->id }}">
+                                                <div class="modal-dialog modal-detail">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Detail </h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="">Updated by</label>
+                                                                    <input type="text" class="form-control" value="{{ $cuti->updated_by }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="">Updated at</label>
+                                                                    <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($cuti->updated_at)->format('d/m/Y H:i:s') }}" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="file_upload">File Cuti</label>
+                                                                    @if ($cuti->file_upload)
+                                                                        <a href="{{ Storage::url($cuti->file_upload) }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                            <i class="fas fa-file-download"></i> Download
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted">Tidak ada file</span>
+                                                                    @endif
+                                                                </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
