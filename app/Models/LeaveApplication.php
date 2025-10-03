@@ -95,5 +95,9 @@ class LeaveApplication extends Model
         }
         return $query->count();
     }
-
+    
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class, 'user_id', 'user_id');
+    }
 }

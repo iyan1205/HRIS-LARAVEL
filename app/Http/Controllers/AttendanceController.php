@@ -49,10 +49,15 @@ class AttendanceController extends Controller
         }
         if($request->file('foto_jam_masuk')){
             $manager = new ImageManager(new Driver());
-            $name_img = now()->format('Ymd_His') . '_' . hexdec(uniqid()) . '.' . $request->file('foto_jam_masuk')->getClientOriginalExtension();
+            $username = Auth::user()->name;
+            $name_img = $username . '_' . now()->format('Ymd_His') . '_' . 'checkin'. '_' . hexdec(uniqid()) . '.jpg'; // selalu simpan ke jpg
+            
             $img = $manager->read($request->file('foto_jam_masuk'));
-            $img->resize(200, 200);
-            $img->save(storage_path('app/public/attendance/'.$name_img));
+
+            // Simpan dengan kompresi (quality 70 cukup)
+            $img->toJpeg(70)->save(
+                storage_path('app/public/attendance/' . $name_img)
+            );
             $path = 'attendance/'.$name_img;
         }
         $ipAddress = $request->ip();
@@ -88,11 +93,17 @@ class AttendanceController extends Controller
         $path = null; // Initialize path variable
 
         if ($request->file('foto_jam_keluar')) {
-            $manager = new ImageManager(new Driver()); // No need to pass a driver explicitly
-            $name_img = now()->format('Ymd_His') . '_' . hexdec(uniqid()) . '.' . $request->file('foto_jam_keluar')->getClientOriginalExtension();
-            $img = $manager->read($request->file('foto_jam_keluar')); // Correct method for reading and processing image
-            $img->resize(200, 200);
-            $img->save(storage_path('app/public/attendance/' . $name_img)); // Save to correct storage path
+            $manager = new ImageManager(new Driver());
+
+            $username = Auth::user()->name;
+            $name_img = $username . '_' . now()->format('Ymd_His') . '_' . 'checkout'. '_' . hexdec(uniqid()) . '.jpg';
+            
+            $img = $manager->read($request->file('foto_jam_keluar'));
+
+            // Simpan dengan kompresi (quality 70 cukup)
+            $img->toJpeg(70)->save(
+                storage_path('app/public/attendance/' . $name_img)
+            );
             $path = 'attendance/' . $name_img;
         }
         $ipAddress = $request->ip();

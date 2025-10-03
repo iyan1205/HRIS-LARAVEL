@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
 
     Route::get('/view-certificate/{file}', [PelatihanController::class, 'viewCertificate'])->name('view.certificate');
 
-    Route::prefix('Cuti')->group(function () {
+    Route::prefix('cuti')->group(function () {
         // Pengajuan Cuti Route
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
         Route::get('/approval-cuti', [LeaveApplicationController::class, 'approval'])->name('approval-cuti');
@@ -165,6 +165,11 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/pengajuan-cuti/{id}/cancel', [LeaveApplicationController::class, 'cancel'])->name('leave-application.cancel');    
         Route::put('/pengajuan-cuti/{id}/cancel_approve', [LeaveApplicationController::class, 'cancel_approve'])->name('cuti.cancel_approve');    
         Route::get('/pengajuan-cuti/edit/{kategori}', [LeaveApplicationController::class, 'getLeaveTypes']);
+
+        Route::get('/file-cuti', [LeaveApplicationController::class, 'file_cuti'])->name('file.cuti');
+        Route::get('/file-cuti/result', [LeaveApplicationController::class, 'search_file'])->name('cari.file.cuti');
+        Route::get('/file-cuti/download/{id}', [LeaveApplicationController::class, 'downloadFile'])->name('file.cuti.download');
+        Route::post('/file-cuti/download-all', [LeaveApplicationController::class, 'downloadAllByFilter'])->name('file.cuti.downloadAll');
 
         // Saldo
         Route::get('/saldo-cuti', [LeaveBalanceController::class, 'index'])->name('saldo-cuti');
