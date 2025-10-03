@@ -118,8 +118,8 @@
         </li>
         @endcan
         @can('sidebar_cuti')
-        <li class="nav-item {{ request()->is('Cuti/*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ request()->is('Cuti/*') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is('cuti/*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('cuti/*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-paper-plane"></i>
                 <p>Cuti
                     <i class="fas fa-angle-left right"></i>
@@ -130,7 +130,7 @@
                 @can('sidebar pengajuancuti')
                 <li class="nav-item">
                     <a href="{{ route('pengajuan-cuti') }}"
-                        class="nav-link {{ request()->is('Cuti/pengajuan-cuti*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('cuti/pengajuan-cuti*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Pengajuan Cuti</p>
                     </a>
@@ -139,7 +139,7 @@
                 @can('approve cuti')
                 <li class="nav-item">
                     <a href="{{ route('approval-cuti') }}"
-                        class="nav-link {{ request()->is('Cuti/approval-cuti*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('cuti/approval-cuti*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Approval Cuti</p>
                     </a>
@@ -149,7 +149,7 @@
                 @can('sidebar laporan cuti')
                 <li class="nav-item">
                     <a href="{{ route('laporan-cuti') }}"
-                        class="nav-link {{ request()->is('Cuti/laporan-cuti*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('cuti/laporan-cuti*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Laporan Cuti</p>
                     </a>
@@ -159,7 +159,7 @@
                 @can('sidebar saldocuti')
                 <li class="nav-item">
                     <a href="{{ route('saldo-cuti') }}"
-                        class="nav-link {{ request()->is('Cuti/saldo-cuti*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('cuti/saldo-cuti*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Saldo Cuti</p>
                     </a>
@@ -169,13 +169,21 @@
                 @role('admin')
                 <li class="nav-item">
                     <a href="{{ route('btn-sc.cuti') }}"
-                        class="nav-link {{ request()->is('Cuti/approval-cuti/*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('cuti/approval-cuti/*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Cancel Cuti</p>
                     </a>
                 </li>
-                @endrole
 
+                <li class="nav-item">
+                   <a href="{{ route('file.cuti') }}"
+                        class="nav-link {{ request()->is('cuti/file-cuti*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>File Cuti</p>
+                    </a>
+                </li>                
+                @endrole
+                
             </ul>
         </li>
         @endcan
