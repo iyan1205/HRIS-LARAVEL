@@ -56,7 +56,7 @@
                                         <td>{{ $data->departemen_baru }}</td>
                                         <td>{{ $data->unit_sekarang }}</td>
                                         <td>{{ $data->unit_baru }}</td>
-                                        <td>{{ $data->tanggal_efektif }}</td>
+                                        <td>{{ \Carbon\Carbon::createFromFormat('m/d/Y', $data->tanggal_efektif)->format('d/m/Y') }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('mobilitas.edit', ['id' => $data->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                         </td>
