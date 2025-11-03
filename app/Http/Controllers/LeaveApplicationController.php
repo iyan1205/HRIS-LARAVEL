@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class LeaveApplicationController extends Controller
 {
@@ -351,22 +352,6 @@ class LeaveApplicationController extends Controller
             return redirect()->back()->withInput()->with('error', $message);
         }
     
-        // Periksa apakah jenis cuti memerlukan pengecekan saldo
-        $leaveType = LeaveType::find($request->input('leave_type_id'));
-        if ($leaveType->cek_saldo) {
-            // Memeriksa saldo cuti pengguna
-            $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
-    
-            if (!$leaveBalance) {
-                $message = 'Saldo cuti pengguna tidak ditemukan.';
-                return redirect()->back()->withInput()->with('error', $message);
-            }
-    
-            if ($leaveBalance->saldo_cuti <= 0) {
-                $message = 'Sisa Cuti Sudah Habis.';
-                return redirect()->back()->withInput()->with('error', $message);
-            }
-        }
     
         // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
         $manager_id = $request->input('manager_id');
@@ -424,21 +409,22 @@ class LeaveApplicationController extends Controller
         //
     }
 
+    //Menu Cancel Cuti
     public function searchcuti(User $user){
         /** @var App\Models\User */
-    $authUser = Auth::user();
-    if ($authUser->hasRole('admin')) {
-        $users = $user->activeKaryawan() // Using the injected User instance
-            ->get()
-            ->sortBy(fn($user) => $user->karyawan->name)
-            ->mapWithKeys(fn($user) => [$user->id => $user->karyawan->name]);
-    } else {
-        $karyawan = Karyawan::where('user_id', $authUser->id)->firstOrFail(); 
-         $users = $user->getActiveUsersByDepartment($karyawan->departemen_id); 
+        $authUser = Auth::user();
+        if ($authUser->hasRole('admin')) {
+            $users = $user->activeKaryawan() // Using the injected User instance
+                ->get()
+                ->sortBy(fn($user) => $user->karyawan->name)
+                ->mapWithKeys(fn($user) => [$user->id => $user->karyawan->name]);
+        } else {
+            $karyawan = Karyawan::where('user_id', $authUser->id)->firstOrFail(); 
+            $users = $user->getActiveUsersByDepartment($karyawan->departemen_id); 
+        }
+            return view('cuti.searchcuti', compact('users'));
     }
-        return view('cuti.searchcuti', compact('users'));
-    }
-
+    // Hasil Pencarian Menu Cancel Cuti
     public function searchapprove(Request $request){
         $users = $request->input('user_id');
         $startDate = $request->input('start_date');
@@ -468,7 +454,7 @@ class LeaveApplicationController extends Controller
         $results = $query->get();
         
         return view('cuti.results_approve', compact('results'));
-        }
+    }
 
 
     function laporan() {
@@ -559,6 +545,114 @@ class LeaveApplicationController extends Controller
         $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Cuti')->get();
 
         return view('cuti.report-history', compact('reporthistory'));
-    } 
+    }
 
+    public function file_cuti(User $user){
+        $users = $user->activeKaryawan()
+                ->get()
+                ->sortBy(fn($user) => $user->karyawan->name)
+                ->mapWithKeys(fn($user) => [$user->id => $user->karyawan->name]);
+        return view('cuti.file.file_cuti', compact('users'));
+    }
+
+    public function search_file(Request $request){
+        $users    = $request->input('user_id');
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        $query = LeaveApplication::select(
+                'leave_applications.*',
+                'leave_types.name as leave_type', 
+                'leave_types.kategori_cuti as kategori',
+                'users.name as user_name',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan',
+            )
+            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+            ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->where('leave_applications.status', 'approved')
+            ->where('leave_types.file_upload','yes');
+
+        if (!empty($users)) {
+            $query->where('users.id', $users);
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('leave_applications.start_date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('leave_applications.start_date', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->where('leave_applications.end_date', '<=', $endDate);
+        }
+
+        $results = $query->get();
+
+        return view('cuti.file.results_file', compact('results', 'users'));
+    }
+    public function downloadFile($id)
+    {
+        $application = LeaveApplication::findOrFail($id);
+
+        if (!$application->file_upload) {
+            return back()->with('error', 'File tidak ditemukan.');
+        }
+
+        // Path fisik di server
+        $filePath = storage_path('app/public/' . $application->file_upload);
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'File tidak ada di server.');
+        }
+
+        // Paksa download
+        return response()->download($filePath, basename($filePath));
+}
+
+   public function downloadAllByFilter(Request $request)
+{
+    $users     = $request->input('user_id');
+    $startDate = $request->input('start_date');
+    $endDate   = $request->input('end_date');
+
+    $query = LeaveApplication::with('karyawan')
+        ->where('status', 'approved')
+        ->whereNotNull('file_upload');
+
+    if (!empty($users)) {
+        $query->where('user_id', $users);
+    }
+
+    if ($startDate && $endDate) {
+        $query->whereBetween('start_date', [$startDate, $endDate]);
+    } elseif ($startDate) {
+        $query->where('start_date', '>=', $startDate);
+    } elseif ($endDate) {
+        $query->where('end_date', '<=', $endDate);
+    }
+
+    $applications = $query->get();
+
+    if ($applications->isEmpty()) {
+        return back()->with('error', 'Tidak ada file cuti sesuai filter.');
+    }
+
+    $zipFileName = 'file_cuti_filter_' . now()->format('Ymd_His') . '.zip';
+    $zip = new \ZipArchive;
+    $tmpFile = tempnam(sys_get_temp_dir(), $zipFileName);
+
+    if ($zip->open($tmpFile, \ZipArchive::CREATE) === TRUE) {
+        foreach ($applications as $app) {
+            $filePath = storage_path('app/public/' . $app->file_upload);
+            if (file_exists($filePath)) {
+                $karyawanName = $app->karyawan->name ?? 'unknown';
+                $zip->addFile($filePath, $karyawanName . '_' . basename($filePath));
+            }
+        }
+        $zip->close();
+    }
+
+    return response()->download($tmpFile, $zipFileName)->deleteFileAfterSend(true);
+    }
 }

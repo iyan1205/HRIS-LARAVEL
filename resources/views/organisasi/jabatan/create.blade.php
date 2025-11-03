@@ -51,7 +51,8 @@
                                                 <option value="Direktur" {{ old('level') == 'Direktur' ? 'selected' : '' }}>Direktur</option>
                                                 <option value="Manajer" {{ old('level') == 'Manajer' ? 'selected' : '' }}>Manajer</option>
                                                 <option value="SPV" {{ old('level') == 'SPV' ? 'selected' : '' }}>SPV</option>
-                                                <option value="Kanit" {{ old('level') == 'Kanit' ? 'selected' : '' }}>Kanit</option>
+                                                <option value="Kains" {{ old('level') == 'Kains' ? 'selected' : '' }}>Kains</option>
+                                                <option value="Koordinator" {{ old('level') == 'Koordinator' ? 'selected' : '' }}>Koordinator</option>
                                                 <option value="Staff" {{ old('level') == 'Staff' ? 'selected' : '' }}>Staff</option>
                                             </select>
                                             @error('level')

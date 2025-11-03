@@ -53,7 +53,8 @@
                                                 <option value="Direktur" {{ $jabatan->level == 'Direktur' ? 'selected' : '' }}>Direktur</option>
                                                 <option value="Manajer" {{ $jabatan->level == 'Manajer' ? 'selected' : '' }}>Manajer</option>
                                                 <option value="SPV" {{ $jabatan->level == 'SPV' ? 'selected' : '' }}>SPV</option>
-                                                <option value="Kanit" {{ $jabatan->level == 'Kanit' ? 'selected' : '' }}>Kanit</option>
+                                                <option value="Kains" {{ $jabatan->level == 'Kains' ? 'selected' : '' }}>Kains</option>
+                                                <option value="Koordinator" {{ $jabatan->level == 'Koordinator' ? 'selected' : '' }}>Koordinator</option>
                                                 <option value="Staff" {{ $jabatan->level == 'Staff' ? 'selected' : '' }}>Staff</option>
                                             </select>
                                             @error('level')

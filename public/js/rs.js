@@ -256,16 +256,16 @@ $(document).ready(function() {
         useCurrent: false // Tidak menggunakan tanggal saat ini secara default
     });
 
-    // Mengatur bahwa tanggal di end_date tidak bisa sebelum tanggal di start_date
+    // Saat start_date dipilih, atur minDate dan maxDate untuk end_date
     $("#start_date").on("change.datetimepicker", function (e) {
-        $('#end_date').datetimepicker('minDate', e.date);
+        if (e.date) {
+            let minStart = e.date.clone();
+            let maxEnd   = e.date.clone().add(90, 'days');
+            $('#end_date').datetimepicker('minDate', minStart);
+            $('#end_date').datetimepicker('maxDate', maxEnd);
+        }
     });
-
-    // Mengatur bahwa tanggal di start_date tidak bisa setelah tanggal di end_date
-    $("#end_date").on("change.datetimepicker", function (e) {
-        $('#start_date').datetimepicker('maxDate', e.date);
-    });
-
+    
     //Laporan
     var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
     

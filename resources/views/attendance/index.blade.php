@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi</title>
     <!-- Shortcut Icon -->
-    <link rel="shortcut icon" href="{{ asset('lte/dist/img/logo.png') }}"">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link rel="shortcut icon" href="{{ asset('lte/dist/img/logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +26,9 @@
             box-shadow: none; /* Menghilangkan bayangan saat fokus */
             background-color: transparent; /* Tetap transparan saat fokus */
         }
-
+        #previewImage {
+            pointer-events: none; /* Biar tidak bisa diklik */
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -56,19 +58,25 @@
                     <div class="mb-6">
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center relative">
                             <!-- Ikon Kamera -->
-                            <div id="cameraIcon" class="text-gray-400 flex flex-col items-center">
+                            <div class="camera-icon text-gray-400 flex flex-col items-center">
                                 <i class="fas fa-camera text-4xl"></i>
                                 <span class="text-sm mt-2">Ambil Foto</span>
                             </div>
-                    
+
                             <!-- Pratinjau Gambar -->
-                            <img id="previewImage" src="#" alt="Pratinjau Gambar" class="hidden w-40 h-40 object-cover rounded-lg shadow-md mt-2">
-                    
+                            <img class="preview-image hidden w-40 h-40 object-cover rounded-lg shadow-md mt-2" style="pointer-events: none;">
+
                             <!-- Input File -->
-                            <input type="file" id="foto" name="foto_jam_keluar" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" capture="environment" onClick="this.value = null" required>
-                    
+                            <input type="file" 
+                                name="foto_jam_keluar" 
+                                class="foto-input absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                accept="image/*" capture="environment" required>
+
                             <!-- Tombol Clear -->
-                            <button type="button" id="clearButton" class="hidden mt-4 text-red-500 underline text-sm">Clear</button>
+                            <button type="button" 
+                                    class="clear-button hidden absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md z-20">
+                                ❌
+                            </button>
                         </div>
                     </div>
                     
@@ -99,19 +107,25 @@
                     <div class="mb-6">
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center relative">
                             <!-- Ikon Kamera -->
-                            <div id="cameraIcon" class="text-gray-400 flex flex-col items-center">
+                            <div class="camera-icon text-gray-400 flex flex-col items-center">
                                 <i class="fas fa-camera text-4xl"></i>
                                 <span class="text-sm mt-2">Ambil Foto</span>
                             </div>
-                    
+
                             <!-- Pratinjau Gambar -->
-                            <img id="previewImage" src="#" alt="Pratinjau Gambar" class="hidden w-40 h-40 object-cover rounded-lg shadow-md mt-2">
-                    
+                            <img class="preview-image hidden w-40 h-40 object-cover rounded-lg shadow-md mt-2" style="pointer-events: none;">
+
                             <!-- Input File -->
-                            <input type="file" id="foto" name="foto_jam_masuk" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" capture="environment" required>
-                    
+                            <input type="file" 
+                                name="foto_jam_masuk"
+                                class="foto-input absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                accept="image/*" capture="environment" required>
+
                             <!-- Tombol Clear -->
-                            <button type="button" id="clearButton" class="hidden mt-4 text-red-500 underline text-sm">Clear</button>
+                            <button type="button" 
+                                    class="clear-button hidden absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md z-20">
+                                ❌
+                            </button>
                         </div>
                     </div>
                     
@@ -213,49 +227,53 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const inputFile = document.getElementById('foto');
-        const previewImage = document.getElementById('previewImage');
-        const cameraIcon = document.getElementById('cameraIcon');
-        const clearButton = document.getElementById('clearButton');
+        // Loop semua input kamera (checkin & checkout)
+        document.querySelectorAll('.foto-input').forEach((inputFile) => {
+            const wrapper = inputFile.closest('div');
+            const previewImage = wrapper.querySelector('.preview-image');
+            const cameraIcon = wrapper.querySelector('.camera-icon');
+            const clearButton = wrapper.querySelector('.clear-button');
 
-        inputFile.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                new Compressor(file, {
-                    quality: 0.6,           // Kompres kualitas 60%
-                    maxWidth: 1280,         // Resize lebar maksimum 1280px
-                    maxHeight: 1280,        // Resize tinggi maksimum 1280px
-                    success(result) {
-                        // Tampilkan preview gambar
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            previewImage.src = e.target.result;
-                            previewImage.classList.remove('hidden');
-                            cameraIcon.classList.add('hidden');
-                            clearButton.classList.remove('hidden');
-                        };
-                        reader.readAsDataURL(result);
+            inputFile.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    new Compressor(file, {
+                        quality: 0.6,
+                        maxWidth: 720,
+                        maxHeight: 720,
+                        success(result) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                previewImage.src = e.target.result;
+                                previewImage.classList.remove('hidden');
+                                cameraIcon.classList.add('hidden');
+                                clearButton.classList.remove('hidden');
+                                inputFile.classList.add('hidden');
+                            };
+                            reader.readAsDataURL(result);
 
-                        // Replace file di input agar yang dikirim versi compressed
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(result);
-                        inputFile.files = dataTransfer.files;
-                    },
-                    error(err) {
-                        console.error('Compress Error:', err.message);
-                        alert('Gagal mengkompres gambar, coba ulangi.');
-                    }
-                });
-            }
-        });
+                            // replace file di input
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(result);
+                            inputFile.files = dataTransfer.files;
+                        },
+                        error(err) {
+                            console.error('Compress Error:', err.message);
+                            alert('Gagal mengkompres gambar, coba ulangi.');
+                        }
+                    });
+                }
+            });
 
-        // Tombol reset gambar
-        clearButton.addEventListener('click', () => {
-            inputFile.value = '';
-            previewImage.src = '#';
-            previewImage.classList.add('hidden');
-            cameraIcon.classList.remove('hidden');
-            clearButton.classList.add('hidden');
+            // tombol hapus foto
+            clearButton.addEventListener('click', () => {
+                inputFile.value = '';
+                previewImage.removeAttribute('src');
+                previewImage.classList.add('hidden');
+                clearButton.classList.add('hidden');
+                cameraIcon.classList.remove('hidden');
+                inputFile.classList.remove('hidden');
+            });
         });
     });
 </script>
