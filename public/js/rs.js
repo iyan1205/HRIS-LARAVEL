@@ -398,7 +398,7 @@ $(document).ready(function() {
                         if (kategoriCuti === 'CUTI TAHUNAN') {
                             $('#leave_type_id_container').hide();
                             $('#leave_type_id').val('20'); // Set leave_type_id value to 20
-                            $('#max_amount_display').text('Maksimal Jumlah Cuti: 5').show();
+                            $('#max_amount_display').text('Maksimal Jumlah Cuti: -').show();
                         } else {
                             $('#leave_type_id_container').show();
                             $('#max_amount_display').hide();
