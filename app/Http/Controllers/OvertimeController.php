@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\OvertimeSearchRequest;
 
 class OvertimeController extends Controller
 {
@@ -309,15 +310,7 @@ class OvertimeController extends Controller
         $users = $request->input('user_id');
         $startDate = $request->input('start_date');
 
-        $query = Overtime::select(
-                'overtimes.*',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan'
-            )
-            ->join('users', 'overtimes.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = Overtime::Q_overtime()
             ->where('overtimes.status', 'approved');
 
             if ($users) {
@@ -339,7 +332,7 @@ class OvertimeController extends Controller
         return view('overtime.search');
     }
 
-    public function search(Request $request){
+    public function search(OvertimeSearchRequest $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
@@ -352,17 +345,9 @@ class OvertimeController extends Controller
             'name' => 'Pengajuan Lembur'    
         ]);
 
-        $query = Overtime::select(
-                'overtimes.*',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan'
-            )
-            ->join('users', 'overtimes.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
-            ->whereBetween('overtimes.start_date', [$startDate, $endDate])
-            ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
+        $query = Overtime::Q_overtime()
+                        ->whereBetween('overtimes.start_date', [$startDate, $endDate])
+                        ->whereBetween('overtimes.end_date', [$startDate, $endDate]);
 
             if ($status) {
                 $query->where('overtimes.status', $status);
@@ -388,7 +373,7 @@ class OvertimeController extends Controller
     }
     
     public function report_history_lembur(){
-        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Lembur')->get();
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Lembur')->orderBy('created_at', 'desc')->get();
         return view('overtime.report-history', compact('reporthistory'));
     }
 

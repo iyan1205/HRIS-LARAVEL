@@ -192,7 +192,7 @@ class AttendanceController extends Controller
     }
 
     public function report_history_absensi(){
-        $reporthistory = ReportHistory::with('user')->where('name','Absensi')->get();
+        $reporthistory = ReportHistory::with('user')->where('name','Absensi')->orderBy('created_at', 'desc')->get();
         return view('attendance.report-history', compact('reporthistory'));
     }
     public function find_by() {

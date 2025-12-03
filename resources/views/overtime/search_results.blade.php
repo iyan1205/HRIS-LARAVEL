@@ -26,9 +26,17 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                               
+                               @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <strong>Terjadi Kesalahan:</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                             </div>
-                           
                             <div class="card-body ">
                             @if(isset($results) && count($results) > 0)
                                 <table class="table table-bordered table-hover" id="laporan_lembur">
@@ -37,6 +45,8 @@
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
                                             <th>Jabatan</th>
+                                            <th>Instalasi</th>
+                                            <th>Departemen</th>
                                             <th>Tanggal Pengajuan</th>
                                             <th>Tanggal Awal</th>
                                             <th>Tanggal Akhir</th>
@@ -58,6 +68,8 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $result->karyawan_name }}</td>
                                             <td>{{ $result->nama_jabatan }}</td>
+                                            <td>{{ $result->nama_unit }}</td>
+                                            <td>{{ $result->nama_departemen }}</td>
                                             <td>{{ $result->created_at }}</td>
                                             <td>{{ $result->start_date }}</td>
                                             <td>{{ $result->end_date }}</td>

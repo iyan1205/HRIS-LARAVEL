@@ -26,9 +26,17 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                               
+                               @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <strong>Terjadi Kesalahan:</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                             </div>
-                           
                             <div class="card-body ">
                             @if(isset($results) && count($results) > 0)
                                 <table class="table table-bordered table-hover" id="laporan">
@@ -37,6 +45,8 @@
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
                                             <th>Jabatan</th>
+                                            <th>Instalasi</th>
+                                            <th>Departemen</th>
                                             <th>Kategori Cuti</th>
                                             <th>Jenis Cuti</th>
                                             <th>Tanggal Pengajuan</th>
@@ -59,6 +69,8 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $result->karyawan_name }}</td>
                                             <td>{{ $result->nama_jabatan }}</td>
+                                            <td>{{ $result->nama_unit }}</td>
+                                            <td>{{ $result->nama_departemen }}</td>
                                             <td>{{ $result->kategori }}</td>
                                             <td>{{ $result->leave_type }}</td>
                                             <td>{{ $result->created_at }}</td>

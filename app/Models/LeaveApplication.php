@@ -97,4 +97,43 @@ class LeaveApplication extends Model
     {
         return $this->hasOne(Karyawan::class, 'user_id', 'user_id');
     }
+    public function scopeQ_approve() {
+        return self::select(
+                'leave_applications.*',
+                'leave_types.name as leave_type',
+                'leave_types.kategori_cuti as kategori',
+                'users.id as user_id',
+                'karyawans.id as karyawan_id',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan',
+                'units.name as nama_unit',
+                'departemens.name as nama_departemen'
+            )
+            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+            ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->join('units', 'karyawans.unit_id', '=', 'units.id')
+            ->join('departemens', 'karyawans.departemen_id', '=', 'departemens.id');
+    }
+
+    public function scopeQ_laporan() {
+        return self::select(
+                'leave_applications.*',
+                'leave_types.name as leave_type',
+                'leave_types.kategori_cuti as kategori',
+                'users.id as user_id',
+                'karyawans.id as karyawan_id',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan',
+                'units.name as nama_unit',
+                'departemens.name as nama_departemen'
+            )
+            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
+            ->join('users', 'leave_applications.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->join('units', 'karyawans.unit_id', '=', 'units.id')
+            ->join('departemens', 'karyawans.departemen_id', '=', 'departemens.id');
+    }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\OncallSearchRequest;
 
 class OnCallController extends Controller
 {
@@ -296,15 +297,7 @@ class OnCallController extends Controller
         $users = $request->input('user_id');
         $startDate = $request->input('start_date');
 
-        $query = OnCall::select(
-            'on_calls.*',
-            'users.name as user_name',
-            'karyawans.name as karyawan_name',
-            'jabatans.name as nama_jabatan'
-        )
-        ->join('users', 'on_calls.user_id', '=', 'users.id')
-        ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-        ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = OnCall::Q_oncall()
         ->where('on_calls.status', 'approved');
         if ($users) {
             $query->where('users.id', $users);
@@ -324,7 +317,7 @@ class OnCallController extends Controller
         return view('oncall.search');
     }
 
-    public function search(Request $request){
+    public function search(OncallSearchRequest $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
@@ -337,15 +330,7 @@ class OnCallController extends Controller
             'name' => 'Pengajuan OnCall'    
         ]);
 
-        $query = OnCall::select(
-                'on_calls.*',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan'
-            )
-            ->join('users', 'on_calls.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = OnCall::Q_oncall()
             ->whereBetween('on_calls.start_date', [$startDate, $endDate])
             ->whereBetween('on_calls.end_date', [$startDate, $endDate]);
 
@@ -374,7 +359,7 @@ class OnCallController extends Controller
     }
     
     public function report_history_oncall(){
-        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan OnCall')->get();
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan OnCall')->orderBy('created_at', 'desc')->get();
         return view('oncall.report-history', compact('reporthistory'));
     }
 
