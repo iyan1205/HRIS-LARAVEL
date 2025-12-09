@@ -34,6 +34,8 @@
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
                                             <th>Jabatan</th>
+                                            <th>Instalasi</th>
+                                            <th>Departemen</th>
                                             <th>Kategori Cuti</th>
                                             <th>Jenis Cuti</th>
                                             <th>Tanggal Awal</th>
@@ -48,6 +50,8 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $cuti->karyawan_name }}</td>
                                             <td>{{ $cuti->nama_jabatan }}</td>
+                                            <td>{{ $cuti->nama_unit }}</td>
+                                            <td>{{ $cuti->nama_departemen }}</td>
                                             <td>{{ $cuti->kategori }}</td>
                                             <td>{{ $cuti->leave_type }}</td>
                                             <td>{{ \Carbon\Carbon::parse($cuti->start_date)->format('d/m/Y') }}</td>

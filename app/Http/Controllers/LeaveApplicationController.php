@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
+use App\Http\Requests\LeaveSearchRequest;
 
 class LeaveApplicationController extends Controller
 {
@@ -297,22 +298,17 @@ class LeaveApplicationController extends Controller
         return response()->json($leaveTypes);
     }
 
-
     public function edit(Request $request,$id)
     {
         $leaveApplication = LeaveApplication::findOrFail($id);
         $users = User::pluck('name', 'id');
         $approver = Jabatan::pluck('name', 'id');
-    
         // Fetch categories for leave types
         $kategori_cuti = LeaveType::distinct()->pluck('kategori_cuti', 'kategori_cuti');
         // Get the current category for the leave application
         $currentCategory = LeaveType::find($leaveApplication->leave_type_id)->kategori_cuti ?? '';
-        
         // Fetch leave types
         $leaveTypes = LeaveType::where('kategori_cuti', $currentCategory)->pluck('name', 'id');
-    
-    
         // Convert date strings to Carbon instances
         $leaveApplication->start_date = \Carbon\Carbon::parse($leaveApplication->start_date);
         $leaveApplication->end_date = \Carbon\Carbon::parse($leaveApplication->end_date);
@@ -429,20 +425,8 @@ class LeaveApplicationController extends Controller
         $users = $request->input('user_id');
         $startDate = $request->input('start_date');
 
-        $query = LeaveApplication::select(
-                'leave_applications.*',
-                'leave_types.name as leave_type', 
-                'leave_types.kategori_cuti as kategori',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan',
-            )
-            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
-            ->join('users', 'leave_applications.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = LeaveApplication::Q_approve()
             ->where('leave_applications.status', 'approved');
-        // Pastikan ada nilai untuk user_id,
         if ($users) {
             $query->where('users.id', $users);
         }
@@ -461,7 +445,7 @@ class LeaveApplicationController extends Controller
         return view('cuti.search');
     }
 
-    public function search(Request $request){
+    public function search(LeaveSearchRequest $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $status = $request->input('status');
@@ -474,17 +458,7 @@ class LeaveApplicationController extends Controller
             'name' => 'Pengajuan Cuti'    
         ]);
 
-        $query = LeaveApplication::select(
-                'leave_applications.*',
-                'leave_types.name as leave_type', 'leave_types.kategori_cuti as kategori',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan'
-            )
-            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
-            ->join('users', 'leave_applications.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = LeaveApplication::Q_laporan()
             ->whereBetween('leave_applications.start_date', [$startDate, $endDate])
             ->whereBetween('leave_applications.end_date', [$startDate, $endDate]);
     
@@ -542,7 +516,7 @@ class LeaveApplicationController extends Controller
     }
 
     public function report_history_cuti(){
-        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Cuti')->get();
+        $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Cuti')->orderBy('created_at', 'desc')->get();
 
         return view('cuti.report-history', compact('reporthistory'));
     }
@@ -560,18 +534,7 @@ class LeaveApplicationController extends Controller
         $startDate = $request->input('start_date');
         $endDate   = $request->input('end_date');
 
-        $query = LeaveApplication::select(
-                'leave_applications.*',
-                'leave_types.name as leave_type', 
-                'leave_types.kategori_cuti as kategori',
-                'users.name as user_name',
-                'karyawans.name as karyawan_name',
-                'jabatans.name as nama_jabatan',
-            )
-            ->join('leave_types', 'leave_applications.leave_type_id', '=', 'leave_types.id')
-            ->join('users', 'leave_applications.user_id', '=', 'users.id')
-            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
-            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+        $query = LeaveApplication::Q_approve()
             ->where('leave_applications.status', 'approved')
             ->where('leave_types.file_upload','yes');
 

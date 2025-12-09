@@ -35,7 +35,7 @@
                                                     <th>NIK</th>
                                                     <th>Jabatan</th>
                                                     <th>Departemen</th>
-                                                    <th>Unit</th>
+                                                    <th>Instalasi</th>
                                                     <th>Tanggal dan Jam Masuk</th>
                                                     <th>Tanggal dan Jam Keluar</th>
                                                     <th>Total Jam</th>

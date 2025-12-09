@@ -54,5 +54,19 @@ class OnCall extends Model
         }
         return $query->count();
     }
-    
+    public function scopeQ_oncall()
+    {
+        return self::select(
+                'on_calls.*',
+                'karyawans.name as karyawan_name',
+                'jabatans.name as nama_jabatan',
+                'units.name as nama_unit',
+                'departemens.name as nama_departemen'
+            )
+            ->join('users', 'on_calls.user_id', '=', 'users.id')
+            ->join('karyawans', 'users.id', '=', 'karyawans.user_id')
+            ->join('jabatans', 'karyawans.jabatan_id', '=', 'jabatans.id')
+            ->join('units', 'karyawans.unit_id', '=', 'units.id')
+            ->join('departemens', 'karyawans.departemen_id', '=', 'departemens.id');
+    }
 }
