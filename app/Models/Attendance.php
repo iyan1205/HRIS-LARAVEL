@@ -28,19 +28,34 @@ class Attendance extends Model
 
     public function getTotalDurationAttribute()
     {
-        if (!$this->created_at || !$this->updated_at) {
-            return null; // Handle missing timestamps
+        // Jika tidak punya jam keluar → belum absen pulang
+        if (!$this->jam_keluar || $this->jam_keluar == $this->jam_masuk) {
+            return "Belum absen pulang";
         }
-    
-        $durationInMinutes = $this->created_at->diffInMinutes($this->updated_at);
-        $hours = intdiv($durationInMinutes, 60);
-        $minutes = $durationInMinutes % 60;
-    
-        if ($hours >= 24) {
+
+        // Gabungkan created_at + jam_masuk
+        $tanggalMasuk = $this->created_at->format('Y-m-d') . ' ' . $this->jam_masuk;
+        $datetimeMasuk = Carbon::parse($tanggalMasuk);
+
+        // Gabungkan updated_at + jam_keluar
+        $tanggalPulang = $this->updated_at->format('Y-m-d') . ' ' . $this->jam_keluar;
+        $datetimePulang = Carbon::parse($tanggalPulang);
+
+        // Jika waktu pulang <= waktu masuk → definisikan sebagai belum absen pulang
+        if ($datetimePulang->lessThanOrEqualTo($datetimeMasuk)) {
+            return "Belum absen pulang";
+        }
+
+        // Hitung durasi
+        $durationInMinutes = $datetimeMasuk->diffInMinutes($datetimePulang);
+        if ($durationInMinutes > 1440) {
             return "Tidak absen pulang";
         }
-    
-        return sprintf('%d Jam %d Menit', $hours, $minutes);
+        $hours = intdiv($durationInMinutes, 60);
+        $minutes = $durationInMinutes % 60;
+        $seconds = $datetimeMasuk->diffInSeconds($datetimePulang) % 60;
+
+        return sprintf('%d Jam %d Menit %d Detik', $hours, $minutes, $seconds);
     }
 
 }

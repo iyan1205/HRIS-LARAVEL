@@ -69,4 +69,8 @@ class OnCall extends Model
             ->join('units', 'karyawans.unit_id', '=', 'units.id')
             ->join('departemens', 'karyawans.departemen_id', '=', 'departemens.id');
     }
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
 }

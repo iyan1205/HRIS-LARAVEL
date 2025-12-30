@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OncallSearchRequest;
+use App\Traits\ApprovalCountTrait;
 
 class OnCallController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use ApprovalCountTrait;
+
     public function index()
     {
         $user = Auth::user();
@@ -345,18 +345,10 @@ class OnCallController extends Controller
 
     public function getOncallCount()
     {
-        /** @var App\Models\User */
-        $users = Auth::user();
-        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
-            $countOncall = OnCall::where('status', 'pending')->count();
-        }else{
-            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $countOncall = OnCall::whereIn('approver_id', $subordinateIds)
-                                 ->where('status', 'pending')
-                                 ->count();
-        }
-        return response()->json(['countOncall' => $countOncall]);
+        $jumlah = $this->getPendingCountForUser(OnCall::class, 'approver_id');
+        return response()->json(['countOncall' => $jumlah]);
     }
+
     
     public function report_history_oncall(){
         $reporthistory = ReportHistory::with('user')->where('name','Pengajuan OnCall')->orderBy('created_at', 'desc')->get();

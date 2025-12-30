@@ -297,36 +297,37 @@
             icon: "error",
             title: "{{ session('error') }}",
             showConfirmButton: false,
-            timer: 1500
+            timer: 3500
         });
     </script>
      @endif
     @role('karyawan')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function updateBadge(url, badgeId, dataKey) {
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        const badge = document.getElementById(badgeId);
-                        if (data[dataKey] > 0) {
-                            badge.textContent = data[dataKey];
-                            badge.style.display = 'inline-block'; // Menampilkan badge jika nilainya lebih dari 0
-                        } else {
-                            badge.style.display = 'none'; // Menyembunyikan badge jika nilainya 0
-                        }
-                    })
-                    .catch(() => {}); 
-            }
+        document.addEventListener('DOMContentLoaded', () => {
 
-            // Initial calls to update all counts
-            updateBadge('{{ route('api.pending-count') }}', 'pendingCountBadge', 'pendingCount');
-            updateBadge('{{ route('api.over-count') }}', 'lemburCountBadge', 'countOvertime');
-            updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
+        function updateBadge(url, badgeId, dataKey) {
+            const badge = document.getElementById(badgeId);
+            if (!badge) return; // ⛔ cegah error JS
+
+            fetch(url)
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (!data) return;
+
+                    const count = data[dataKey] ?? 0;
+                    badge.textContent = count;
+
+                    badge.style.display = count > 0 ? 'inline-block' : 'none';
+                })
+                .catch(err => console.warn('Badge error:', err));
+        }
+
+        updateBadge('{{ route('api.pending-count') }}', 'pendingCountBadge', 'pendingCount');
+        updateBadge('{{ route('api.over-count') }}', 'lemburCountBadge', 'countOvertime');
+        updateBadge('{{ route('api.oncall-count') }}', 'oncallCountBadge', 'countOncall');
         });
     </script>
     @endrole
-
 </body>
 
 </html>

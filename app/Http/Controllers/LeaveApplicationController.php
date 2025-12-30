@@ -18,9 +18,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use App\Http\Requests\LeaveSearchRequest;
+use App\Traits\ApprovalCountTrait;
 
 class LeaveApplicationController extends Controller
 {
+    use ApprovalCountTrait;
+
     public function __construct()
     {
         $this->middleware('permission:view cuti', ['only' => ['index']]);
@@ -97,105 +100,102 @@ class LeaveApplicationController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input dari form
+        /* ================= VALIDASI DASAR ================= */
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'leave_type_id' => 'required|string|max:255',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'manager_id' => 'nullable',
-            'level_approve' => 'nullable'
-            // Tambahkan aturan validasi sesuai kebutuhan
+            'user_id'        => 'required|exists:users,id',
+            'leave_type_id'  => 'required|exists:leave_types,id',
+            'start_date'     => 'required|date',
+            'end_date'       => 'required|date|after_or_equal:start_date',
+            'manager_id'     => 'nullable',
+            'level_approve'  => 'nullable|integer',
+            'file_upload'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        // Jika validasi gagal, kembali ke halaman sebelumnya dengan pesan kesalahan
         if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
-        // Memeriksa apakah ada pengajuan sebelumnya yang masih dalam status pending
-        $pendingApplications = LeaveApplication::where('user_id', $request->input('user_id'))
-        ->where('status', 'pending')
-        ->count();
 
-        if ($pendingApplications > 0) {
-            $message = 'Pengajuan Sebelumnya Belum Di Setujui !';
-            return redirect()->back()->withInput()->with('error', $message);
+        /* ================= CEK PENDING ================= */
+        $pendingApplications = LeaveApplication::where('user_id', $request->user_id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($pendingApplications) {
+            return back()->withInput()
+                ->with('error', 'Pengajuan sebelumnya belum disetujui.');
         }
-        
-         // Periksa apakah jenis cuti memerlukan pengecekan saldo
-        $leaveType = LeaveType::find($request->input('leave_type_id'));
+
+        /* ================= AMBIL LEAVE TYPE ================= */
+        $leaveType = LeaveType::findOrFail($request->leave_type_id);
+
+        /* ================= HITUNG TANGGAL ================= */
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate   = Carbon::parse($request->end_date)->startOfDay();
+
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+
+        /* ================= VALIDASI MAX CUTI ================= */
+        // max_amount null atau 0 → unlimited
+        if (!empty($leaveType->max_amount) && $leaveType->max_amount > 0) {
+            if ($totalDays > $leaveType->max_amount) {
+                return back()->withInput()->with(
+                    'error',
+                    'Jumlah hari cuti melebihi batas maksimal ('
+                    . $leaveType->max_amount . ' hari).'
+                );
+            }
+        }
+
+        /* ================= VALIDASI SALDO CUTI ================= */
         if ($leaveType->cek_saldo == 0) {
-            // Memeriksa saldo cuti pengguna
-            $leaveBalance = LeaveBalance::where('user_id', $request->input('user_id'))->first();
+            $leaveBalance = LeaveBalance::where('user_id', $request->user_id)->first();
 
-            if (!$leaveBalance) {
-                $message = 'Saldo cuti pengguna tidak ditemukan.';
-                return redirect()->back()->withInput()->with('error', $message);
-            }
-
-            if ($leaveBalance->saldo_cuti <= 0) {
-                $message = 'Sisa Cuti Sudah Habis.';
-                return redirect()->back()->withInput()->with('error', $message);
+            if (!$leaveBalance || $leaveBalance->saldo_cuti <= 0) {
+                return back()->withInput()
+                    ->with('error', 'Sisa cuti sudah habis.');
             }
         }
 
-        // Ambil nilai manager_id dari user_id yang dipilih jika manager_id bernilai null
-        $manager_id = $request->input('manager_id');
-        if ($manager_id === null) {
-            // Ambil user yang dipilih
-            $selectedUser = User::findOrFail($request->input('user_id'));
-            // Ambil manager_id dari user yang dipilih
-            $manager_id = $selectedUser->karyawan->jabatan->manager_id;
-        }
+        /* ================= VALIDASI FILE UPLOAD ================= */
+        $filePath = null;
 
-        // Menghitung jumlah hari cuti
-        $start_date = Carbon::parse($request->input('start_date'));
-        $end_date = Carbon::parse($request->input('end_date'));
-        $total_days = $start_date->diffInDays($end_date) + 1; // Jumlah hari termasuk tanggal start_date dan end_date
-
-        // Jika kategori cuti adalah "CUTI KHUSUS", lakukan validasi file dan simpan file ke dalam folder file_cuti
-        if ($request->kategori_cuti === 'CUTI KHUSUS' || $request->leave_type_id === '1') {
-            $validator = Validator::make($request->all(), [
-                'file_upload' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', // Max size 2MB
-            ]);
-
-            if ($validator->fails()) {
-                $message = 'File terlalu besar atau format tidak didukung.';
-                return redirect()->back()->withInput()->with('error', $message);
+        if ($leaveType->file_upload === 'yes') {
+            if (!$request->hasFile('file_upload')) {
+                return back()->withInput()
+                    ->with('error', 'Jenis cuti ini mewajibkan upload dokumen.');
             }
 
-            // Simpan file ke dalam folder file_cuti
             $file = $request->file('file_upload');
-             // Generate nama file berdasarkan tanggal upload
-            $fileName = Carbon::now()->format('Y-m-d') . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-            // Simpan file ke dalam folder file_cuti dengan nama yang telah diubah
-            $path = $file->storeAs('file_cuti', $fileName, 'public'); // Folder file_cuti di dalam storage/app/public
-        } else {
-            // Jika kategori cuti bukan "CUTI KHUSUS", set nilai path file menjadi null
-            $path = null;
+            $fileName = now()->format('Ymd') . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('file_cuti', $fileName, 'public');
         }
-        // Buat dan simpan jabatan baru
-        $leaveApplication = LeaveApplication::create([
-            'user_id' => $request->input('user_id'),
-            'leave_type_id' => $request->input('leave_type_id'),
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'total_days' => $total_days,
-            'manager_id' => $manager_id,
-            'level_approve' => $request->input('level_approve'),
-            'file_upload' => $path,
-            
-            // Tambahkan kolom lain yang perlu disimpan
+
+        /* ================= MANAGER ================= */
+        $managerId = $request->manager_id;
+
+        if (!$managerId) {
+            $user = User::with('karyawan.jabatan')->findOrFail($request->user_id);
+            $managerId = $user->karyawan->jabatan->manager_id;
+        }
+
+        /* ================= SIMPAN DATA ================= */
+        LeaveApplication::create([
+            'user_id'        => $request->user_id,
+            'leave_type_id'  => $request->leave_type_id,
+            'start_date'     => $startDate,
+            'end_date'       => $endDate,
+            'total_days'     => $totalDays,
+            'manager_id'     => $managerId,
+            'level_approve'  => $request->level_approve,
+            'file_upload'    => $filePath,
+            'status'         => 'pending',
         ]);
 
-        // Tambahkan session flash message
-        $message = 'Pengajuan cuti berhasil dibuat.';
-        Session::flash('successAdd', $message);
-
-        // Redirect ke halaman tertentu atau tampilkan pesan sukses
-        return redirect()->route('pengajuan-cuti');
+        return redirect()
+            ->route('pengajuan-cuti')
+            ->with('successAdd', 'Pengajuan cuti berhasil dibuat.');
     }
+
     
     public function approve(Request $request, $id) {
         $user = Auth::user();
@@ -503,16 +503,8 @@ class LeaveApplicationController extends Controller
 
     public function getPendingCount()
     {
-        /** @var App\Models\User */
-        $users = Auth::user();
-        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
-            // Admin and superadmin see all pending 
-            $pendingCount = LeaveApplication::where('status', 'pending')->count();
-        } else {
-            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $pendingCount = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->count();
-        }
-        return response()->json(['pendingCount' => $pendingCount]);
+        $jumlah = $this->getPendingCountForUser(LeaveApplication::class, 'manager_id');
+        return response()->json(['pendingCount' => $jumlah]);
     }
 
     public function report_history_cuti(){

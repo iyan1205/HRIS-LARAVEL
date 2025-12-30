@@ -205,23 +205,19 @@ $(document).ready(function() {
         }
     });
 
-    // Mengatur bahwa tanggal di end_dateover tidak bisa sebelum tanggal di start_dateover
     $("#start_dateover").on("change.datetimepicker", function (e) {
         $('#end_dateover').datetimepicker('minDate', e.date);
     });
 
-    // Mengatur bahwa tanggal di start_dateover tidak bisa setelah tanggal di end_dateover
     $("#end_dateover").on("change.datetimepicker", function (e) {
         $('#start_dateover').datetimepicker('maxDate', e.date);
     });
 
-    //Cuti
-    // Mendapatkan tanggal sekarang
-    var currentDate = new Date();
+    // ================= CUTI =================
+    var currentDate = moment();
 
-    // Inisialisasi datetimepicker untuk elemen input dengan id "start_dateabsen"
     $('#start_date').datetimepicker({
-        format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+        format: 'YYYY-MM-DD',
         icons: {
             time: 'fa fa-clock',
             date: 'fa fa-calendar',
@@ -232,40 +228,60 @@ $(document).ready(function() {
             today: 'fa fa-calendar-check-o',
             clear: 'fa fa-trash',
             close: 'fa fa-times'
-        },
-    
+        }
+    });
+
+    $('#end_date').datetimepicker({
+        format: 'YYYY-MM-DD',
+        useCurrent: false,
+        icons: {
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-calendar-check-o',
+            clear: 'fa fa-trash',
+            close: 'fa fa-times'
+        }
     });
 
     $('#time_in').datetimepicker({
         format: 'HH:mm'
     });
-    // Inisialisasi datetimepicker untuk elemen input dengan id "end_date"
-    $('#end_date').datetimepicker({
-        format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
-        icons: {
-            time: 'fa fa-clock',
-            date: 'fa fa-calendar',
-            up: 'fa fa-chevron-up',
-            down: 'fa fa-chevron-down',
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right',
-            today: 'fa fa-calendar-check-o',
-            clear: 'fa fa-trash',
-            close: 'fa fa-times'
-        },
-        useCurrent: false // Tidak menggunakan tanggal saat ini secara default
-    });
 
-    // Saat start_date dipilih, atur minDate dan maxDate untuk end_date
+    // 🔹 Set batas end_date (max 90 hari)
     $("#start_date").on("change.datetimepicker", function (e) {
         if (e.date) {
             let minStart = e.date.clone();
-            let maxEnd   = e.date.clone().add(90, 'days');
+            let maxEnd   = e.date.clone().add(89, 'days');
+
             $('#end_date').datetimepicker('minDate', minStart);
             $('#end_date').datetimepicker('maxDate', maxEnd);
+            $('#end_date').datetimepicker('date', minStart);
+            calculateDays();
         }
     });
-    
+
+    $('#end_date').on('change.datetimepicker', function () {
+        calculateDays();
+    });
+
+    // 🔹 Hitung total hari cuti
+    function calculateDays() {
+        var startDate = $('#start_date').datetimepicker('date');
+        var endDate   = $('#end_date').datetimepicker('date');
+
+        if (startDate && endDate) {
+            var days = endDate.diff(startDate, 'days') + 1; // inklusif
+            $('#total_days').val(days + ' Hari');
+        } else {
+            $('#total_days').val('');
+        }
+    }
+    // ================= END CUTI =================
+
     //Laporan
     var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
     
@@ -353,57 +369,130 @@ $(document).ready(function() {
             }
         });
 
-        // Initialize the date pickers
-        $('#start_date').datetimepicker({
-            format: 'L'
-        });
-        $('#end_date').datetimepicker({
-            format: 'L'
-        });
+        /* ================= GLOBAL ================= */
+        let maxCuti = null;
 
-        // Update total days when either date changes
-        $('#start_date, #end_date').on('change.datetimepicker', function () {
-            calculateDays();
-        });
+        $(document).ready(function () {
 
-        function calculateDays() {
-            var startDate = $('#start_date').datetimepicker('date');
-            var endDate = $('#end_date').datetimepicker('date');
-            
-            if (startDate && endDate) {
-                var start = moment(startDate);
-                var end = moment(endDate);
-                var days = end.diff(start, 'days') + 1; // Add 1 to include both start and end dates
+            /* ================= DATE PICKER ================= */
+            $('#start_date_cuti').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
 
-                $('#total_days').val(days + ' Hari');
+            $('#end_date_cuti').datetimepicker({
+                format: 'YYYY-MM-DD',
+                useCurrent: false
+            });
+
+            /* ================= LOCK KALENDER ================= */
+            function lockEndDateCalendar() {
+                let startDate = $('#start_date_cuti').datetimepicker('date');
+                if (!startDate) return;
+
+                // end_date tidak boleh < start_date
+                $('#end_date_cuti').datetimepicker('minDate', startDate);
+
+                // UNLIMITED (null atau 0)
+                if (isUnlimitedCuti()) {
+                    $('#end_date_cuti').datetimepicker('maxDate', false);
+                    return;
+                }
+
+                let maxEndDate = startDate.clone().add(maxCuti - 1, 'days');
+                $('#end_date_cuti').datetimepicker('maxDate', maxEndDate);
+
+                // koreksi jika melewati batas
+                let endDate = $('#end_date_cuti').datetimepicker('date');
+                if (endDate && endDate.isAfter(maxEndDate)) {
+                    $('#end_date_cuti').datetimepicker('date', maxEndDate);
+                }
             }
-        }
 
-           // TAMBAH/EDIT cuti
-           $('#kategori_cuti').change(function() {
-            var kategoriCuti = $(this).val();
-            if (kategoriCuti) {
+
+            /* ================= HITUNG TOTAL HARI ================= */
+            function calculateDays() {
+                let startDate = $('#start_date_cuti').datetimepicker('date');
+                let endDate   = $('#end_date_cuti').datetimepicker('date');
+
+                if (!startDate || !endDate) {
+                    $('#total_days').val('');
+                    return;
+                }
+                if (endDate.isBefore(startDate)) {
+                    $('#end_date_cuti').datetimepicker('date', startDate);
+                    endDate = startDate.clone();
+                }
+
+                let totalDays = endDate.diff(startDate, 'days') + 1;
+
+            if (!isUnlimitedCuti() && totalDays > maxCuti) {
+                    let maxEnd = startDate.clone().add(maxCuti - 1, 'days');
+                    $('#end_date_cuti').datetimepicker('date', maxEnd);
+                    $('#total_days').val(maxCuti + ' Hari');
+                    return;
+                }
+
+                $('#total_days').val(totalDays + ' Hari');
+            }
+
+            function isUnlimitedCuti() {
+                return maxCuti === null || maxCuti === 0;
+            }
+
+            /* ================= START DATE CHANGE ================= */
+            $("#start_date_cuti").on("change.datetimepicker", function (e) {
+                if (e.date) {
+                    $('#end_date_cuti').datetimepicker('date', e.date);
+                    lockEndDateCalendar();
+                    calculateDays();
+                }
+            });
+
+            /* ================= END DATE CHANGE ================= */
+            $("#end_date_cuti").on("change.datetimepicker", function () {
+                calculateDays();
+            });
+
+            /* ================= KATEGORI CUTI ================= */
+            $('#kategori_cuti').change(function () {
+                let kategoriCuti = $(this).val();
+                maxCuti = null;
+
+                if (!kategoriCuti) {
+                    $('#leave_type_id_container').hide();
+                    $('#file_upload_container').hide();
+                    $('#max_amount_display').hide();
+                    return;
+                }
+
                 $.ajax({
                     url: '/pengajuan-cuti/create/' + kategoriCuti,
                     type: 'GET',
-                    success: function(data) {
-                        $('#leave_type_id').empty();
-                        $('#leave_type_id').append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
-                        $.each(data, function(key, value) {
-                            $('#leave_type_id').append('<option value="' + key + '">' + value + '</option>');
-                        });
-                        $('#leave_type_id_container').show();
+                    success: function (data) {
 
-                        // Show/hide file upload container based on kategori_cuti
+                        $('#leave_type_id').empty()
+                            .append('<option value="" disabled selected>Pilih Jenis Cuti</option>');
+
+                        $.each(data, function (key, value) {
+                            $('#leave_type_id')
+                                .append('<option value="' + key + '">' + value + '</option>');
+                        });
+
+                        // CUTI TAHUNAN
                         if (kategoriCuti === 'CUTI TAHUNAN') {
                             $('#leave_type_id_container').hide();
-                            $('#leave_type_id').val('20'); // Set leave_type_id value to 20
-                            $('#max_amount_display').text('Maksimal Jumlah Cuti: -').show();
+                            $('#leave_type_id').val('20');
+
+                            maxCuti = null;
+                            $('#max_amount_display').hide();
+                                // .text('Maksimal Jumlah Cuti: -')
+                                // .show()
                         } else {
                             $('#leave_type_id_container').show();
                             $('#max_amount_display').hide();
                         }
 
+                        // CUTI KHUSUS → file wajib
                         if (kategoriCuti === 'CUTI KHUSUS') {
                             $('#file_upload_container').show();
                             $('#file_upload').prop('required', true);
@@ -411,54 +500,63 @@ $(document).ready(function() {
                             $('#file_upload_container').hide();
                             $('#file_upload').prop('required', false);
                         }
+
+                        lockEndDateCalendar();
+                        calculateDays();
                     }
                 });
-            } else {
-                $('#leave_type_id_container').hide();
-                $('#file_upload_container').hide();
-                $('#file_upload').prop('required', false);
-                $('#max_amount_display').hide();
-            }
-        });
+            });
 
-        // Handle leave_type_id change event
-        $('#leave_type_id').change(function() {
-            var leaveTypeId = $(this).val();
-            if (leaveTypeId) {
+            /* ================= JENIS CUTI ================= */
+            $('#leave_type_id').change(function () {
+                let leaveTypeId = $(this).val();
+
+                if (!leaveTypeId) {
+                    maxCuti = null;
+                    $('#max_amount_display').hide();
+                    $('#file_upload_container').hide();
+                    $('#file_upload').prop('required', false);
+                    return;
+                }
+
                 $.ajax({
                     url: '/pengajuan-cuti/leave-types/' + leaveTypeId,
                     type: 'GET',
-                    success: function(data) {
-                        if (data.max_amount) {
-                            $('#max_amount_display').text('Maksimal Jumlah Cuti: ' + data.max_amount + ' Hari').show();
+                    success: function (data) {
+
+                        if (data.max_amount !== null) {
+                            maxCuti = parseInt(data.max_amount);
                         } else {
-                            $('#max_amount_display').hide();
+                            maxCuti = null;
                         }
 
+                        if (isUnlimitedCuti()) {
+                            $('#max_amount_display').hide();
+                        } else {
+                            $('#max_amount_display')
+                                .text('Maksimal Jumlah Cuti: ' + maxCuti + ' Hari')
+                                .show();
+                        }
+                        // ===== FILE UPLOAD (INI INTI NYA) =====
                         if (data.file_upload === 'yes') {
                             $('#file_upload_container').show();
                             $('#file_upload').prop('required', true);
                         } else {
                             $('#file_upload_container').hide();
                             $('#file_upload').prop('required', false);
-                        }
+                            $('#file_upload').val('');
+                    }
+                        lockEndDateCalendar();
+                        calculateDays();
                     }
                 });
-            } else {
-                $('#max_amount_display').hide();
-                $('#file_upload_container').hide();
-                $('#file_upload').prop('required', false);
-            }
-        });
-        // Handle file upload change event to update the label with the selected file name
-        $('#file_upload').change(function() {
-            var fileName = $(this).val().split('\\').pop(); // Extract the file name from the file path
-            $(this).next('.custom-file-label').html(fileName); // Update the label text
+            });
+
         });
 
-        $(document).ready(function() {
-            $('.select2bst4').select2({
-                theme: 'bootstrap4'
-            });
+    $(document).ready(function() {
+        $('.select2bst4').select2({
+            theme: 'bootstrap4'
         });
+    });
 });

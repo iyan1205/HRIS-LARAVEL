@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OvertimeSearchRequest;
+use App\Traits\ApprovalCountTrait;
 
 class OvertimeController extends Controller
 {
+    use ApprovalCountTrait;
+
     public function __construct()
     {
         $this->middleware('permission:view overtime', ['only' => ['index']]);
@@ -360,16 +363,8 @@ class OvertimeController extends Controller
 
     public function getOverCount()
     {
-        /** @var App\Models\User */
-        $users = Auth::user();
-        if ($users->hasRole('admin') || $users->hasRole('Super-Admin')) {
-            // Admin and superadmin see all pending 
-            $countOvertime = Overtime::where('status', 'pending')->count();
-        } else {
-            $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-            $countOvertime = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->count(); 
-        } 
-        return response()->json(['countOvertime' => $countOvertime]); // Mengubah 'countovertime' menjadi 'overCount'
+        $jumlah = $this->getPendingCountForUser(Overtime::class, 'approver_id');
+        return response()->json(['countOvertime' => $jumlah]);
     }
     
     public function report_history_lembur(){

@@ -50,11 +50,13 @@
                                                     <td>{{ $record->user->karyawan->jabatan->name ?? 'Tidak Diketahui' }}</td>
                                                     <td>{{ $record->user->karyawan->departemen->name ?? 'Tidak Diketahui' }}</td>
                                                     <td>{{ $record->user->karyawan->unit->name ?? 'Tidak Diketahui' }}</td>
-                                                    <td>{{ $record->created_at->format('d/m/Y H:i:s') }}</td>
-                                                    <td>{{ $record->updated_at == $record->created_at ? ' ' : $record->updated_at->format('d/m/Y H:i:s') }}</td>
+                                                    <td>{{ $record->created_at->format('d/m/Y') }} {{ \Carbon\Carbon::parse($record->jam_masuk)->format('H:i:s') }}</td>
+                                                    <td>{{ $record->updated_at->format('d/m/Y') }} {{ \Carbon\Carbon::parse($record->jam_keluar)->format('H:i:s') }}</td>
                                                     <td>
                                                         @if ($record->total_duration === 'Tidak absen pulang')
                                                             <span class="badge badge-danger">{{ $record->total_duration }}</span>
+                                                        @elseif ($record->total_duration === 'Belum absen pulang')
+                                                            <span class="badge badge-warning">{{ $record->total_duration }}</span>
                                                         @else
                                                             {{ $record->total_duration }}
                                                         @endif
