@@ -85,32 +85,30 @@
                                         <select name="leave_type_id" id="leave_type_id" class="form-control select2bs4" required></select>
                                     </div>
 
-                                    <div id="max_amount_display" style="color:red; display:none;"></div>
-
                                     <div class="form-group row">
                                         <div class="col">
-                                            <label for="start_date">Tanggal Awal:<span class="red-star">*</span></label>
-                                            <div class="input-group date" id="start_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date" name="start_date" value="{{ old('start_date') }}" required/>
-                                                <div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
+                                            <label for="start_date_cuti">Tanggal Awal:<span class="red-star">*</span></label>
+                                            <div class="input-group date" id="start_date_cuti" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date_cuti" name="start_date" value="{{ old('start_date_cuti') }}" required/>
+                                                <div class="input-group-append" data-target="#start_date_cuti" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
-                                            @error('start_date')
+                                            @error('start_date_cuti')
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
                                             @enderror
                                         </div>
                                         <div class="col">
-                                            <label for="end_date">Tanggal Akhir:<span class="red-star">*</span></label>
-                                            <div class="input-group date" id="end_date" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date" name="end_date" value="{{ old('end_date') }}" required/>
-                                                <div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
+                                            <label for="end_date_cuti">Tanggal Akhir:<span class="red-star">*</span></label>
+                                            <div class="input-group date" id="end_date_cuti" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date_cuti" name="end_date" value="{{ old('end_date_cuti') }}" required/>
+                                                <div class="input-group-append" data-target="#end_date_cuti" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
-                                            @error('end_date')
+                                            @error('end_date_cuti')
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
@@ -121,6 +119,7 @@
                                     <div class="form-group">
                                         <label>Total Hari:</label>
                                         <input type="text" class="form-control" id="total_days" disabled/>
+                                        <small id="max_amount_display"class="form-text text-danger"style="display:none;"></small>
                                     </div>
                                     
                                     <div class="form-group" id="file_upload_container" style="display: none;">

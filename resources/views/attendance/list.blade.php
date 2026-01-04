@@ -52,8 +52,11 @@
                                         <td>
                                             {{ $attendance->updated_at == $attendance->created_at ? ' ' : $attendance->updated_at->format('d/m/Y H:i:s') }}
                                         </td>
-                                        <td> @if ($attendance->total_duration === 'Tidak absen pulang')
+                                        <td> 
+                                        @if ($attendance->total_duration === 'Tidak absen pulang')
                                             <span class="badge badge-danger">{{ $attendance->total_duration }}</span>
+                                        @elseif ($attendance->total_duration === 'Belum absen pulang')
+                                            <span class="badge badge-warning">{{ $attendance->total_duration }}</span>
                                         @else
                                             <span class="badge badge-success">{{ $attendance->total_duration }}</span>
                                         @endif</td>

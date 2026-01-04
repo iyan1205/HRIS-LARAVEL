@@ -129,12 +129,11 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         
     });
 
-
-// Pelatihan
+    // Pelatihan
     Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan');
     Route::get('/pelatihan/create', [PelatihanController::class, 'create'])->name('pelatihan.create');
     Route::post('/pelatihan/store', [PelatihanController::class, 'store'])->name('pelatihan.store');
-//Proses Pelatihan
+    //Proses Pelatihan
     Route::get('/pelatihan/edit/{id}', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
     Route::put('/pelatihan/update/{id}', [PelatihanController::class, 'update'])->name('pelatihan.update');
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');

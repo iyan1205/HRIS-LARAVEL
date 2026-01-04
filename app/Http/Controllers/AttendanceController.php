@@ -11,6 +11,7 @@ use Intervention\Image\ImageManager;
 use Jenssegers\Agent\Agent;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceController extends Controller
 {
@@ -40,25 +41,26 @@ class AttendanceController extends Controller
 
         // Cek apakah user sudah check-in hari ini
         $existingAttendance = Attendance::where('user_id', $userId)
-            ->whereDate('jam_masuk', today())
-            ->where('status', 'hadir')
+            ->whereNull('jam_masuk')
             ->first();
         
         if ($existingAttendance) {
-            return redirect()->route('attendance.list')->with('error', 'Anda sudah check-in hari ini.');
+            return redirect()->route('attendance.list')->with('error', 'Anda belum check-out.');
         }
+        $dateFormat = now()->format('Ymd');
+        $basePath = "absensi/{$dateFormat}/checkin";
+        Storage::disk('public')->makeDirectory($basePath);
+
         if($request->file('foto_jam_masuk')){
             $manager = new ImageManager(new Driver());
             $username = Auth::user()->name;
-            $name_img = $username . '_' . now()->format('Ymd_His') . '_' . 'checkin'. '_' . hexdec(uniqid()) . '.jpg'; // selalu simpan ke jpg
-            
+            $name_img = $username . '_' . now()->format('His') . '_' . bin2hex(random_bytes(5)) . '.jpg';
             $img = $manager->read($request->file('foto_jam_masuk'));
-
             // Simpan dengan kompresi (quality 70 cukup)
             $img->toJpeg(70)->save(
-                storage_path('app/public/attendance/' . $name_img)
+               storage_path("app/public/{$basePath}/$name_img")
             );
-            $path = 'attendance/'.$name_img;
+            $path = "{$basePath}/{$name_img}";
         }
         $ipAddress = $request->ip();
 
@@ -90,49 +92,50 @@ class AttendanceController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
-        $path = null; // Initialize path variable
+
+        $attendance = Attendance::where('user_id', Auth::id())
+                                ->whereNull('jam_keluar')
+                                ->first();
+        if (!$attendance) {
+            return redirect()->route('attendance.list')->with('error', 'Data absensi tidak ditemukan.');
+        }
+        if (now()->diffInMinutes($attendance->jam_masuk) < 120) {
+            return redirect()->route('attendance.list')->with('error', 'Checkout hanya bisa dilakukan setelah 2 jam dari check-in.');
+        }
+
+        $path = null; 
+        $dateFormat = now()->format('Ymd');
+        $basePath = "absensi/{$dateFormat}/checkout";
+        Storage::disk('public')->makeDirectory($basePath);
 
         if ($request->file('foto_jam_keluar')) {
             $manager = new ImageManager(new Driver());
 
             $username = Auth::user()->name;
-            $name_img = $username . '_' . now()->format('Ymd_His') . '_' . 'checkout'. '_' . hexdec(uniqid()) . '.jpg';
-            
+            $name_img = $username . '_' . now()->format('His') . '_' . bin2hex(random_bytes(5)) . '.jpg';
             $img = $manager->read($request->file('foto_jam_keluar'));
 
             // Simpan dengan kompresi (quality 70 cukup)
             $img->toJpeg(70)->save(
-                storage_path('app/public/attendance/' . $name_img)
+                storage_path("app/public/{$basePath}/$name_img")
             );
-            $path = 'attendance/' . $name_img;
+            $path = "{$basePath}/{$name_img}";
         }
-        $ipAddress = $request->ip();
 
-        // Parsing informasi perangkat menggunakan library Jenssegers Agent
         $agent = new Agent();
-        $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
-        $platform = $agent->platform(); // Contoh: Windows, iOS, Android
-        $browser = $agent->browser();   // Contoh: Chrome, Safari
+        $deviceInfo = ($agent->isMobile() ? 'Mobile' : 'Desktop')
+            . ' | ' . $agent->platform()
+            . ' | ' . $agent->browser();
 
-        $deviceInfo = "{$deviceType} | {$platform} | {$browser}";
+        $attendance->update([
+            'jam_keluar' => now(),
+            'foto_jam_keluar' => $path,
+            'ip_address' => $request->ip(),
+            'device_info' => $deviceInfo,
+            'status' => 'pulang',
+        ]);
 
-        $attendance = Attendance::where('user_id', Auth::id())
-                                ->whereNull('jam_keluar')
-                                ->first();
-
-        if ($attendance) {
-            $attendance->update([
-                'jam_keluar' => now(),
-                'foto_jam_keluar' => $path,
-                'ip_address' => $ipAddress,
-                'device_info' => $deviceInfo,
-                'status' => 'pulang',
-            ]);
-
-            return redirect()->route('attendance.list')->with('successAdd', 'Check-out berhasil.');
-        }
-
-        return redirect()->route('attendance.list')->with('error', 'Data absensi tidak ditemukan.');
+        return redirect()->route('attendance.list')->with('successAdd', 'Check-out berhasil.');
     }
 
     public function list_attendance() {
