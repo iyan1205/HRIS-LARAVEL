@@ -375,37 +375,35 @@ $(document).ready(function() {
         $(document).ready(function () {
 
             /* ================= DATE PICKER ================= */
-            $('#start_date_cuti').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-
-            $('#end_date_cuti').datetimepicker({
+            $('#start_date_cuti, #end_date_cuti').datetimepicker({
                 format: 'YYYY-MM-DD',
                 useCurrent: false
             });
 
             /* ================= LOCK KALENDER ================= */
             function lockEndDateCalendar() {
-                let startDate = $('#start_date_cuti').datetimepicker('date');
-                if (!startDate) return;
+            let startDate = $('#start_date_cuti').datetimepicker('date');
+            if (!startDate) return;
 
-                // end_date tidak boleh < start_date
-                $('#end_date_cuti').datetimepicker('minDate', startDate);
+            const endPicker = $('#end_date_cuti');
 
-                // UNLIMITED (null atau 0)
-                if (isUnlimitedCuti()) {
-                    $('#end_date_cuti').datetimepicker('maxDate', false);
-                    return;
-                }
+            // selalu set minimal = start
+            endPicker.datetimepicker('minDate', startDate);
 
-                let maxEndDate = startDate.clone().add(maxCuti - 1, 'days');
-                $('#end_date_cuti').datetimepicker('maxDate', maxEndDate);
+            // jika unlimited → jangan set maxDate sama sekali
+            if (isUnlimitedCuti()) {
+                endPicker.datetimepicker('maxDate', null);
+                return;
+            }
 
-                // koreksi jika melewati batas
-                let endDate = $('#end_date_cuti').datetimepicker('date');
-                if (endDate && endDate.isAfter(maxEndDate)) {
-                    $('#end_date_cuti').datetimepicker('date', maxEndDate);
-                }
+            let maxEndDate = startDate.clone().add(maxCuti - 1, 'days');
+            endPicker.datetimepicker('maxDate', maxEndDate);
+
+            // koreksi kalau melewati batas
+            let endDate = endPicker.datetimepicker('date');
+            if (endDate && endDate.isAfter(maxEndDate)) {
+                endPicker.datetimepicker('date', maxEndDate);
+            }
             }
 
 
@@ -441,12 +439,19 @@ $(document).ready(function() {
 
             /* ================= START DATE CHANGE ================= */
             $("#start_date_cuti").on("change.datetimepicker", function (e) {
-                if (e.date) {
+                if (!e.date) return;
+
+                let endDate = $('#end_date_cuti').datetimepicker('date');
+
+                // hanya set end_date jika belum ada
+                if (!endDate || endDate.isBefore(e.date)) {
                     $('#end_date_cuti').datetimepicker('date', e.date);
-                    lockEndDateCalendar();
-                    calculateDays();
                 }
+
+                lockEndDateCalendar();
+                calculateDays();
             });
+
 
             /* ================= END DATE CHANGE ================= */
             $("#end_date_cuti").on("change.datetimepicker", function () {
