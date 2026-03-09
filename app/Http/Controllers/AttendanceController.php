@@ -99,9 +99,9 @@ class AttendanceController extends Controller
         if (!$attendance) {
             return redirect()->route('attendance.list')->with('error', 'Data absensi tidak ditemukan.');
         }
-        if (now()->diffInMinutes($attendance->jam_masuk) < 120) {
-            return redirect()->route('attendance.list')->with('error', 'Checkout hanya bisa dilakukan setelah 2 jam dari check-in.');
-        }
+        // if (now()->diffInMinutes($attendance->created_at) < 120) {
+        //     return redirect()->route('attendance.list')->with('error', 'Checkout hanya bisa dilakukan setelah 2 jam dari check-in.');
+        // }
 
         $path = null; 
         $dateFormat = now()->format('Ymd');
