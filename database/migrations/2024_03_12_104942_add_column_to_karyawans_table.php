@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignId('departemen_id')->constrained();
             $table->foreignId('jabatan_id')->constrained();
             $table->foreignId('unit_id')->constrained();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 
@@ -24,9 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('karyawans', function (Blueprint $table) {
-            $table->dropColumn('departemen_id');
-            $table->dropColumn('jabatan_id');
-            $table->dropColumn('unit_id');
+            $table->dropForeign(['departemen_id']);
+            $table->dropForeign(['jabatan_id']);
+            $table->dropForeign(['unit_id']);
+            $table->dropColumn('deleted_at');
         });
     }
 };

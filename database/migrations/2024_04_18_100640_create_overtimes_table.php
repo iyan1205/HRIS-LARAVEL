@@ -21,8 +21,11 @@ return new class extends Migration
             $table->string('keterangan');
             $table->string('alasan_reject')->nullable();
             $table->string('approver_id')->nullable();
+            $table->integer('level_approve');
             $table->string('updated_by')->nullable();
             $table->timestamps();
+            $table->string('updated_by_atasan', 255)->nullable();
+            $table->timestamps('updated_at_atasan')->nullable();
         });
     }
 
