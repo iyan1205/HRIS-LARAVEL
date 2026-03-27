@@ -71,13 +71,15 @@
                     </div>
                     <!-- /.col -->
                 </div>
+                @php
+                    $randomQuote = \App\Models\Quotes::where('status', true)->inRandomOrder()->first();
+                @endphp
                 <div class="mt-3 text-center" style="font-size:14px; border:1px solid #dee2e6; border-top:3px solid #007bff; border-radius:6px; padding:12px;">
                         <p class="mb-1">
-                            “Sesungguhnya Allah mencintai seseorang yang apabila bekerja,
-                            ia mengerjakannya secara <i>itqan</i> (profesional dan bersungguh-sungguh).”
+                            {!! $randomQuote->quote ?? "Tidak ada quote yang tersedia." !!}
                         </p>
                         <footer class="blockquote-footer">
-                            HR. Thabrani
+                            {!! $randomQuote->author ?? '....' !!}
                         </footer>
                 </div>
                 </form>

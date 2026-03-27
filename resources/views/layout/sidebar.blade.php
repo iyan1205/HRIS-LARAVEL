@@ -353,6 +353,15 @@
                 </li>
             </ul>
         </li>
+
+        <li class="nav-item {{ request()->is('quotes/*') ? 'menu-open' : '' }}">
+            <a href="{{ route('quotes') }}" class="nav-link {{ request()->is('quotes/*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-quote-left"></i>
+                <p>
+                    Quotes
+                </p>
+            </a>
+        </li>
         @endrole
     </ul>
     
