@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('exp_str')->nullable();
             $table->string('profesi')->nullable();
             $table->string('cert_profesi')->nullable();
+            $table->string('nomer_sip')->nullable();
+            $table->date('tgl_terbit_sip')->nullable();
+            $table->date('exp_sip')->nullable();
             $table->timestamps();
         });
     }

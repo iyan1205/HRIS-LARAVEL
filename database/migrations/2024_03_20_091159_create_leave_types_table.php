@@ -17,6 +17,8 @@ return new class extends Migration
             $table->enum('kategori_cuti',['SAKIT','IZIN','CUTI KHUSUS','CUTI TAHUNAN']);
             $table->enum('file_upload',['yes','no'])->default('yes');
             $table->string('max_amount');
+            $table->enum('saldo_cuti',['yes','no'])->default('yes');
+            $table->integer('cek_saldo')->default(0);
             $table->timestamps();
         });
     }

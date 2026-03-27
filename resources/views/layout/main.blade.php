@@ -29,8 +29,6 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/daterangepicker/daterangepicker.css') }}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('lte/plugins/summernote/summernote-bs4.min.css') }}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
@@ -328,6 +326,18 @@
         });
     </script>
     @endrole
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.querySelector('#quote')) {
+            ClassicEditor
+                .create(document.querySelector('#quote'))
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    });
+    </script>
 </body>
 
 </html>

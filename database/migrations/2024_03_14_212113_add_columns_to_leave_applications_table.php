@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('leave_applications', function (Blueprint $table) {
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->date('start_date');
-            $table->date('end_date');
-            
+            $table->string('updated_by_atasan', 255)->nullable();
+            $table->timestamps('updated_at_atasan')->nullable();
         });
     }
 
@@ -25,9 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('leave_applications', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
+            $table->dropColumn('updated_by_atasan');
+            $table->dropColumn('updated_at_atasan');
         });
     }
 };

@@ -18,10 +18,13 @@ return new class extends Migration
             $table->datetime('end_date');
             $table->string('interval');
             $table->enum('status', ['pending', 'rejected' ,'approved'])->default('pending');
-            $table->string('keterangan');
-            $table->string('approver_id');
-            $table->string('alasan_reject');
-            $table->string('updated_by');
+            $table->text('keterangan');
+            $table->string('alasan_reject', 500);
+            $table->string('approver_id', 255);
+            $tabvle->integer('level_approve');
+            $table->string('updated_by', 255);
+            $table->string('updated_by_atasan', 255)->nullable();
+            $table->timestamps('updated_at_atasan')->nullable();
             $table->timestamps();
         });
     }

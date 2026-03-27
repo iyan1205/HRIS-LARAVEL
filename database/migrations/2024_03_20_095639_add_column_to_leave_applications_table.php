@@ -15,8 +15,8 @@ return new class extends Migration
             $table->foreignId('leave_type_id')->constrained();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('total_days', 30)->nullable();
-            $table->string('alasan_reject', 255)->nullable();
-            $table->string('updated_by', 30)->nullable();
+            $table->string('alasan_reject', 500)->nullable();
+            $table->string('updated_by', 255)->nullable();
             $table->bigInteger('manager_id')->nullable();
             $table->integer('level_approve')->nullable(); // Removed the length parameter
             $table->string('file_upload', 200)->nullable();

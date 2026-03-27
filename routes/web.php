@@ -18,6 +18,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MobilitasJabatanController;
+use App\Http\Controllers\QuotesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -233,6 +234,17 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/oncall/update/{id}', [OnCallController::class, 'update'])->name('oncall.update');
         Route::delete('/oncall/delete/{id}', [OnCallController::class, 'destroy'])->name('oncall.delete');
 
+    });
+
+    Route::prefix('quotes')->group(function () {
+        Route::get('/quotes', [QuotesController::class, 'index'])->name('quotes');
+        Route::get('/create', [QuotesController::class, 'create_function'])->name('quotes.create');
+        Route::post('/store', [QuotesController::class, 'store'])->name('quotes.store');
+        
+        Route::get('/edit/{id}', [QuotesController::class, 'edit'])->name('quotes.edit');
+        Route::put('/update/{id}', [QuotesController::class, 'update'])->name('quotes.update');
+        Route::delete('/delete/{id}', [QuotesController::class, 'delete'])->name('quotes.delete');
+        Route::patch('/quotes/{id}/toggle', [QuotesController::class, 'toggle'])->name('quotes.toggle');
     });
 });
 

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leave_applications', function (Blueprint $table) {
+        Schema::create('quotes', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->string('author');
+            $table->text('quote');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leave_applications');
+        Schema::dropIfExists('quotes');
     }
 };

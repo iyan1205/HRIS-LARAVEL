@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('karyawan_pelatihan', function (Blueprint $table) {
             $table->unsignedBigInteger('karyawan_id');
             $table->unsignedBigInteger('pelatihan_id');
+            $table->date('tanggal_expired')->nullable();
+            $table->string('file')->nullable();
             $table->foreign('karyawan_id')->references('id')->on('karyawans')->onDelete('cascade');
             $table->foreign('pelatihan_id')->references('id')->on('pelatihans')->onDelete('cascade');
             $table->primary(['karyawan_id', 'pelatihan_id']);
