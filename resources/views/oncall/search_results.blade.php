@@ -45,7 +45,7 @@
                                             <th>No</th>
                                             <th>Nama Lengkap</th>
                                             <th>Jabatan</th>
-                                            <th>Instalasi</th>
+                                            <th>Instalasi/Divisi</th>
                                             <th>Departemen</th>
                                             <th>Tanggal Pengajuan</th>
                                             <th>Tanggal Awal</th>

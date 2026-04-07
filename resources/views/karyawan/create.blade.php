@@ -123,10 +123,10 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="unit" class="form-label">Unit</label>
+                                        <label for="unit" class="form-label">Instalasi/Divisi</label>
                                         <select class="form-control select2bs4" id="Unit" name="unit_id"
                                             style="width: 100%;" required>
-                                            <option selected value="" required>Pilih Unit
+                                            <option selected value="" required>Pilih Instalasi/Divisi
                                             </option>
                                             @foreach ($units as $id => $name)
                                                 <option value="{{ $id }}"

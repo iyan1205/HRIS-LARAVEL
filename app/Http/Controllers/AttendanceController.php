@@ -41,11 +41,11 @@ class AttendanceController extends Controller
 
         // Cek apakah user sudah check-in hari ini
         $existingAttendance = Attendance::where('user_id', $userId)
-            ->whereNull('jam_masuk')
-            ->first();
-        
+           ->whereDate('created_at', now()->toDateString())
+            ->exists();
+
         if ($existingAttendance) {
-            return redirect()->route('attendance.list')->with('error', 'Anda belum check-out.');
+            return redirect()->route('attendance.list')->with('error', 'Anda sudah check-in hari ini.');
         }
         $dateFormat = now()->format('Ymd');
         $basePath = "absensi/{$dateFormat}/checkin";
