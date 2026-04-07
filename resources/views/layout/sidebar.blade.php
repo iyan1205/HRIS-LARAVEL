@@ -30,7 +30,7 @@
                     <a href="{{ route('unit') }}"
                         class="nav-link {{ request()->is('organisasi/unit*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Unit</p>
+                        <p>Instalasi/Divisi</p>
                     </a>
                 </li>
                 <li class="nav-item">
