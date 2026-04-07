@@ -76,7 +76,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="unit_sekarang">Unit </label>
+                                            <label for="unit_sekarang">Instalasi/Divisi </label>
                                             <input type="hidden" name="unit_sekarang" value="{{ $karyawan->unit_id }}">
                                             <select class="form-control select2bs4" id="unit_sekarang" name="unit_sekarang" disabled>
                                                 @foreach ($units as $id => $name)
@@ -167,9 +167,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="unit_baru" class="form-label">Unit</label>
+                                    <label for="unit_baru" class="form-label">Instalasi/Divisi</label>
                                     <select class="form-control select2bs4" id="unit_baru" name="unit_baru" style="width: 100%;" required>
-                                        <option selected value="" required disabled>Pilih Unit
+                                        <option selected value="" required disabled>Pilih Instalasi/Divisi
                                         </option>
                                         @foreach ($units as $id => $name)
                                             <option value="{{ $id }}"

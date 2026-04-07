@@ -136,7 +136,7 @@
                                   </div>
                                 </div>
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Unit</label>
+                                  <label for="inputEmail" class="col-sm-2 col-form-label">Instalasi/Divisi</label>
                                   <div class="col-sm-5">
                                     <input type="email" class="form-control" name="email" value="{{ $user->karyawan->unit->name }}" readonly>
                                   </div>

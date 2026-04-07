@@ -114,7 +114,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="units">Unit</label>
+                                        <label for="units">Instalasi/Divisi</label>
                                         <select class="form-control select2bs4" id="Unit" name="unit_id"
                                             style="width: 100%;">
                                             @foreach ($units as $id => $name)
