@@ -38,8 +38,8 @@
                                         <th>Jabatan Baru</th>
                                         <th>Departemen Sebelumnya</th>
                                         <th>Departemen Baru</th>
-                                        <th>Unit Sebelumnya</th>
-                                        <th>Unit Baru</th>
+                                        <th>Instalasi/Divisi Sebelumnya</th>
+                                        <th>Instalasi/Divisi Baru</th>
                                         <th>Tanggal</th>
                                         <th>Action</th>
                                     </tr>

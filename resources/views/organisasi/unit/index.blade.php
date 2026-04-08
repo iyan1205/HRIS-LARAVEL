@@ -35,7 +35,7 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">No</th>
-                                        <th>Nama Units</th>
+                                        <th>Nama Instalasi/Divisi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
