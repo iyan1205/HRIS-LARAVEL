@@ -558,7 +558,26 @@ $(document).ready(function() {
             });
 
         });
+        $(document).on('change', '#file_upload', function () {
+            let file = this.files[0];
+            if (file) {
+                // Validasi ukuran
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file melebihi 2MB!');
+                    $(this).val('');
+                    $(this).next('.custom-file-label').text('Choose file');
+                    return;
+                }
 
+                let sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                let sizeKB = (file.size / 1024).toFixed(1);
+                let displaySize = file.size >= 1048576 ? sizeMB + ' MB' : sizeKB + ' KB';
+
+                $(this).next('.custom-file-label').text(file.name + ' (' + displaySize + ')');
+            } else {
+                $(this).next('.custom-file-label').text('Choose file');
+            }
+        });
     $(document).ready(function() {
         $('.select2bst4').select2({
             theme: 'bootstrap4'

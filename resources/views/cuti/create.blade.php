@@ -123,7 +123,7 @@
                                     </div>
                                     
                                     <div class="form-group" id="file_upload_container" style="display: none;">
-                                        <label for="file_upload">Upload File <span class="red-star">*</span></label>
+                                        <label for="file_upload">Upload File <span class="red-star">*</span> <small class="form-text text-danger">Format PDF, JPG, JPEG, atau PNG. Maksimal ukuran file 2MB.</small></label>
                                         <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" value="{{ old('file_upload') }}" required>
@@ -135,6 +135,7 @@
                                                 </small>
                                             @enderror
                                         </div>
+                                        
                                     </div>
 
                                     <div class="form-group">
