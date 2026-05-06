@@ -109,11 +109,15 @@ class OvertimeController extends Controller
         
         // Ambil nilai approver_id dari user_id yang dipilih jika approver_id bernilai null
         $approver_id = $request->input('approver_id');
-        if ($approver_id === null) {
-            // Ambil user yang dipilih
+        if (empty($approver_id)) {
             $selectedUser = User::findOrFail($request->input('user_id'));
-            // Ambil approver_id dari user yang dipilih
-            $approver_id = $selectedUser->karyawan->jabatan->approver_id;
+            
+            if (!$selectedUser->karyawan || !$selectedUser->karyawan->jabatan) {
+                return redirect()->back()->withErrors([
+                    'approver_id' => 'Data jabatan karyawan tidak ditemukan.'
+                ]);
+            }
+            $approver_id = $selectedUser->karyawan->jabatan->manager_id;
         }
 
         // Menghitung interval waktu
