@@ -37,9 +37,7 @@
                                     <h3 class="card-title">Form Lembur</h3>
                                 </div>
                                 <!-- /.card-header -->
-                                <!-- form start -->
-                                <form>
-                                    <div class="card-body">
+                                   <div class="card-body">
                                         @if(auth()->user()->hasRole('admin|Super-Admin'))
                                         <div class="form-group">
                                             <label for="user_id" class="form-label">Nama Karyawan:</label>
@@ -104,7 +102,8 @@
                                     <div class="card-footer">
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
-                                </form>
+                                
+                                   </div>
                             </div>
                             <!-- /.card -->
 

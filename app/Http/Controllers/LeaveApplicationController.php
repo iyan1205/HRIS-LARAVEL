@@ -173,7 +173,7 @@ class LeaveApplicationController extends Controller
         /* ================= MANAGER ================= */
         $managerId = $request->manager_id;
 
-        if (!$managerId) {
+        if (empty($managerId)) {
             $user = User::with('karyawan.jabatan')->findOrFail($request->user_id);
             $managerId = $user->karyawan->jabatan->manager_id;
         }
