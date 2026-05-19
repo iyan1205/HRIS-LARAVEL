@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use App\Http\Requests\LeaveSearchRequest;
 use App\Traits\ApprovalCountTrait;
+use App\Notifications\LeaveNotification;
 
 class LeaveApplicationController extends Controller
 {
@@ -45,14 +46,29 @@ class LeaveApplicationController extends Controller
 
         return view('cuti.index', compact('leaveApplications'));
     }
-
+    // Halaman Approval Cuti
     public function approval(){
 
         $users = Auth::user();
 
-        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
-        $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();   
-        
+       $subordinateManagerIds = $users->karyawan
+            ->jabatan
+            ->subordinates                  // relasi: jabatan yang melapor ke jabatan ini
+            ->pluck('manager_id')           // ambil manager_id tiap bawahan
+            ->push($users->id)               // sertakan ID user sendiri (approval langsung)
+            ->unique()
+            ->filter()                      // buang null
+            ->values();
+
+        $leaveApplications = LeaveApplication::with([
+                'user.karyawan.jabatan',    // eager load agar tidak N+1
+                'leaveType',
+            ])
+            ->whereIn('manager_id', $subordinateManagerIds)
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
         return view('cuti.approval-cuti', compact('leaveApplications'));   
         
     }
@@ -100,145 +116,133 @@ class LeaveApplicationController extends Controller
 
     public function store(Request $request)
     {
-        /* ================= VALIDASI DASAR ================= */
+        /* ── Validasi Dasar ── */
         $validator = Validator::make($request->all(), [
-            'user_id'        => 'required|exists:users,id',
-            'leave_type_id'  => 'required|exists:leave_types,id',
-            'start_date'     => 'required|date',
-            'end_date'       => 'required|date|after_or_equal:start_date',
-            'manager_id'     => 'nullable',
-            'level_approve'  => 'nullable|integer',
-            'file_upload'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'user_id'       => 'required|exists:users,id',
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after_or_equal:start_date',
+            'manager_id'    => 'nullable',
+            'level_approve' => 'nullable|integer',
+            'file_upload'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        /* ================= CEK PENDING ================= */
-        $pendingApplications = LeaveApplication::where('user_id', $request->user_id)
-            ->where('status', 'pending')
-            ->exists();
-
-        if ($pendingApplications) {
-            return back()->withInput()
-                ->with('error', 'Pengajuan sebelumnya belum disetujui.');
+        /* ── Cek Pending ── */
+        if (LeaveApplication::where('user_id', $request->user_id)->where('status', 'pending')->exists()) {
+            return back()->withInput()->with('error', 'Pengajuan sebelumnya belum disetujui.');
         }
 
-        /* ================= AMBIL LEAVE TYPE ================= */
+        /* ── Leave Type ── */
         $leaveType = LeaveType::findOrFail($request->leave_type_id);
 
-        /* ================= HITUNG TANGGAL ================= */
+        /* ── Hitung Hari ── */
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate   = Carbon::parse($request->end_date)->startOfDay();
-
         $totalDays = $startDate->diffInDays($endDate) + 1;
 
-        /* ================= VALIDASI MAX CUTI ================= */
-        // max_amount null atau 0 → unlimited
-        if (!empty($leaveType->max_amount) && $leaveType->max_amount > 0) {
-            if ($totalDays > $leaveType->max_amount) {
-                return back()->withInput()->with(
-                    'error',
-                    'Jumlah hari cuti melebihi batas maksimal ('
-                    . $leaveType->max_amount . ' hari).'
-                );
-            }
+        /* ── Validasi Max ── */
+        if (!empty($leaveType->max_amount) && $leaveType->max_amount > 0 && $totalDays > $leaveType->max_amount) {
+            return back()->withInput()->with('error',
+                'Jumlah hari cuti melebihi batas maksimal (' . $leaveType->max_amount . ' hari).');
         }
 
-        /* ================= VALIDASI SALDO CUTI ================= */
+        /* ── Validasi Saldo ── */
         if ($leaveType->cek_saldo == 0) {
             $leaveBalance = LeaveBalance::where('user_id', $request->user_id)->first();
-
             if (!$leaveBalance || $leaveBalance->saldo_cuti <= 0) {
-                return back()->withInput()
-                    ->with('error', 'Sisa cuti sudah habis.');
+                return back()->withInput()->with('error', 'Sisa cuti sudah habis.');
             }
         }
 
-        /* ================= VALIDASI FILE UPLOAD ================= */
+        /* ── File Upload ── */
         $filePath = null;
-
         if ($leaveType->file_upload === 'yes') {
             if (!$request->hasFile('file_upload')) {
-                return back()->withInput()
-                    ->with('error', 'Jenis cuti ini mewajibkan upload dokumen.');
+                return back()->withInput()->with('error', 'Jenis cuti ini mewajibkan upload dokumen.');
             }
-
-            $file = $request->file('file_upload');
+            $file     = $request->file('file_upload');
             $fileName = now()->format('Ymd') . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('file_cuti', $fileName, 'public');
         }
 
-        /* ================= MANAGER ================= */
+        /* ── Manager ── */
         $managerId = $request->manager_id;
-
         if (empty($managerId)) {
-            $user = User::with('karyawan.jabatan')->findOrFail($request->user_id);
-            $managerId = $user->karyawan->jabatan->manager_id;
+            $managerId = User::with('karyawan.jabatan')->findOrFail($request->user_id)
+                ->karyawan->jabatan->manager_id;
         }
 
-        /* ================= SIMPAN DATA ================= */
-        LeaveApplication::create([
-            'user_id'        => $request->user_id,
-            'leave_type_id'  => $request->leave_type_id,
-            'start_date'     => $startDate,
-            'end_date'       => $endDate,
-            'total_days'     => $totalDays,
-            'manager_id'     => $managerId,
-            'level_approve'  => $request->level_approve,
-            'file_upload'    => $filePath,
-            'status'         => 'pending',
+        /* ── Simpan ── */
+        $leaveApplication = LeaveApplication::create([
+            'user_id'       => $request->user_id,
+            'leave_type_id' => $request->leave_type_id,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate,
+            'total_days'    => $totalDays,
+            'manager_id'    => $managerId,
+            'level_approve' => $request->level_approve,
+            'file_upload'   => $filePath,
+            'status'        => 'pending',
         ]);
 
-        return redirect()
-            ->route('pengajuan-cuti')
-            ->with('successAdd', 'Pengajuan cuti berhasil dibuat.');
+        /* ── Notifikasi → Manager ── */
+        // ✅ Cast ke int: $request->manager_id / jabatan->manager_id bisa bertipe string
+        //    notifyManager(int $managerId) → TypeError jika tidak di-cast → notif gagal
+        $this->notifyManager($leaveApplication, (int) $managerId);
+
+        return redirect()->route('pengajuan-cuti')->with('successAdd', 'Pengajuan cuti berhasil dibuat.');
     }
 
     
-    public function approve(Request $request, $id) {
-        $user = Auth::user();
-        $updatedBy = $user->name;
-        $leaveApplication = LeaveApplication::findOrFail($id);
-    
-        // Level 1 Untuk yang tidak memiliki Atasan langsung
-        if ($leaveApplication->level_approve === 1) {
-            // Jika leave_type_id mempunyai saldo_cuti "no", saldo tidak dikurangi
-            if ($leaveApplication->leaveType->saldo_cuti === 'no') {
-                // Set status menjadi approved
-                $leaveApplication->status = 'approved';
-            } else {
-                // Kurangi saldo cuti
-                $total_days = $leaveApplication->total_days;
-                $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->firstOrFail();
-                $leaveBalance->saldo_cuti -= $total_days;
+    /* ══════════════════════════════════════════════════
+     |  APPROVE
+     ══════════════════════════════════════════════════ */
+    public function approve(Request $request, $id)
+    {
+        $user             = Auth::user();
+        $updatedBy        = $user->name;
+        $leaveApplication = LeaveApplication::with('leaveType')->findOrFail($id);
+ 
+        /* ── LEVEL 1 — Approval final ── */
+        if ($leaveApplication->level_approve == 1) {
+ 
+            if ($leaveApplication->leaveType->saldo_cuti !== 'no') {
+                $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)
+                    ->firstOrFail();
+                $leaveBalance->saldo_cuti -= $leaveApplication->total_days;
                 $leaveBalance->save();
-
-                // Set status menjadi approved
-                $leaveApplication->status = 'approved';
             }
-            $leaveApplication->level_approve = '0';
-        }
-    
-        // Level 2 Untuk Yang memiliki Atasan Langsung
-        elseif ($leaveApplication->level_approve === 2) {
-            // Update level approve
-            $leaveApplication->level_approve = '1';
-            // Update manager_id
-            $leaveApplication->manager_id = $user->karyawan->jabatan->manager_id;
+ 
+            $leaveApplication->status        = 'approved';
+            $leaveApplication->level_approve = 0;
+ 
+            $this->notifyEmployee($leaveApplication, 'approved', $updatedBy);
+ 
+        /* ── LEVEL 2 — Eskalasi ke atasan berikutnya ── */
+        } elseif ($leaveApplication->level_approve == 2) {
+ 
+            /*
+             * manager_id di tabel jabatan = jabatan_id (BUKAN user_id)
+             * Diambil dari jabatan milik user yang sedang login
+             */
+            $nextJabatanId = (int) $user->karyawan->jabatan->manager_id;
+ 
+            $leaveApplication->manager_id        = $nextJabatanId;
+            $leaveApplication->level_approve     = 1;
             $leaveApplication->updated_by_atasan = $updatedBy;
             $leaveApplication->updated_at_atasan = now();
+ 
+            $this->notifyEscalation($leaveApplication, $nextJabatanId, $updatedBy);
         }
-    
-        // Menyetujui aplikasi cuti
+ 
         $leaveApplication->approve($updatedBy);
-    
-        // Simpan perubahan pada aplikasi cuti
         $leaveApplication->save();
-    
-        $message = 'Pengajuan cuti Approved.';
-        Session::flash('successAdd', $message);
+ 
+        Session::flash('successAdd', 'Pengajuan cuti Approved.');
         return redirect()->route('approval-cuti');
     }
     
@@ -278,6 +282,13 @@ class LeaveApplicationController extends Controller
 
         $leaveApplication->reject($updatedBy);
         $leaveApplication->save();
+        /* ── ✅ NOTIFIKASI: Karyawan — cuti ditolak ── */
+        $this->notifyEmployee(
+            $leaveApplication,
+            'rejected',
+            $user->name,
+            $request->input('reason', '')
+        );
 
         $message = 'Pengajuan cuti Tidak Disetujui.';
         Session::flash('successAdd', $message);
@@ -546,68 +557,251 @@ class LeaveApplicationController extends Controller
 
         return view('cuti.file.results_file', compact('results', 'users'));
     }
+
     public function downloadFile($id)
     {
-        $application = LeaveApplication::findOrFail($id);
+            $application = LeaveApplication::findOrFail($id);
 
-        if (!$application->file_upload) {
-            return back()->with('error', 'File tidak ditemukan.');
-        }
-
-        // Path fisik di server
-        $filePath = storage_path('app/public/' . $application->file_upload);
-
-        if (!file_exists($filePath)) {
-            return back()->with('error', 'File tidak ada di server.');
-        }
-
-        // Paksa download
-        return response()->download($filePath, basename($filePath));
-}
-
-   public function downloadAllByFilter(Request $request)
-{
-    $users     = $request->input('user_id');
-    $startDate = $request->input('start_date');
-    $endDate   = $request->input('end_date');
-
-    $query = LeaveApplication::with('karyawan')
-        ->where('status', 'approved')
-        ->whereNotNull('file_upload');
-
-    if (!empty($users)) {
-        $query->where('user_id', $users);
-    }
-
-    if ($startDate && $endDate) {
-        $query->whereBetween('start_date', [$startDate, $endDate]);
-    } elseif ($startDate) {
-        $query->where('start_date', '>=', $startDate);
-    } elseif ($endDate) {
-        $query->where('end_date', '<=', $endDate);
-    }
-
-    $applications = $query->get();
-
-    if ($applications->isEmpty()) {
-        return back()->with('error', 'Tidak ada file cuti sesuai filter.');
-    }
-
-    $zipFileName = 'file_cuti_filter_' . now()->format('Ymd_His') . '.zip';
-    $zip = new \ZipArchive;
-    $tmpFile = tempnam(sys_get_temp_dir(), $zipFileName);
-
-    if ($zip->open($tmpFile, \ZipArchive::CREATE) === TRUE) {
-        foreach ($applications as $app) {
-            $filePath = storage_path('app/public/' . $app->file_upload);
-            if (file_exists($filePath)) {
-                $karyawanName = $app->karyawan->name ?? 'unknown';
-                $zip->addFile($filePath, $karyawanName . '_' . basename($filePath));
+            if (!$application->file_upload) {
+                return back()->with('error', 'File tidak ditemukan.');
             }
-        }
-        $zip->close();
+
+            // Path fisik di server
+            $filePath = storage_path('app/public/' . $application->file_upload);
+
+            if (!file_exists($filePath)) {
+                return back()->with('error', 'File tidak ada di server.');
+            }
+
+            // Paksa download
+            return response()->download($filePath, basename($filePath));
     }
 
-    return response()->download($tmpFile, $zipFileName)->deleteFileAfterSend(true);
+    public function downloadAllByFilter(Request $request)
+    {
+        $users     = $request->input('user_id');
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        $query = LeaveApplication::with('karyawan')
+            ->where('status', 'approved')
+            ->whereNotNull('file_upload');
+
+        if (!empty($users)) {
+            $query->where('user_id', $users);
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('start_date', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->where('end_date', '<=', $endDate);
+        }
+
+        $applications = $query->get();
+
+        if ($applications->isEmpty()) {
+            return back()->with('error', 'Tidak ada file cuti sesuai filter.');
+        }
+
+        $zipFileName = 'file_cuti_filter_' . now()->format('Ymd_His') . '.zip';
+        $zip = new \ZipArchive;
+        $tmpFile = tempnam(sys_get_temp_dir(), $zipFileName);
+
+        if ($zip->open($tmpFile, \ZipArchive::CREATE) === TRUE) {
+            foreach ($applications as $app) {
+                $filePath = storage_path('app/public/' . $app->file_upload);
+                if (file_exists($filePath)) {
+                    $karyawanName = $app->karyawan->name ?? 'unknown';
+                    $zip->addFile($filePath, $karyawanName . '_' . basename($filePath));
+                }
+            }
+            $zip->close();
+        }
+
+        return response()->download($tmpFile, $zipFileName)->deleteFileAfterSend(true);
+    }
+
+    /* ══════════════════════════════════════════════════
+     |  MARK AS READ — Tandai notifikasi telah dibaca
+     ══════════════════════════════════════════════════ */
+    public function markNotificationRead(Request $request, $notificationId)
+    {
+        $notification = Auth::user()
+            ->notifications()
+            ->findOrFail($notificationId);
+
+        $notification->markAsRead();
+
+        return response()->json(['success' => true]);
+    }
+
+    /* ══════════════════════════════════════════════════
+     |  MARK ALL READ — Tandai semua notifikasi dibaca
+     ══════════════════════════════════════════════════ */
+    public function markAllNotificationsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return response()->json(['success' => true]);
+    }
+
+    /* ══════════════════════════════════════════════════
+     |  GET NOTIFICATIONS — Untuk dropdown bell (JSON)
+     ══════════════════════════════════════════════════ */
+    public function getNotifications()
+    {
+        $user          = Auth::user();
+        $notifications = $user->notifications()->latest()->take(10)->get();
+
+        $data = $notifications->map(function ($n) {
+            return [
+                'id'          => $n->id,
+                'title'       => $n->data['title']   ?? '',
+                'message'     => $n->data['message']  ?? '',
+                'url'         => $n->data['url']      ?? '#',
+                'icon'        => $n->data['icon']     ?? 'bell',
+                'color'       => $n->data['color']    ?? 'gray',
+                'is_read'     => !is_null($n->read_at),
+                'time'        => $n->created_at->diffForHumans(),
+            ];
+        });
+
+        return response()->json([
+            'notifications' => $data,
+            'unread_count'  => $user->unreadNotifications()->count(),
+        ]);
+    }
+
+    /* ══════════════════════════════════════════════════
+     |  PRIVATE HELPERS
+     ══════════════════════════════════════════════════ */
+
+    /**
+     * Kirim notifikasi ke manager saat karyawan submit cuti.
+     */
+    private function notifyManager(LeaveApplication $leave, int $jabatanId): void
+    {
+        try {
+            // Cari user yang memiliki jabatan dengan ID = $jabatanId
+            $manager = User::whereHas('karyawan', function($query) use ($jabatanId) {
+                $query->where('jabatan_id', $jabatanId);
+            })->first();
+            
+            if (!$manager) {
+                \Log::warning("Tidak ada user yang memiliki jabatan ID: {$jabatanId}", [
+                    'leave_id' => $leave->id,
+                    'user_id' => $leave->user_id
+                ]);
+                return;
+            }
+            
+            $employee = User::find($leave->user_id);
+            
+            \Log::info("Mengirim notifikasi ke manager dengan jabatan ID: {$jabatanId}", [
+                'manager_user_id' => $manager->id,
+                'manager_name' => $manager->name,
+                'leave_id' => $leave->id
+            ]);
+            
+            $notification = new LeaveNotification('submitted', [
+                'leave_id'      => $leave->id,
+                'employee_name' => $employee?->name ?? 'Karyawan',
+                'leave_type'    => $leave->leaveType->name ?? '-',
+                'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
+                'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
+                'total_days'    => $leave->total_days,
+            ]);
+            
+            $manager->notify($notification);
+            
+            // Verifikasi notifikasi tersimpan
+            $notifCount = $manager->notifications()->count();
+            \Log::info("Notifikasi terkirim. Manager sekarang memiliki {$notifCount} notifikasi");
+            
+        } catch (\Exception $e) {
+            \Log::error("Gagal mengirim notifikasi ke jabatan {$jabatanId}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Kirim notifikasi ke karyawan (approved / rejected).
+     */
+    private function notifyEmployee(
+        LeaveApplication $leave,
+        string $status,
+        string $actorName,
+        string $reason = ''
+    ): void {
+        $employee = User::find($leave->user_id);
+
+        if (!$employee) return;
+
+        $payload = [
+            'leave_id'   => $leave->id,
+            'leave_type' => $leave->leaveType->name ?? '-',
+            'start_date' => Carbon::parse($leave->start_date)->format('d M Y'),
+            'end_date'   => Carbon::parse($leave->end_date)->format('d M Y'),
+        ];
+
+        if ($status === 'approved') {
+            $payload['approved_by'] = $actorName;
+        } else {
+            $payload['rejected_by'] = $actorName;
+            $payload['reason']      = $reason;
+        }
+
+        $employee->notify(new LeaveNotification($status, $payload));
+    }
+
+    /**
+     * Kirim notifikasi ke manager berikutnya saat cuti dieskalasi.
+     */
+    /* ══════════════════════════════════════════════════
+     |  NOTIFY ESCALATION — approve level 2 → level 1
+     |  $nextJabatanId = manager_id dari jabatan user
+     |                 = jabatan_id atasan (bukan user_id)
+     |
+     |  ✅ FIX: konsisten dengan notifyManager()
+     |          pakai whereHas jabatan_id, BUKAN User::find()
+     ══════════════════════════════════════════════════ */
+    private function notifyEscalation(
+        LeaveApplication $leave,
+        int $nextJabatanId,   // jabatan_id atasan, bukan user_id
+        string $escalatedBy
+    ): void {
+        try {
+            // Cari user yang jabatan_id-nya = nextJabatanId
+            // Sama persis dengan logika notifyManager()
+            $nextManager = User::whereHas('karyawan', function ($query) use ($nextJabatanId) {
+                $query->where('jabatan_id', $nextJabatanId)
+                      ->where('status', 'active'); 
+            })->first();
+ 
+            if (!$nextManager) {
+                \Log::warning('[notifyEscalation] User tidak ditemukan untuk jabatan_id: ' . $nextJabatanId, [
+                    'leave_id' => $leave->id,
+                ]);
+                return;
+            }
+ 
+            $employee = User::find($leave->user_id);
+ 
+            $nextManager->notify(new LeaveNotification('escalated', [
+                'leave_id'      => $leave->id,
+                'employee_name' => $employee?->name ?? 'Karyawan',
+                'leave_type'    => $leave->leaveType->name ?? '-',
+                'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
+                'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
+                'total_days'    => $leave->total_days,
+                'escalated_by'  => $escalatedBy,
+            ]));
+ 
+            \Log::info('[notifyEscalation] Terkirim ke: ' . $nextManager->name . ' (jabatan_id: ' . $nextJabatanId . ')');
+ 
+        } catch (\Exception $e) {
+            \Log::error('[notifyEscalation] Gagal: ' . $e->getMessage());
+        }
     }
 }

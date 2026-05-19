@@ -186,6 +186,12 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
 
+    // Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/',            [LeaveApplicationController::class, 'getNotifications'])->name('index');
+        Route::post('/read-all',   [LeaveApplicationController::class, 'markAllNotificationsRead'])->name('read-all');
+        Route::post('/{id}/read',  [LeaveApplicationController::class, 'markNotificationRead'])->name('read');
+    });
     Route::prefix('Lembur')->group( function() {
         // Overtime
         Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
