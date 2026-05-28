@@ -73,4 +73,10 @@ class OnCall extends Model
     {
         return $query->where('status', 'pending');
     }
+
+    public function approvalHistories()
+    {
+        return $this->hasMany(OncallApprovalHistory::class);
+    }
+    
 }

@@ -5,16 +5,6 @@ namespace App\Notifications;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-/*
- * ✅ PERBAIKAN:
- *  1. Hapus "implements ShouldQueue" dan "use Queueable"
- *     → notifikasi langsung disimpan ke DB saat dipanggil,
- *       tidak perlu queue worker berjalan.
- *
- *  2. via() hanya return ['database'] secara default.
- *     Mail diaktifkan terpisah jika memang dibutuhkan dan
- *     konfigurasi mail sudah siap.
- */
 class LeaveNotification extends Notification
 {
     protected string $type;
@@ -73,7 +63,7 @@ class LeaveNotification extends Notification
                 'message'  => "Pengajuan cuti {$this->data['leave_type']} Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
                             . "telah disetujui oleh {$this->data['approved_by']}.",
-                'url'      => route('pengajuan-cuti'),
+                'url'      => route('riwayat-cuti'),
                 'icon'     => 'check-circle',
                 'color'    => 'green',
                 'leave_id' => $this->data['leave_id'],
@@ -86,7 +76,7 @@ class LeaveNotification extends Notification
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
                             . "ditolak oleh {$this->data['rejected_by']}."
                             . (!empty($this->data['reason']) ? " Alasan: {$this->data['reason']}" : ''),
-                'url'      => route('pengajuan-cuti'),
+                'url'      => route('riwayat-cuti'),
                 'icon'     => 'x-circle',
                 'color'    => 'red',
                 'leave_id' => $this->data['leave_id'],

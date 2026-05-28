@@ -52,8 +52,10 @@
             width: 360px; padding: 0;
             border-radius: 8px;
             box-shadow: 0 4px 24px rgba(0,0,0,.13);
-            border: 1px solid #e3e6f0;
+            border: 1px solid #ffffff;
             overflow: hidden;
+            background-color: #ffffff !important; /* ← TAMBAHKAN INI */
+            opacity: 1 !important;
         }
         .notif-panel-header {
             display: flex; align-items: center;
@@ -189,9 +191,6 @@
                             <span class="notif-panel-title">
                                 <i class="far fa-bell mr-1"></i> Notifikasi
                             </span>
-                            <button class="notif-btn-readall" onclick="notifMarkAllRead()" title="Tandai semua dibaca">
-                                <i class="fas fa-check-double mr-1"></i> Baca Semua
-                            </button>
                         </div>
                         <div class="dropdown-divider m-0"></div>
 
@@ -203,9 +202,9 @@
                         </div>
 
                         <div class="dropdown-divider m-0"></div>
-                        <a href="{{ route('approval-cuti') }}"
+                        <a href="#" onclick="notifMarkAllRead()"
                            class="dropdown-item dropdown-footer text-center">
-                            Lihat Semua Notifikasi
+                            Baca Semua Notifikasi
                         </a>
                     </div>
                 </li>
@@ -260,7 +259,7 @@
             <strong>Copyright &copy; 2025 <a href="https://rs-hamori.co.id">Rumah Sakit HAMORI</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 0.0.2
+                <b>Version</b> 1.0.0
             </div>
         </footer>
 
@@ -358,193 +357,212 @@
          dengan fungsi lain di halaman (terutama updateBadge)
     ═══════════════════════════════════════════════════════════ --}}
     <script>
-    const NOTIF_ICONS = {
-        'calendar-plus'   : 'fas fa-calendar-plus',
-        'check-circle'    : 'fas fa-check-circle',
-        'x-circle'        : 'fas fa-times-circle',
-        'arrow-up-circle' : 'fas fa-arrow-circle-up',
-        'bell'            : 'far fa-bell',
-    };
+        const NOTIF_ICONS = {
+            'calendar-plus'   : 'fas fa-calendar-plus',
+            'check-circle'    : 'fas fa-check-circle',
+            'x-circle'        : 'fas fa-times-circle',
+            'arrow-up-circle' : 'fas fa-arrow-circle-up',
+            'bell'            : 'far fa-bell',
+        };
 
-    /* ── Escape HTML ── */
-    function escHtml(str) {
-        const d = document.createElement('div');
-        d.appendChild(document.createTextNode(String(str ?? '')));
-        return d.innerHTML;
-    }
+        /* ── Escape HTML ── */
+        function escHtml(str) {
+            const d = document.createElement('div');
+            d.appendChild(document.createTextNode(String(str ?? '')));
+            return d.innerHTML;
+        }
 
-    /* ── Toggle dropdown ──
-       Dipasang via addEventListener (bukan onclick di HTML)
-       agar Bootstrap tidak intercept lebih dulu            */
-    function notifToggle(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        /* ── Toggle dropdown ──
+        Dipasang via addEventListener (bukan onclick di HTML)
+        agar Bootstrap tidak intercept lebih dulu            */
+        function notifToggle(e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-        const panel  = document.getElementById('notifDropdown');
-        const isOpen = panel.style.display !== 'none';
+            const panel  = document.getElementById('notifDropdown');
+            const isOpen = panel.style.display !== 'none';
 
-        if (isOpen) {
+            if (isOpen) {
+                panel.style.display = 'none';
+            } else {
+                // ── Tutup semua Bootstrap dropdown yang sedang terbuka ──
+                $('.dropdown-menu.show').each(function () {
+                    $(this).removeClass('show');
+                    $(this).closest('.nav-item.dropdown')
+                        .find('[data-toggle="dropdown"]')
+                        .attr('aria-expanded', 'false');
+                });
+
+                panel.style.display = 'block';
+                notifLoad();
+            }
+        }
+
+        /* ── Tutup saat klik di luar ── */
+        document.addEventListener('click', (e) => {
+            const wrapper = document.querySelector('.notif-nav-item');
+            const panel   = document.getElementById('notifDropdown');
+            const btn     = document.getElementById('notifToggleBtn');
+
+            if (!wrapper || !panel) return;
+
+            // Jangan tutup jika klik di dalam panel atau di tombol bell
+            if (panel.contains(e.target) || (btn && btn.contains(e.target))) return;
+
             panel.style.display = 'none';
-        } else {
-            panel.style.display = 'block';
-            notifLoad();
-        }
-    }
+        });
 
-    /* ── Tutup saat klik di luar ── */
-    document.addEventListener('click', (e) => {
-        const wrapper = document.querySelector('.notif-nav-item');
-        const panel   = document.getElementById('notifDropdown');
-        if (wrapper && panel && !wrapper.contains(e.target)) {
-            panel.style.display = 'none';
-        }
-    });
-
-    /* ── Pasang listener ke bell setelah DOM siap ── */
-    document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('notifToggleBtn');
-        if (btn) {
-            btn.addEventListener('click', notifToggle);
-        }
-    });
-
-    /* ── Fetch & render notifikasi ── */
-    async function notifLoad() {
-        const list = document.getElementById('notifList');
-        list.innerHTML = `<div class="notif-loading">
-            <div class="notif-spinner"></div>
-            <span>Memuat notifikasi…</span>
-        </div>`;
-
-        try {
-            const res  = await fetch('{{ route("notifications.index") }}', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            const json = await res.json();
-            notifUpdateBadge(json.unread_count);
-            notifRender(json.notifications);
-        } catch {
-            list.innerHTML = `<div class="notif-empty">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>Gagal memuat notifikasi</span>
-            </div>`;
-        }
-    }
-
-    /* ── Render list ── */
-    function notifRender(notifications) {
-        const list = document.getElementById('notifList');
-
-        if (!notifications || !notifications.length) {
-            list.innerHTML = `<div class="notif-empty">
-                <i class="far fa-bell-slash"></i>
-                <span>Belum ada notifikasi</span>
-            </div>`;
-            return;
-        }
-
-        // ✅ FIX KLIK: Tidak pakai onclick di sini.
-        //    Navigasi ditangani lewat href pada <a>.
-        //    markRead dipanggil via event listener setelah render.
-        list.innerHTML = notifications.map(n => `
-            <a class="notif-item ${n.is_read ? '' : 'unread'}"
-               href="${escHtml(n.url)}"
-               data-notif-id="${escHtml(n.id)}"
-               data-is-read="${n.is_read ? '1' : '0'}"
-               data-url="${escHtml(n.url)}">
-                <div class="notif-icon ${escHtml(n.color)}">
-                    <i class="${NOTIF_ICONS[n.icon] || NOTIF_ICONS['bell']}"></i>
-                </div>
-                <div class="notif-content">
-                    <div class="notif-item-title">${escHtml(n.title)}</div>
-                    <div class="notif-item-msg">${escHtml(n.message)}</div>
-                    <span class="notif-item-time">
-                        <i class="far fa-clock mr-1"></i>${escHtml(n.time)}
-                    </span>
-                </div>
-                ${!n.is_read ? '<div class="notif-unread-dot"></div>' : ''}
-            </a>
-        `).join('');
-
-        // ✅ FIX KLIK: Bootstrap .dropdown-menu intercept semua klik di dalamnya.
-        //    Solusi: gunakan window.location.href secara eksplisit,
-        //    jangan andalkan navigasi href alami di dalam dropdown Bootstrap.
-        list.querySelectorAll('.notif-item').forEach(el => {
-            el.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation(); // cegah Bootstrap menutup sebelum navigasi
-
-                const id     = this.dataset.notifId;
-                const isRead = this.dataset.isRead === '1';
-                const url    = this.dataset.url;
-
-                if (!isRead) {
-                    // Tandai dibaca, lalu navigasi setelah request selesai (atau timeout)
-                    fetch(`{{ url('notifications') }}/${id}/read`, {
-                        method : 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN'     : '{{ csrf_token() }}',
-                            'X-Requested-With' : 'XMLHttpRequest',
-                        },
-                    })
-                    .catch(() => {})
-                    .finally(() => { window.location.href = url; });
-                } else {
-                    window.location.href = url;
-                }
+        /* ── Pasang listener ke bell setelah DOM siap ── */
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('notifToggleBtn');
+            if (btn) {
+                btn.addEventListener('click', notifToggle);
+            }
+            // ── Tutup notif panel saat Bootstrap dropdown lain dibuka ──
+            $(document).on('show.bs.dropdown', function (e) {
+                const panel = document.getElementById('notifDropdown');
+                if (panel) panel.style.display = 'none';
             });
         });
-    }
 
-    /* ── Tandai satu notifikasi dibaca (background) ── */
-    function notifMarkOneRead(id) {
-        fetch(`{{ url('notifications') }}/${id}/read`, {
-            method : 'POST',
-            headers: {
-                'X-CSRF-TOKEN'     : '{{ csrf_token() }}',
-                'X-Requested-With' : 'XMLHttpRequest',
-            },
-        }).catch(() => {}); // silent fail — navigasi sudah berjalan
-    }
+        /* ── Fetch & render notifikasi ── */
+        async function notifLoad() {
+            const list = document.getElementById('notifList');
+            list.innerHTML = `<div class="notif-loading">
+                <div class="notif-spinner"></div>
+                <span>Memuat notifikasi…</span>
+            </div>`;
 
-    /* ── Tandai semua dibaca ── */
-    async function notifMarkAllRead() {
-        try {
-            await fetch('{{ route("notifications.read-all") }}', {
+            try {
+                const res  = await fetch('{{ route("notifications.index") }}', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const json = await res.json();
+                notifUpdateBadge(json.unread_count);
+                notifRender(json.notifications);
+            } catch {
+                list.innerHTML = `<div class="notif-empty">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Gagal memuat notifikasi</span>
+                </div>`;
+            }
+        }
+
+        /* ── Render list ── */
+        function notifRender(notifications) {
+            const list = document.getElementById('notifList');
+
+            if (!notifications || !notifications.length) {
+                list.innerHTML = `<div class="notif-empty">
+                    <i class="far fa-bell-slash"></i>
+                    <span>Belum ada notifikasi</span>
+                </div>`;
+                return;
+            }
+
+            // ✅ FIX KLIK: Tidak pakai onclick di sini.
+            //    Navigasi ditangani lewat href pada <a>.
+            //    markRead dipanggil via event listener setelah render.
+            list.innerHTML = notifications.map(n => `
+                <a class="notif-item ${n.is_read ? '' : 'unread'}"
+                href="${escHtml(n.url)}"
+                data-notif-id="${escHtml(n.id)}"
+                data-is-read="${n.is_read ? '1' : '0'}"
+                data-url="${escHtml(n.url)}">
+                    <div class="notif-icon ${escHtml(n.color)}">
+                        <i class="${NOTIF_ICONS[n.icon] || NOTIF_ICONS['bell']}"></i>
+                    </div>
+                    <div class="notif-content">
+                        <div class="notif-item-title">${escHtml(n.title)}</div>
+                        <div class="notif-item-msg">${escHtml(n.message)}</div>
+                        <span class="notif-item-time">
+                            <i class="far fa-clock mr-1"></i>${escHtml(n.time)}
+                        </span>
+                    </div>
+                    ${!n.is_read ? '<div class="notif-unread-dot"></div>' : ''}
+                </a>
+            `).join('');
+
+            // ✅ FIX KLIK: Bootstrap .dropdown-menu intercept semua klik di dalamnya.
+            //    Solusi: gunakan window.location.href secara eksplisit,
+            //    jangan andalkan navigasi href alami di dalam dropdown Bootstrap.
+            list.querySelectorAll('.notif-item').forEach(el => {
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // cegah Bootstrap menutup sebelum navigasi
+
+                    const id     = this.dataset.notifId;
+                    const isRead = this.dataset.isRead === '1';
+                    const url    = this.dataset.url;
+
+                    if (!isRead) {
+                        // Tandai dibaca, lalu navigasi setelah request selesai (atau timeout)
+                        fetch(`{{ url('notifications') }}/${id}/read`, {
+                            method : 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN'     : '{{ csrf_token() }}',
+                                'X-Requested-With' : 'XMLHttpRequest',
+                            },
+                        })
+                        .catch(() => {})
+                        .finally(() => { window.location.href = url; });
+                    } else {
+                        window.location.href = url;
+                    }
+                });
+            });
+        }
+
+        /* ── Tandai satu notifikasi dibaca (background) ── */
+        function notifMarkOneRead(id) {
+            fetch(`{{ url('notifications') }}/${id}/read`, {
                 method : 'POST',
                 headers: {
                     'X-CSRF-TOKEN'     : '{{ csrf_token() }}',
                     'X-Requested-With' : 'XMLHttpRequest',
                 },
-            });
-            notifUpdateBadge(0);
-            notifLoad(); // reload list setelah semua dibaca
-        } catch (_) {}
-    }
-
-    /* ── Update badge bell ── */
-    // ✅ Nama fungsi notifUpdateBadge — tidak konflik dengan updateBadge sidebar
-    function notifUpdateBadge(count) {
-        const badge = document.getElementById('notifBellBadge');
-        if (!badge) return;
-        if (count > 0) {
-            badge.textContent = count > 99 ? '99+' : count;
-            badge.classList.remove('d-none');
-        } else {
-            badge.classList.add('d-none');
+            }).catch(() => {}); // silent fail — navigasi sudah berjalan
         }
-    }
 
-    /* ── Load badge saat halaman pertama kali dibuka ── */
-    (async () => {
-        try {
-            const res  = await fetch('{{ route("notifications.index") }}', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            const json = await res.json();
-            notifUpdateBadge(json.unread_count);
-        } catch (_) {}
-    })();
+        /* ── Tandai semua dibaca ── */
+        async function notifMarkAllRead() {
+            try {
+                await fetch('{{ route("notifications.read-all") }}', {
+                    method : 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN'     : '{{ csrf_token() }}',
+                        'X-Requested-With' : 'XMLHttpRequest',
+                    },
+                });
+                notifUpdateBadge(0);
+                notifLoad(); // reload list setelah semua dibaca
+            } catch (_) {}
+        }
+
+        /* ── Update badge bell ── */
+        // ✅ Nama fungsi notifUpdateBadge — tidak konflik dengan updateBadge sidebar
+        function notifUpdateBadge(count) {
+            const badge = document.getElementById('notifBellBadge');
+            if (!badge) return;
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.classList.remove('d-none');
+            } else {
+                badge.classList.add('d-none');
+            }
+        }
+
+        /* ── Load badge saat halaman pertama kali dibuka ── */
+        (async () => {
+            try {
+                const res  = await fetch('{{ route("notifications.index") }}', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const json = await res.json();
+                notifUpdateBadge(json.unread_count);
+            } catch (_) {}
+        })();
+    
     </script>
 
 </body>

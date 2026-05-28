@@ -141,4 +141,9 @@ class LeaveApplication extends Model
     {
         return $query->where('status', 'pending');
     }
+
+    public function approvalHistories()
+    {
+        return $this->hasMany(LeaveApprovalHistory::class);
+    }
 }

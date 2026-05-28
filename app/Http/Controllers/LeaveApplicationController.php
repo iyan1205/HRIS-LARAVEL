@@ -20,6 +20,7 @@ use ZipArchive;
 use App\Http\Requests\LeaveSearchRequest;
 use App\Traits\ApprovalCountTrait;
 use App\Notifications\LeaveNotification;
+use App\Models\LeaveApprovalHistory;
 
 class LeaveApplicationController extends Controller
 {
@@ -204,7 +205,7 @@ class LeaveApplicationController extends Controller
     public function approve(Request $request, $id)
     {
         $user             = Auth::user();
-        $updatedBy        = $user->name;
+        $updatedBy        = $user->karyawan->name;
         $leaveApplication = LeaveApplication::with('leaveType')->findOrFail($id);
  
         /* ── LEVEL 1 — Approval final ── */
@@ -219,37 +220,49 @@ class LeaveApplicationController extends Controller
  
             $leaveApplication->status        = 'approved';
             $leaveApplication->level_approve = 0;
- 
+
+            // Simpan riwayat
+            LeaveApprovalHistory::create([
+                'leave_application_id' => $leaveApplication->id,
+                'user_id'              => $user->id,
+                'action'               => 'approved',
+                'level_approve'        => 1,
+            ]);
+
             $this->notifyEmployee($leaveApplication, 'approved', $updatedBy);
  
         /* ── LEVEL 2 — Eskalasi ke atasan berikutnya ── */
         } elseif ($leaveApplication->level_approve == 2) {
  
-            /*
-             * manager_id di tabel jabatan = jabatan_id (BUKAN user_id)
-             * Diambil dari jabatan milik user yang sedang login
-             */
             $nextJabatanId = (int) $user->karyawan->jabatan->manager_id;
  
             $leaveApplication->manager_id        = $nextJabatanId;
             $leaveApplication->level_approve     = 1;
             $leaveApplication->updated_by_atasan = $updatedBy;
             $leaveApplication->updated_at_atasan = now();
- 
+            
+            // Simpan riwayat
+            LeaveApprovalHistory::create([
+                'leave_application_id' => $leaveApplication->id,
+                'user_id'              => $user->id,
+                'action'               => 'escalated',
+                'level_approve'        => 2,
+            ]);
+
             $this->notifyEscalation($leaveApplication, $nextJabatanId, $updatedBy);
         }
  
         $leaveApplication->approve($updatedBy);
         $leaveApplication->save();
  
-        Session::flash('successAdd', 'Pengajuan cuti Approved.');
+        Session::flash('successAdd', 'Pengajuan Cuti Di Setujui.');
         return redirect()->route('approval-cuti');
     }
     
 
     public function cancel(Request $request, $id) {
         $user = Auth::user();
-        $updatedBy = $user->name;
+        $updatedBy = $user->karyawan->name;
         $leaveApplication = LeaveApplication::findOrFail($id);
         $leaveApplication->cancel($updatedBy);
         $leaveApplication->save();
@@ -263,22 +276,17 @@ class LeaveApplicationController extends Controller
     public function reject(Request $request, $id) {
         $user = Auth::user();
         $updatedBy = $user->name;
-
         $leaveApplication = LeaveApplication::findOrFail($id);
-        // Set nilai alasan reject
+
         $alasan_reject = $request->input('alasan_reject');
         $leaveApplication->alasan_reject = $alasan_reject;
 
-           // If the leave is approved and the category is "CUTI TAHUNAN", update the leave balance
-        if ($leaveApplication->status == 'approved' && $leaveApplication->leavetype->kategori_cuti == 'CUTI TAHUNAN') {
-            // Find the user's leave balance record
-            $leaveBalance = LeaveBalance::where('user_id', $leaveApplication->user_id)->first();
-            if ($leaveBalance) {
-                // Add total_days of the rejected leave back to saldo_cuti
-                $leaveBalance->saldo_cuti += $leaveApplication->total_days;
-                $leaveBalance->save();
-            }
-        }
+        LeaveApprovalHistory::create([
+                'leave_application_id' => $leaveApplication->id,
+                'user_id'              => $user->id,
+                'action'               => 'rejected',
+                'level_approve'        => $leaveApplication->level_approve,
+            ]);
 
         $leaveApplication->reject($updatedBy);
         $leaveApplication->save();
@@ -286,7 +294,7 @@ class LeaveApplicationController extends Controller
         $this->notifyEmployee(
             $leaveApplication,
             'rejected',
-            $user->name,
+            $user->karyawan->name,
             $request->input('reason', '')
         );
 
@@ -402,8 +410,7 @@ class LeaveApplicationController extends Controller
             'file_upload' => $path,
         ]);
     
-        $message = 'Pengajuan cuti berhasil diperbarui.';
-        Session::flash('successAdd', $message);
+        Session::flash('successAdd', 'Pengajuan cuti Tidak Disetujui.');
     
         return redirect()->route('pengajuan-cuti');
     }
@@ -653,7 +660,7 @@ class LeaveApplicationController extends Controller
     public function getNotifications()
     {
         $user          = Auth::user();
-        $notifications = $user->notifications()->latest()->take(10)->get();
+        $notifications = $user->unreadNotifications()->latest()->take(10)->get();
 
         $data = $notifications->map(function ($n) {
             return [
@@ -663,7 +670,7 @@ class LeaveApplicationController extends Controller
                 'url'         => $n->data['url']      ?? '#',
                 'icon'        => $n->data['icon']     ?? 'bell',
                 'color'       => $n->data['color']    ?? 'gray',
-                'is_read'     => !is_null($n->read_at),
+                'is_read'     => false,
                 'time'        => $n->created_at->diffForHumans(),
             ];
         });
@@ -683,64 +690,38 @@ class LeaveApplicationController extends Controller
      */
     private function notifyManager(LeaveApplication $leave, int $jabatanId): void
     {
-        try {
-            // Cari user yang memiliki jabatan dengan ID = $jabatanId
-            $manager = User::whereHas('karyawan', function($query) use ($jabatanId) {
-                $query->where('jabatan_id', $jabatanId);
-            })->first();
-            
-            if (!$manager) {
-                \Log::warning("Tidak ada user yang memiliki jabatan ID: {$jabatanId}", [
-                    'leave_id' => $leave->id,
-                    'user_id' => $leave->user_id
-                ]);
-                return;
-            }
-            
-            $employee = User::find($leave->user_id);
-            
-            \Log::info("Mengirim notifikasi ke manager dengan jabatan ID: {$jabatanId}", [
-                'manager_user_id' => $manager->id,
-                'manager_name' => $manager->name,
-                'leave_id' => $leave->id
-            ]);
-            
-            $notification = new LeaveNotification('submitted', [
-                'leave_id'      => $leave->id,
-                'employee_name' => $employee?->name ?? 'Karyawan',
-                'leave_type'    => $leave->leaveType->name ?? '-',
-                'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
-                'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
-                'total_days'    => $leave->total_days,
-            ]);
-            
-            $manager->notify($notification);
-            
-            // Verifikasi notifikasi tersimpan
-            $notifCount = $manager->notifications()->count();
-            \Log::info("Notifikasi terkirim. Manager sekarang memiliki {$notifCount} notifikasi");
-            
-        } catch (\Exception $e) {
-            \Log::error("Gagal mengirim notifikasi ke jabatan {$jabatanId}: " . $e->getMessage());
-        }
+        // Cari user yang memiliki jabatan dengan ID = $jabatanId
+        $manager = User::whereHas('karyawan', function($query) use ($jabatanId) {
+            $query->where('jabatan_id', $jabatanId)->where('status', 'active'); // Pastikan hanya mencari user dengan status aktif
+        })->first();
+        
+        if (!$manager) return;
+        
+        $employee = User::find($leave->user_id);
+    
+        $notification = new LeaveNotification('submitted', [
+            'leave_id'      => $leave->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'leave_type'    => $leave->leaveType->kategori_cuti ?? '-',
+            'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
+            'total_days'    => $leave->total_days,
+        ]);
+        
+        $manager->notify($notification);
     }
-
+    
     /**
      * Kirim notifikasi ke karyawan (approved / rejected).
      */
-    private function notifyEmployee(
-        LeaveApplication $leave,
-        string $status,
-        string $actorName,
-        string $reason = ''
-    ): void {
+    private function notifyEmployee(LeaveApplication $leave,string $status,string $actorName,string $reason = ''): void {
         $employee = User::find($leave->user_id);
 
         if (!$employee) return;
 
         $payload = [
             'leave_id'   => $leave->id,
-            'leave_type' => $leave->leaveType->name ?? '-',
+            'leave_type' => $leave->leaveType->kategori_cuti ?? '-',
             'start_date' => Carbon::parse($leave->start_date)->format('d M Y'),
             'end_date'   => Carbon::parse($leave->end_date)->format('d M Y'),
         ];
@@ -758,50 +739,42 @@ class LeaveApplicationController extends Controller
     /**
      * Kirim notifikasi ke manager berikutnya saat cuti dieskalasi.
      */
-    /* ══════════════════════════════════════════════════
-     |  NOTIFY ESCALATION — approve level 2 → level 1
-     |  $nextJabatanId = manager_id dari jabatan user
-     |                 = jabatan_id atasan (bukan user_id)
-     |
-     |  ✅ FIX: konsisten dengan notifyManager()
-     |          pakai whereHas jabatan_id, BUKAN User::find()
-     ══════════════════════════════════════════════════ */
-    private function notifyEscalation(
-        LeaveApplication $leave,
-        int $nextJabatanId,   // jabatan_id atasan, bukan user_id
-        string $escalatedBy
-    ): void {
-        try {
-            // Cari user yang jabatan_id-nya = nextJabatanId
-            // Sama persis dengan logika notifyManager()
-            $nextManager = User::whereHas('karyawan', function ($query) use ($nextJabatanId) {
-                $query->where('jabatan_id', $nextJabatanId)
-                      ->where('status', 'active'); 
-            })->first();
- 
-            if (!$nextManager) {
-                \Log::warning('[notifyEscalation] User tidak ditemukan untuk jabatan_id: ' . $nextJabatanId, [
-                    'leave_id' => $leave->id,
-                ]);
-                return;
-            }
- 
-            $employee = User::find($leave->user_id);
- 
-            $nextManager->notify(new LeaveNotification('escalated', [
-                'leave_id'      => $leave->id,
-                'employee_name' => $employee?->name ?? 'Karyawan',
-                'leave_type'    => $leave->leaveType->name ?? '-',
-                'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
-                'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
-                'total_days'    => $leave->total_days,
-                'escalated_by'  => $escalatedBy,
-            ]));
- 
-            \Log::info('[notifyEscalation] Terkirim ke: ' . $nextManager->name . ' (jabatan_id: ' . $nextJabatanId . ')');
- 
-        } catch (\Exception $e) {
-            \Log::error('[notifyEscalation] Gagal: ' . $e->getMessage());
-        }
+
+    private function notifyEscalation(LeaveApplication $leave,int $nextJabatanId, string $escalatedBy): void {
+        // Sama persis dengan logika notifyManager()
+        $nextManager = User::whereHas('karyawan', function ($query) use ($nextJabatanId) {
+            $query->where('jabatan_id', $nextJabatanId)
+                    ->where('status', 'active'); 
+        })->first();
+
+        if (!$nextManager) return;
+
+        $employee = User::find($leave->user_id);
+
+        $nextManager->notify(new LeaveNotification('escalated', [
+            'leave_id'      => $leave->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'leave_type'    => $leave->leaveType->kategori_cuti ?? '-',
+            'start_date'    => Carbon::parse($leave->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($leave->end_date)->format('d M Y'),
+            'total_days'    => $leave->total_days,
+            'escalated_by'  => $escalatedBy,
+        ]));
     }
+
+    public function historyApproval()
+    {
+        $user = Auth::user();
+
+        $approvalHistory = LeaveApprovalHistory::with([
+                'leaveApplication.user.karyawan.jabatan'
+            ])
+            ->where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subMonth())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('cuti.history_approval', compact('approvalHistory', 'user'));
+    }
+
 }
