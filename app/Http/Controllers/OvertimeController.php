@@ -225,6 +225,7 @@ class OvertimeController extends Controller
         $overime->reject($updatedBy);
         $overime->save();
 
+        $this->notifyEmployee($overime, 'rejected', $updatedBy, $alasan_reject);
         Session::flash('successAdd', 'Pengajuan Lembur Tidak DiSetujui.');
         return redirect()->route('approval-overtime');
 

@@ -50,7 +50,7 @@ class OncallNotification extends Notification
                 'title'   => 'Penugasan Oncall Disetujui',
                 'message' => "Penugasan oncall Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
-                            . "telah disetujui oleh {$this->data['approved_by']}.",
+                            . "telah Disetujui.",
                 'url'     => route('oncall.riwayat'),
                 'icon'    => 'check-circle',
                 'color'   => 'green',

@@ -46,16 +46,26 @@
         /* ══════════════════════════════════════════
            NOTIFIKASI STYLES
         ══════════════════════════════════════════ */
-        .notif-nav-item { position: static; }
+        .notif-nav-item { position: relative; }
 
         .notif-panel {
-            width: 360px; padding: 0;
+            width: 400px; padding: 0;
             border-radius: 8px;
             box-shadow: 0 4px 24px rgba(0,0,0,.13);
             border: 1px solid #ffffff;
             overflow: hidden;
             background-color: #ffffff !important; /* ← TAMBAHKAN INI */
             opacity: 1 !important;
+        }
+        @media (max-width: 576px) {
+            .notif-panel {
+                width: 400px;
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                position: fixed !important;
+                top: 60px !important;
+            }
         }
         .notif-panel-header {
             display: flex; align-items: center;

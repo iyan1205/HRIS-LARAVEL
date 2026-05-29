@@ -45,7 +45,7 @@ class LeaveNotification extends Notification
         return match ($this->type) {
 
             'submitted' => [
-                'type'     => 'leave_submitted',
+                'type'     => 'new_leave',
                 'title'    => 'Pengajuan Cuti Baru',
                 'message'  => "{$this->data['employee_name']} mengajukan cuti "
                             . "{$this->data['leave_type']} pada "
@@ -62,7 +62,7 @@ class LeaveNotification extends Notification
                 'title'    => 'Cuti Disetujui',
                 'message'  => "Pengajuan cuti {$this->data['leave_type']} Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
-                            . "telah disetujui oleh {$this->data['approved_by']}.",
+                            . "telah Disetujui.",
                 'url'      => route('riwayat-cuti'),
                 'icon'     => 'check-circle',
                 'color'    => 'green',
@@ -71,7 +71,7 @@ class LeaveNotification extends Notification
 
             'rejected' => [
                 'type'     => 'leave_rejected',
-                'title'    => 'Cuti Ditolak',
+                'title'    => 'Pengajuan Cuti Ditolak',
                 'message'  => "Pengajuan cuti {$this->data['leave_type']} Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
                             . "ditolak oleh {$this->data['rejected_by']}."
@@ -86,8 +86,9 @@ class LeaveNotification extends Notification
                 'type'     => 'leave_escalated',
                 'title'    => 'Eskalasi Pengajuan Cuti',
                 'message'  => "Pengajuan cuti {$this->data['employee_name']} "
-                            . "({$this->data['leave_type']}) telah disetujui level 1 "
-                            . "dan memerlukan persetujuan Anda.",
+                            . "({$this->data['leave_type']}) pada "
+                            . "{$this->data['start_date']} – {$this->data['end_date']} "
+                            . "telah dieskalasi menunggu persetujuan.",
                 'url'      => route('approval-cuti'),
                 'icon'     => 'arrow-up-circle',
                 'color'    => 'yellow',

@@ -50,7 +50,7 @@ class OvertimeNotification extends Notification
                 'title'   => 'Pengajuan Lembur Disetujui',
                 'message' => "Pengajuan lembur Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
-                            . "telah disetujui oleh {$this->data['approved_by']}.",
+                            . "telah Disetujui.",
                 'url'     => route('overtime.riwayat'),
                 'icon'    => 'check-circle',
                 'color'   => 'green',
@@ -61,7 +61,7 @@ class OvertimeNotification extends Notification
                 'title'   => 'Pengajuan Lembur Ditolak',
                 'message' => "Pengajuan lembur Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
-                            . "tidak disetujui. Alasan: {$this->data['reason']}.",
+                            . "ditolak oleh: {$this->data['approved_by']}.",
                 'url'     => route('overtime.riwayat'),
                 'icon'    => 'times-circle',
                 'color'   => 'red',
