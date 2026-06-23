@@ -27,22 +27,69 @@ class KaryawanController extends Controller
         $this->middleware('permission:delete karyawan', ['only' => ['destroy']]);
     }
     
-    public function index()
+    public function index(request $request)
     {
-        $karyawans = Karyawan::where('status', 'active')
-        ->orderBy('nik', 'desc')
-        ->with('pelatihans')
-        ->get();
+        $perPage = in_array($request->per_page, [10, 25, 50]) ? $request->per_page : 10;
+        
+        $karyawans = Karyawan::with('pelatihans')
+            ->when($request->filled('nama'), function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->nama . '%');
+            })
+            ->when($request->filled('nik'), function ($q) use ($request) {
+                $q->where('nik', 'like', '%' . $request->nik . '%');
+            })
+            ->when($request->filled('jabatan'), function ($q) use ($request) {
+                $q->whereHas('jabatan', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->jabatan . '%');
+                });
+            })
+            ->when($request->filled('departemen'), function ($q) use ($request) {
+                $q->whereHas('departemen', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->departemen . '%');
+                });
+            })
+            ->when($request->filled('unit'), function ($q) use ($request) {
+                $q->whereHas('unit', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->unit . '%');
+                });
+            })
+            ->where('status', 'active')
+            ->orderBy('nik', 'desc')
+            ->paginate($perPage)
+            ->withQueryString();
         $jumlahKaryawanAktif = Karyawan::where('status', 'active')->count();
         return view('karyawan.index', compact('karyawans', 'jumlahKaryawanAktif'));
     }
 
-    public function resign()
+    public function resign(request $request)
     {
+        $perPage = in_array($request->per_page, [10, 25, 50]) ? $request->per_page : 10;
         $resigns = Karyawan::where('status', 'resign')
+            ->when($request->filled('nama'), function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->nama . '%');
+            })
+            ->when($request->filled('nik'), function ($q) use ($request) {
+                $q->where('nik', 'like', '%' . $request->nik . '%');
+            })
+            ->when($request->filled('jabatan'), function ($q) use ($request) {
+                $q->whereHas('jabatan', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->jabatan . '%');
+                });
+            })
+            ->when($request->filled('departemen'), function ($q) use ($request) {
+                $q->whereHas('departemen', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->departemen . '%');
+                });
+            })
+            ->when($request->filled('unit'), function ($q) use ($request) {
+                $q->whereHas('unit', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->unit . '%');
+                });
+            })
         ->orderBy('tgl_resign', 'desc')
-        ->get();
-        return \view('karyawan.resign', compact('resigns'));
+        ->paginate($perPage)
+        ->withQueryString();
+        return view('karyawan.resign', compact('resigns'));
     }
 
     public function create()

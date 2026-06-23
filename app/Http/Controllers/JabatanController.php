@@ -15,9 +15,18 @@ class JabatanController extends Controller
         $this->middleware('role:Super-Admin|admin');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $jabatans = Jabatan::orderBy('name', 'asc')->get();
+        $perPage = in_array($request->per_page, [10, 25, 50]) ? $request->per_page : 10;
+
+        $jabatans = Jabatan::select('id', 'name')
+            ->when($request->filled('nama'), function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->nama . '%');
+            })
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
+
         return view('organisasi.jabatan.index', compact('jabatans'));
     }
     public function create()

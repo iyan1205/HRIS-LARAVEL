@@ -18,9 +18,40 @@ class MobilitasJabatanController extends Controller
         $this->middleware('role:Super-Admin|admin');
     }
 
-    function index() {
-        $mobilitasData = Mobilitas::orderBy('tanggal_efektif', 'desc')->get();
-        return view('organisasi.jabatan.mobilitas-jabatan', compact('mobilitasData'));
+    function index(request $request) 
+    {
+        $perPage = in_array($request->per_page, [10, 25, 50]) ? $request->per_page : 10;
+        $mobilitasJabatans = Mobilitas::with('karyawan')
+            ->when($request->filled('nama'), function ($q) use ($request) {
+                $q->whereHas('karyawan', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->nama . '%');
+                });
+            })
+            ->when($request->filled('aspek'), function ($q) use ($request) {
+                $q->where('aspek', 'like', '%' . $request->aspek . '%');
+            })
+            ->when($request->filled('jabatan_sebelumnya'), function ($q) use ($request) {
+                $q->where('jabatan_sekarang', 'like', '%' . $request->jabatan_sebelumnya . '%');
+            })
+            ->when($request->filled('jabatan_baru'), function ($q) use ($request) {
+                $q->where('jabatan_baru', 'like', '%' . $request->jabatan_baru . '%');
+            })
+            ->when($request->filled('departemen_sebelumnya'), function ($q) use ($request) {
+                $q->where('departemen_sekarang', 'like', '%' . $request->departemen_sebelumnya . '%');
+            })
+            ->when($request->filled('departemen_baru'), function ($q) use ($request) {
+                $q->where('departemen_baru', 'like', '%' . $request->departemen_baru . '%');
+            })
+            ->when($request->filled('instalasi_divisi_sebelumnya'), function ($q) use ($request) {
+                $q->where('unit_sekarang', 'like', '%' . $request->instalasi_divisi_sebelumnya . '%');
+            })
+            ->when($request->filled('instalasi_divisi_baru'), function ($q) use ($request) {
+                $q->where('unit_baru', 'like', '%' . $request->instalasi_divisi_baru . '%');
+            })
+            ->orderByRaw('STR_TO_DATE(tanggal_efektif, "%Y-%m-%d") ASC')
+            ->paginate($perPage)
+            ->withQueryString();
+        return view('organisasi.jabatan.mobilitas-jabatan', compact('mobilitasJabatans'));
     }
 
     function edit(Request $request, $id) {

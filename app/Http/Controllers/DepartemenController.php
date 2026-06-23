@@ -14,9 +14,15 @@ class DepartemenController extends Controller
         $this->middleware('role:Super-Admin|admin');
     }
     
-    public function index()
+    public function index(request $request)
     {
-        $departemens = Departemen::get();
+        $perPage = in_array($request->per_page, [10, 25, 50]) ? $request->per_page : 10;
+        $departemens = Departemen::
+        when($request->filled('nama'), function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->nama . '%');
+            })
+            ->paginate($perPage)
+            ->withQueryString();
         return view('organisasi.departemen.index', compact('departemens'));
     }
 
