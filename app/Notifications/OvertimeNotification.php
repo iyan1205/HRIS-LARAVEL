@@ -61,7 +61,7 @@ class OvertimeNotification extends Notification
                 'title'   => 'Pengajuan Lembur Ditolak',
                 'message' => "Pengajuan lembur Anda pada "
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
-                            . "ditolak oleh: {$this->data['approved_by']}.",
+                            . "ditolak oleh: {$this->data['rejected_by']}.",
                 'url'     => route('overtime.riwayat'),
                 'icon'    => 'times-circle',
                 'color'   => 'red',

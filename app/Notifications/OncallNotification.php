@@ -63,7 +63,7 @@ class OncallNotification extends Notification
                             . "{$this->data['start_date']} – {$this->data['end_date']} "
                             . "ditolak oleh {$this->data['rejected_by']}."
                             . (!empty($this->data['reason']) ? " Alasan: {$this->data['reason']}" : ''),
-                'url'     => route('riwayat-oncall'),
+                'url'     => route('oncall.riwayat'),
                 'icon'    => 'x-circle',
                 'color'   => 'red',
                 'oncall_id' => $this->data['oncall_id'],

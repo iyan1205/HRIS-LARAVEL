@@ -81,7 +81,7 @@
                                             @elseif ($history->action == 'rejected')
                                                 <span class="badge bg-danger">Ditolak</span>
                                             @elseif ($history->action == 'escalated')
-                                                <span class="badge bg-warning">Diteruskan</span>
+                                                <span class="badge bg-warning">Diteruskan Ke Atasan</span>
                                             @else
                                                 <span class="badge bg-secondary">{{ ucfirst($history->action) }}</span>
                                             @endif
