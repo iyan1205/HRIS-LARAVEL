@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OvertimeSearchRequest;
 use App\Traits\ApprovalCountTrait;
+use App\Notifications\OvertimeNotification;
+use App\Models\OvertimeApprovalHistory;
 
 class OvertimeController extends Controller
 {
@@ -33,7 +35,7 @@ class OvertimeController extends Controller
         /// Ambil pengguna yang sedang login
         $user = Auth::user();
 
-        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        // Ambil pengajuan lembur yang diajukan oleh pengguna yang sedang login
         $overtimes = Overtime::where('user_id', $user->id)
             ->where('status', 'pending')
             ->get();
@@ -49,14 +51,14 @@ class OvertimeController extends Controller
             if ($users->hasRole(['Super-Admin', 'admin'])) {
                 $overtimes = Overtime::where('status', 'pending')->get();
             } else if ($users->hasRole('Approver')) {
-                // Query untuk mendapatkan pengajuan cuti yang memiliki unit yang sama dengan unit pengguna
+                // Query untuk mendapatkan pengajuan lembur yang memiliki unit yang sama dengan unit pengguna
                
             $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
             $overtimes = Overtime::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->get();   
         
             } else {
-                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
-                $overtimes = $users->leave_applications()->where('status', 'pending')->get();
+                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan lembur yang diajukan oleh pengguna
+                $overtimes = $users->overtimes()->where('status', 'pending')->get();
             }
     
             return view('overtime.approval-overtime', compact('overtimes'));   
@@ -70,7 +72,7 @@ class OvertimeController extends Controller
         // Ambil pengguna yang sedang login
         $user = Auth::user();
     
-        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        // Ambil pengajuan lembur yang diajukan oleh pengguna yang sedang login
         $overtimes = Overtime::where('user_id', $user->id)
             ->whereIn('status', ['rejected', 'approved', 'canceled'])
             ->orderBy('created_at', 'desc')
@@ -157,54 +159,74 @@ class OvertimeController extends Controller
         ]);
 
         // Tambahkan session flash message
-        $message = 'Pengajuan Lembur berhasil dibuat.';
-        Session::flash('successAdd', $message);
-
+        Session::flash('successAdd', 'Pengajuan Lembur berhasil dibuat.');
+        
+        $this->notifyManager($overtimes, $approver_id);
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('overtime');
     }
 
     public function approve(Request $request, $id) {
         $user = Auth::user();
-        $updatedBy = $user->name;
-        $overtimes = Overtime::findOrFail($id);
+        $updatedBy = $user->karyawan->name;
+        $overtime = Overtime::findOrFail($id);
 
-        if ($overtimes->level_approve === 1) {
-            $overtimes->status = 'approved';
-            $overtimes->level_approve = '0';
-        } else {
-            $overtimes->status = 'pending';
-            $overtimes->level_approve = '1';
-            $overtimes->approver_id = $user->karyawan->jabatan->manager_id;
-            $overtimes->updated_by_atasan = $updatedBy;
-            $overtimes->updated_at_atasan = now();
+        if ($overtime->level_approve === 1) {
+            $overtime->status = 'approved';
+            $overtime->level_approve = 0;
+
+            OvertimeApprovalHistory::create([
+                'overtime_id' => $overtime->id,
+                'user_id' => $user->id,
+                'action' => 'approved',
+                'level_approve' => 1,
+            ]);
+            $this->notifyEmployee($overtime, 'approved', $updatedBy);
+        } elseif ($overtime->level_approve === 2) {
+            $nextJabatanId = $user->karyawan->jabatan->manager_id;
+
+            $overtime->approver_id = $nextJabatanId;
+            $overtime->level_approve = 1;
+            $overtime->updated_by_atasan = $updatedBy;
+            $overtime->updated_at_atasan = now();
+
+            OvertimeApprovalHistory::create([
+                'overtime_id' => $overtime->id,
+                'user_id' => $user->id,
+                'action' => 'escalated',
+                'level_approve' => 2,
+            ]);
+            $this->notifyEscalation($overtime, $nextJabatanId, $updatedBy);
         }
         
-        $overtimes->approve($updatedBy);
-        $overtimes->save();
+        $overtime->approve($updatedBy);
+        $overtime->save();
 
-        $message = 'Lembur Approved.';
-        Session::flash('successAdd', $message);
+        Session::flash('successAdd', 'Pengajuan Lembur Disetujui.');
         return redirect()->route('approval-overtime');
 
     }
     
     public function reject(Request $request, $id) {
         $user = Auth::user();
-        $updatedBy = $user->name;
+        $updatedBy = $user->karyawan->name;
 
-        $overimes = Overtime::findOrFail($id);
+        $overime = Overtime::findOrFail($id);
         // Set nilai alasan reject
         $alasan_reject = $request->input('alasan_reject');
+        $overime->alasan_reject = $alasan_reject;
 
-        // Simpan alasan reject
-        $overimes->alasan_reject = $alasan_reject;
+            OvertimeApprovalHistory::create([
+                'overtime_id' => $overime->id,
+                'user_id' => $user->id,
+                'action' => 'rejected',
+                'level_approve' => $overime->level_approve,
+            ]);
+        $overime->reject($updatedBy);
+        $overime->save();
 
-        $overimes->reject($updatedBy);
-        $overimes->save();
-
-        $message = 'Pengajuan Lembur Tidak Di Setujui.';
-        Session::flash('successAdd', $message);
+        $this->notifyEmployee($overime, 'rejected', $updatedBy, $alasan_reject);
+        Session::flash('successAdd', 'Pengajuan Lembur Tidak DiSetujui.');
         return redirect()->route('approval-overtime');
 
     }
@@ -374,6 +396,83 @@ class OvertimeController extends Controller
     public function report_history_lembur(){
         $reporthistory = ReportHistory::with('user')->where('name','Pengajuan Lembur')->orderBy('created_at', 'desc')->get();
         return view('overtime.report-history', compact('reporthistory'));
+    }
+
+     private function notifyManager(Overtime $overtime, int $jabatanId): void
+    {
+        // Cari user yang memiliki jabatan dengan ID = $jabatanId
+        $manager = User::whereHas('karyawan', function($query) use ($jabatanId) {
+            $query->where('jabatan_id', $jabatanId)->where('status', 'active'); // Pastikan hanya mencari user dengan status aktif
+        })->first();
+        
+        if (!$manager) return;
+        
+        $employee = User::find($overtime->user_id);
+    
+        $notification = new OvertimeNotification('submitted', [
+            'overtime_id'     => $overtime->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'start_date'    => Carbon::parse($overtime->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($overtime->end_date)->format('d M Y'),
+            'interval'      => $overtime->interval,
+        ]);
+        
+        $manager->notify($notification);
+    }
+    
+    private function notifyEmployee(Overtime $overtime,string $status,string $actorName,string $reason = ''): void {
+        $employee = User::find($overtime->user_id);
+
+        if (!$employee) return;
+
+        $payload = [
+            'overtime_id'   => $overtime->id,
+            'start_date' => Carbon::parse($overtime->start_date)->format('d M Y'),
+            'end_date'   => Carbon::parse($overtime->end_date)->format('d M Y'),
+            'interval'   => $overtime->interval,
+        ];
+
+        if ($status === 'approved') {
+            $payload['approved_by'] = $actorName;
+        } else {
+            $payload['rejected_by'] = $actorName;
+            $payload['reason']      = $reason;
+        }
+
+        $employee->notify(new OvertimeNotification($status, $payload));
+    }
+
+
+    private function notifyEscalation(Overtime $overtime,int $nextJabatanId, string $escalatedBy): void {
+        // Sama persis dengan logika notifyManager()
+        $nextManager = User::whereHas('karyawan', function ($query) use ($nextJabatanId) {
+            $query->where('jabatan_id', $nextJabatanId)
+                    ->where('status', 'active'); 
+        })->first();
+
+        if (!$nextManager) return;
+
+        $employee = User::find($overtime->user_id);
+
+        $nextManager->notify(new OvertimeNotification('escalated', [
+            'overtime_id'      => $overtime->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'start_date'    => Carbon::parse($overtime->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($overtime->end_date)->format('d M Y'),
+            'interval'    => $overtime->interval,
+            'escalated_by'  => $escalatedBy,
+        ]));
+    }
+    
+    public function historyApproval(){
+        $user = Auth::user();
+        $approvalHistory = OvertimeApprovalHistory::with('overtime.user.karyawan')
+            ->where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subMonth())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('overtime.history_approval', compact('approvalHistory'));
     }
 
 }

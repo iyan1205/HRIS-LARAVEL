@@ -144,6 +144,12 @@
                         <p>Approval Cuti</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('approval.history.cuti') }}" class="nav-link {{ request()->is('cuti/history-approval*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Riwayat Approval Cuti</p>
+                    </a>
+                </li>
                 @endcan
 
                 @can('sidebar laporan cuti')
@@ -214,6 +220,12 @@
                         <p>Approval Lembur</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('approval.history.overtime') }}" class="nav-link {{ request()->is('Lembur/riwayat-approval*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Riwayat Approval Lembur</p>
+                    </a>
+                </li>
                 @endcan
 
                 @can('sidebar laporan lembur')
@@ -263,6 +275,12 @@
                         class="nav-link {{ request()->is('oncall/approval-oncall*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Approval On-Call</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('approval.history.oncall') }}" class="nav-link {{ request()->is('oncall/riwayat-approval*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Riwayat Approval On-Call</p>
                     </a>
                 </li>
                 @endcan

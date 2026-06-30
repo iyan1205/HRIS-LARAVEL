@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OncallSearchRequest;
 use App\Traits\ApprovalCountTrait;
+use App\Notifications\OncallNotification;
+use App\Models\OncallApprovalHistory;
 
 class OnCallController extends Controller
 {
@@ -43,7 +45,7 @@ class OnCallController extends Controller
             $oncalls = OnCall::whereIn('approver_id', $subordinateIds)->where('status', 'pending')->get();   
         
             } else {
-                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan cuti yang diajukan oleh pengguna
+                // Jika pengguna bukan 'Super-Admin', 'admin', atau 'Approver', ambil pengajuan oncall yang diajukan oleh pengguna
                 $oncalls = $users->oncall()->where('status', 'pending')->get();
             }
     
@@ -57,7 +59,7 @@ class OnCallController extends Controller
         // Ambil pengguna yang sedang login
         $user = Auth::user();
     
-        // Ambil pengajuan cuti yang diajukan oleh pengguna yang sedang login
+        // Ambil pengajuan oncall yang diajukan oleh pengguna yang sedang login
         $oncalls = OnCall::where('user_id', $user->id)
             ->whereIn('status', ['rejected', 'approved','canceled'])
             ->orderBy('created_at', 'desc')
@@ -146,55 +148,79 @@ class OnCallController extends Controller
         ]);
 
         // Tambahkan session flash message
-        $message = 'Pengajuan On Call berhasil dibuat.';
-        Session::flash('successAdd', $message);
+        Session::flash('successAdd', 'Pengajuan On Call berhasil dibuat.');
 
+        $this->notifyManager($oncalls, $approver_id);
         // Redirect ke halaman tertentu atau tampilkan pesan sukses
         return redirect()->route('oncall');
     }
 
     public function approve(Request $request, $id) {
         $user = Auth::user();
-        $updatedBy = $user->name;
-        $oncalls = OnCall::findOrFail($id);
+        $updatedBy = $user->karyawan->name;
+        $oncall = OnCall::findOrFail($id);
 
-        if ($oncalls->level_approve === 1) {
-            $oncalls->status = 'approved';
-            $oncalls->level_approve = '0';
-        } else {
-            $oncalls->status = 'pending';
-            $oncalls->level_approve = '1';
-            $oncalls->approver_id = $user->karyawan->jabatan->manager_id;
-            $oncalls->updated_by_atasan = $updatedBy;
-            $oncalls->updated_at_atasan = now();
+        if ($oncall->level_approve === 1) {
+            $oncall->status = 'approved';
+            $oncall->level_approve = 0;
+            
+            OncallApprovalHistory::create([
+                'oncall_id' => $oncall->id,
+                'user_id' => $user->id,
+                'action' => 'approved',
+                'level_approve' => 1,             
+            ]);
+
+            $this->notifyEmployee($oncall,'approved',$updatedBy);
+        } elseif ($oncall->level_approve === 2) {
+            $nextJabatanId = $user->karyawan->jabatan->manager_id;
+
+            $oncall->approver_id = $nextJabatanId;
+            $oncall->level_approve = 1;
+            $oncall->updated_by_atasan = $updatedBy;
+            $oncall->updated_at_atasan = now();
+
+            OncallApprovalHistory::create([
+                'oncall_id' => $oncall->id,
+                'user_id' => $user->id,
+                'action' => 'escalated',
+                'level_approve' => 2,
+            ]);
+            $this->notifyEscalation($oncall,$nextJabatanId, $updatedBy);
         }
         
 
-        $oncalls->approve($updatedBy);
-        $oncalls->save();
+        $oncall->approve($updatedBy);
+        $oncall->save();
 
-        $message = 'Pengajuan Oncall Di Setujui.';
-        Session::flash('successAdd', $message);
+        Session::flash('successAdd', 'Pengajuan Oncall DiSetujui.');
         return redirect()->route('approval-oncall');
 
     }
     
     public function reject(Request $request, $id) {
         $user = Auth::user();
-        $updatedBy = $user->name;
+        $updatedBy = $user->karyawan->name;
 
-        $overimes = OnCall::findOrFail($id);
+        $oncall = OnCall::findOrFail($id);
         // Set nilai alasan reject
         $alasan_reject = $request->input('alasan_reject');
+        $oncall->alasan_reject = $alasan_reject;
 
-        // Simpan alasan reject
-        $overimes->alasan_reject = $alasan_reject;
+        OncallApprovalHistory::create([
+            'oncall_id' => $oncall->id,
+            'user_id' => $user->id,
+            'action' => 'rejected',
+            'level_approve' => $oncall->level_approve, // Simpan level
+            'approved_by' => $updatedBy,
+        ]);
 
-        $overimes->reject($updatedBy);
-        $overimes->save();
+        $oncall->reject($updatedBy);
+        $oncall->save();
 
-        $message = 'Pengajuan Oncall Tidak Di Setujui.';
-        Session::flash('successAdd', $message);
+        $this->notifyEmployee($oncall,'rejected',$updatedBy,$alasan_reject);
+
+        Session::flash('successAdd', 'Pengajuan Oncall Tidak Di Setujui.');
         return redirect()->route('approval-oncall');
 
     }
@@ -361,4 +387,80 @@ class OnCallController extends Controller
         return view('oncall.report-history', compact('reporthistory'));
     }
 
+    private function notifyManager(Oncall $oncall, int $jabatanId): void
+    {
+        // Cari user yang memiliki jabatan dengan ID = $jabatanId
+        $manager = User::whereHas('karyawan', function($query) use ($jabatanId) {
+            $query->where('jabatan_id', $jabatanId)->where('status', 'active'); // Pastikan hanya mencari user dengan status aktif
+        })->first();
+        
+        if (!$manager) return;
+        
+        $employee = User::find($oncall->user_id);
+    
+        $notification = new OncallNotification('submitted', [
+            'oncall_id'     => $oncall->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'start_date'    => Carbon::parse($oncall->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($oncall->end_date)->format('d M Y'),
+            'interval'      => $oncall->interval,
+        ]);
+        
+        $manager->notify($notification);
+    }
+    
+    private function notifyEmployee(Oncall $oncall,string $status,string $actorName,string $reason = ''): void {
+        $employee = User::find($oncall->user_id);
+
+        if (!$employee) return;
+
+        $payload = [
+            'oncall_id'   => $oncall->id,
+            'start_date' => Carbon::parse($oncall->start_date)->format('d M Y'),
+            'end_date'   => Carbon::parse($oncall->end_date)->format('d M Y'),
+            'interval'   => $oncall->interval,
+        ];
+
+        if ($status === 'approved') {
+            $payload['approved_by'] = $actorName;
+        } else {
+            $payload['rejected_by'] = $actorName;
+            $payload['reason']      = $reason;
+        }
+
+        $employee->notify(new OncallNotification($status, $payload));
+    }
+
+
+    private function notifyEscalation(Oncall $oncall,int $nextJabatanId, string $escalatedBy): void {
+        // Sama persis dengan logika notifyManager()
+        $nextManager = User::whereHas('karyawan', function ($query) use ($nextJabatanId) {
+            $query->where('jabatan_id', $nextJabatanId)
+                    ->where('status', 'active'); 
+        })->first();
+
+        if (!$nextManager) return;
+
+        $employee = User::find($oncall->user_id);
+
+        $nextManager->notify(new OncallNotification('escalated', [
+            'oncall_id'      => $oncall->id,
+            'employee_name' => $employee?->karyawan?->name ?? 'Karyawan',
+            'start_date'    => Carbon::parse($oncall->start_date)->format('d M Y'),
+            'end_date'      => Carbon::parse($oncall->end_date)->format('d M Y'),
+            'interval'    => $oncall->interval,
+            'escalated_by'  => $escalatedBy,
+        ]));
+    }
+
+    public function historyApproval(){
+        $user = Auth::user();
+        $approvalHistory = OncallApprovalHistory::with('oncall.user.karyawan')
+            ->where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subMonth())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('oncall.history_approval', compact('approvalHistory'));
+    }
 }

@@ -140,7 +140,7 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::delete('/pelatihan/delete/{id}', [PelatihanController::class, 'destroy'])->name('pelatihan.delete');
 
     Route::get('/view-certificate/{file}', [PelatihanController::class, 'viewCertificate'])->name('view.certificate');
-
+    //Cuti
     Route::prefix('cuti')->group(function () {
         // Pengajuan Cuti Route
         Route::get('/pengajuan-cuti', [LeaveApplicationController::class, 'index'])->name('pengajuan-cuti');
@@ -179,6 +179,10 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/saldo-cuti/edit/{id}', [LeaveBalanceController::class, 'edit'])->name('saldo-cuti.edit');
         Route::put('/saldo-cuti/update/{id}', [LeaveBalanceController::class, 'update'])->name('saldo-cuti.update');
         Route::delete('/saldo-cuti/delete/{id}', [LeaveBalanceController::class, 'destroy'])->name('saldo-cuti.delete');
+
+        //history approval
+        Route::get('/history-approval', [LeaveApplicationController::class, 'historyApproval'])->name('approval.history.cuti');
+        
     });
     
     //Json
@@ -186,6 +190,13 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
     Route::get('/pengajuan-cuti/edit/{kategori_cuti}', [LeaveTypeController::class, 'getLeaveTypeByCategory']);
     Route::get('/pengajuan-cuti/leave-types/{id}', [LeaveTypeController::class, 'getMaxAmount']);
 
+    // Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/',            [LeaveApplicationController::class, 'getNotifications'])->name('index');
+        Route::post('/read-all',   [LeaveApplicationController::class, 'markAllNotificationsRead'])->name('read-all');
+        Route::post('/{id}/read',  [LeaveApplicationController::class, 'markNotificationRead'])->name('read');
+    });
+    //Lembur
     Route::prefix('Lembur')->group( function() {
         // Overtime
         Route::get('/overtime', [OvertimeController::class, 'index'])->name('overtime');
@@ -209,6 +220,8 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/overtime/show/{id}', [OvertimeController::class, 'show'])->name('overtime.show');
         Route::put('/overtime/update/{id}', [OvertimeController::class, 'update'])->name('overtime.update');
         Route::delete('/overtime/delete/{id}', [OvertimeController::class, 'destroy'])->name('overtime.delete');
+
+        Route::get('/riwayat-approval', [OvertimeController::class, 'historyApproval'])->name('approval.history.overtime');
     });
  
     Route::prefix('oncall')->group( function (){
@@ -233,6 +246,8 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::get('/oncall/edit/{id}', [OnCallController::class, 'edit'])->name('oncall.edit');
         Route::put('/oncall/update/{id}', [OnCallController::class, 'update'])->name('oncall.update');
         Route::delete('/oncall/delete/{id}', [OnCallController::class, 'destroy'])->name('oncall.delete');
+
+        Route::get('/riwayat-approval', [OnCallController::class, 'historyApproval'])->name('approval.history.oncall');
 
     });
 
