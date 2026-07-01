@@ -51,25 +51,9 @@ class LeaveApplicationController extends Controller
     public function approval(){
 
         $users = Auth::user();
-
-       $subordinateManagerIds = $users->karyawan
-            ->jabatan
-            ->subordinates                  // relasi: jabatan yang melapor ke jabatan ini
-            ->pluck('manager_id')           // ambil manager_id tiap bawahan
-            ->push($users->id)               // sertakan ID user sendiri (approval langsung)
-            ->unique()
-            ->filter()                      // buang null
-            ->values();
-
-        $leaveApplications = LeaveApplication::with([
-                'user.karyawan.jabatan',    // eager load agar tidak N+1
-                'leaveType',
-            ])
-            ->whereIn('manager_id', $subordinateManagerIds)
-            ->where('status', 'pending')
-            ->latest()
-            ->get();
-
+        
+        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+        $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();
         return view('cuti.approval-cuti', compact('leaveApplications'));   
         
     }
