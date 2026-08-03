@@ -583,4 +583,35 @@ $(document).ready(function() {
             theme: 'bootstrap4'
         });
     });
+    $(document).on('change', '#form_pengajuan, #resume, #bukti_pembayaran', function () {
+    let file = this.files[0];
+
+    if (file) {
+        // Validasi tipe file (harus PDF)
+        if (file.type !== 'application/pdf') {
+            alert('File harus berformat PDF!');
+            $(this).val('');
+            $(this).next('.custom-file-label').text('Choose file');
+            return;
+        }
+
+        // Validasi ukuran maksimal 2MB
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran file melebihi 2MB!');
+            $(this).val('');
+            $(this).next('.custom-file-label').text('Choose file');
+            return;
+        }
+
+        // Hitung ukuran file untuk ditampilkan
+        let sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        let sizeKB = (file.size / 1024).toFixed(1);
+        let displaySize = file.size >= 1048576 ? sizeMB + ' MB' : sizeKB + ' KB';
+
+        // Tampilkan nama file + ukuran di label
+        $(this).next('.custom-file-label').text(file.name + ' (' + displaySize + ')');
+    } else {
+        $(this).next('.custom-file-label').text('Choose file');
+    }
+});
 });

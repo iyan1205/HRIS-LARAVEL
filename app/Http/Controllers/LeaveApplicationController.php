@@ -21,7 +21,7 @@ use App\Http\Requests\LeaveSearchRequest;
 use App\Traits\ApprovalCountTrait;
 use App\Notifications\LeaveNotification;
 use App\Models\LeaveApprovalHistory;
-
+use App\Http\Requests\StoreLeaveApplicationRequest;
 class LeaveApplicationController extends Controller
 {
     use ApprovalCountTrait;
@@ -99,22 +99,10 @@ class LeaveApplicationController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
+    public function store(StoreLeaveApplicationRequest $request)
     {
-        /* ── Validasi Dasar ── */
-        $validator = Validator::make($request->all(), [
-            'user_id'       => 'required|exists:users,id',
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'start_date'    => 'required|date',
-            'end_date'      => 'required|date|after_or_equal:start_date',
-            'manager_id'    => 'nullable',
-            'level_approve' => 'nullable|integer',
-            'file_upload'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+        // Validasi sudah otomatis dijalankan oleh StoreLeaveApplicationRequest
+        // Jika gagal → otomatis redirect back() dengan errors + old input
 
         /* ── Cek Pending ── */
         if (LeaveApplication::where('user_id', $request->user_id)->where('status', 'pending')->exists()) {
@@ -175,8 +163,7 @@ class LeaveApplicationController extends Controller
         ]);
 
         /* ── Notifikasi → Manager ── */
-        // ✅ Cast ke int: $request->manager_id / jabatan->manager_id bisa bertipe string
-        //    notifyManager(int $managerId) → TypeError jika tidak di-cast → notif gagal
+        // ✅ Cast ke int: manager_id bisa bertipe string dari input/relasi
         $this->notifyManager($leaveApplication, (int) $managerId);
 
         return redirect()->route('pengajuan-cuti')->with('successAdd', 'Pengajuan cuti berhasil dibuat.');

@@ -315,6 +315,64 @@
                 </p>
             </a>
         </li>
+
+        @php
+            $isBenefitMenu = request()->routeIs('benefit-kartap.*');
+        @endphp
+        @if (auth()->user()->karyawan->status_karyawan === 'kartap')
+        <li class="nav-item {{ $isBenefitMenu ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ $isBenefitMenu ? 'active' : '' }}">
+                <i class="nav-icon fas fa-calendar-plus"></i>
+                <p>
+                    Klaim Benefit
+                    <i class="fas fa-angle-left right"></i>
+                    <span class="badge badge-info right" id="lemburCountBadge" style="display:none;"></span>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                {{-- Form Pengajuan --}}
+                <li class="nav-item">
+                    <a href="{{ route('benefit-kartap.create') }}"
+                        class="nav-link {{ request()->routeIs('benefit-kartap.create') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form Pengajuan</p>
+                    </a>
+                </li>
+
+                {{-- Syarat dan Jenis Benefit --}}
+                <li class="nav-item">
+                    <a href="{{ route('benefit-kartap.syarat') }}"
+                        class="nav-link {{ request()->routeIs('benefit-kartap.syarat') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Syarat dan Jenis Benefit</p>
+                    </a>
+                </li>
+                {{-- Riwayat Klaim --}}
+                <li class="nav-item">
+                    <a href="{{ route('benefit-kartap.index') }}"
+                        class="nav-link {{ request()->routeIs([
+                            'benefit-kartap.index',
+                            'benefit-kartap.show',
+                            'benefit-kartap.edit',
+                            'benefit-kartap.approve',
+                        ]) ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Riwayat Klaim</p>
+                    </a>
+                </li>
+                @can('approval_benefit')
+                {{-- Approval --}}
+                <li class="nav-item">
+                    <a href="{{ route('benefit-kartap.approval') }}"
+                        class="nav-link {{ request()->routeIs('benefit-kartap.approval') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Approval Pengajuan</p>
+                    </a>
+                </li>
+                @endcan
+            </ul>
+        </li>
+        @endif
         @endrole
         @can('laporan_absen')
         <li class="nav-item {{ request()->is('attendance/laporan*') ? 'menu-open' : '' }}">

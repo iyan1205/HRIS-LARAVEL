@@ -32,7 +32,17 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            
+                            {{-- Error dari validator (withErrors) --}}
+                            @if($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title">Form Pengajuan</h3>
@@ -45,10 +55,10 @@
                                             <label for="user_id" class="form-label">Nama Karyawan:</label>
                                             <select class="form-control select2bs4" id="user_id" name="user_id" style="width: 100%;">
                                                 @foreach ($users as $id => $name)
-                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
                                                 @endforeach
                                             </select>
-                                            @error('users')
+                                            @error('user_id')
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
@@ -62,6 +72,11 @@
                                             {{-- Hidden Approver --}}
                                             <input type="hidden" class="form-control" id="approver" name="manager_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
                                             <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
+                                            @error('user_id')
+                                                <small>
+                                                    <p class="text-danger">{{ $message }}</p>
+                                                </small>
+                                            @enderror
                                         </div>
                                     @endif
 
@@ -73,28 +88,29 @@
                                                 <option value="{{ $id }}">{{ $kategori }}</option>
                                             @endforeach
                                         </select>
-                                        @error('kategori_cuti')
+                                        {{-- kategori_cuti hanya trigger JS untuk memuat #leave_type_id, bukan field yang divalidasi --}}
+                                    </div>
+
+                                    <div class="form-group" id="leave_type_id_container" style="display: none;">
+                                        <label for="leave_type_id">Jenis Cuti</label>
+                                        <select name="leave_type_id" id="leave_type_id" class="form-control select2bs4" required></select>
+                                        @error('leave_type_id')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
                                         @enderror
                                     </div>
 
-                                    <div class="form-group" id="leave_type_id_container" style="display: none;">
-                                        <label for="leave_type_id">Jenis Cuti</label>
-                                        <select name="leave_type_id" id="leave_type_id" class="form-control select2bs4" required></select>
-                                    </div>
-
                                     <div class="form-group row">
                                         <div class="col">
                                             <label for="start_date_cuti">Tanggal Awal:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="start_date_cuti" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date_cuti" name="start_date" value="{{ old('start_date_cuti') }}" required/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#start_date_cuti" name="start_date" value="{{ old('start_date') }}" required/>
                                                 <div class="input-group-append" data-target="#start_date_cuti" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
-                                            @error('start_date_cuti')
+                                            @error('start_date')
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
@@ -103,39 +119,38 @@
                                         <div class="col">
                                             <label for="end_date_cuti">Tanggal Akhir:<span class="red-star">*</span></label>
                                             <div class="input-group date" id="end_date_cuti" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date_cuti" name="end_date" value="{{ old('end_date_cuti') }}" required/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#end_date_cuti" name="end_date" value="{{ old('end_date') }}" required/>
                                                 <div class="input-group-append" data-target="#end_date_cuti" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
-                                            @error('end_date_cuti')
+                                            @error('end_date')
                                                 <small>
                                                     <p class="text-danger">{{ $message }}</p>
                                                 </small>
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label>Total Hari:</label>
                                         <input type="text" class="form-control" id="total_days" disabled/>
-                                        <small id="max_amount_display"class="form-text text-danger"style="display:none;"></small>
+                                        <small id="max_amount_display" class="form-text text-danger" style="display:none;"></small>
                                     </div>
-                                    
+
                                     <div class="form-group" id="file_upload_container" style="display: none;">
                                         <label for="file_upload">Upload File <span class="red-star">*</span> <small class="form-text text-danger">Format PDF, JPG, JPEG, atau PNG. Maksimal ukuran file 2MB.</small></label>
                                         <div class="input-group">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" value="{{ old('file_upload') }}" required>
+                                                <input type="file" class="custom-file-input" id="file_upload" name="file_upload" accept=".pdf,.jpg,.jpeg,.png" required>
                                                 <label class="custom-file-label" for="file_upload">Choose file</label>
                                             </div>
-                                            @error('file_upload')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
                                         </div>
-                                        
+                                        @error('file_upload')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">

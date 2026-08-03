@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MobilitasJabatanController;
 use App\Http\Controllers\QuotesController;
+use App\Http\Controllers\BenefitKartapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -260,6 +261,14 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('/update/{id}', [QuotesController::class, 'update'])->name('quotes.update');
         Route::delete('/delete/{id}', [QuotesController::class, 'delete'])->name('quotes.delete');
         Route::patch('/quotes/{id}/toggle', [QuotesController::class, 'toggle'])->name('quotes.toggle');
+    });
+    // Benefit Kartap
+    Route::prefix('klaim-benefit')->group(function(){
+        Route::get('syarat', [BenefitKartapController::class, 'syarat'])->name('benefit-kartap.syarat');
+        Route::put('benefit-kartap/{id}/approve',  [BenefitKartapController::class, 'approve'])->name('benefit-kartap.approve');
+        Route::put('benefit-kartap/{id}/reject',  [BenefitKartapController::class, 'reject'])->name('benefit-kartap.reject');
+        Route::get('appoval',  [BenefitKartapController::class, 'approvalIndex'])->name('benefit-kartap.approval');
+        Route::resource('benefit-kartap', BenefitKartapController::class);
     });
 });
 
