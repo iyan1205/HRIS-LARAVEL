@@ -50,36 +50,19 @@
                                 <!-- /.card-header -->
                                 <!-- form start -->
                                 <div class="card-body">
-                                    @if(auth()->user()->hasRole('admin|Super-Admin'))
-                                        <div class="form-group">
-                                            <label for="user_id" class="form-label">Nama Karyawan:</label>
-                                            <select class="form-control select2bs4" id="user_id" name="user_id" style="width: 100%;">
-                                                @foreach ($users as $id => $name)
-                                                    <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('user_id')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
-                                        </div>
-                                    @else
-                                        <div class="form-group">
-                                            <label for="name">Nama</label>
-                                            <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
-                                            <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" disabled>
-                                            {{-- Hidden Approver --}}
-                                            <input type="hidden" class="form-control" id="approver" name="manager_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
-                                            <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
-                                            @error('user_id')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
-                                        </div>
-                                    @endif
-
+                                    <div class="form-group">
+                                        <label for="name">Nama</label>
+                                        <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
+                                        <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" disabled>
+                                        {{-- Hidden Approver --}}
+                                        <input type="hidden" class="form-control" id="approver" name="manager_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
+                                        <input type="hidden" class="form-control" id="approver" name="level_approve" value="{{ Auth::user()->karyawan->jabatan->level_approve }}">
+                                        @error('user_id')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
                                     <div class="form-group">
                                         <label for="kategori_cuti">Kategori Cuti</label>
                                         <select name="kategori_cuti" id="kategori_cuti" class="form-control select2bs4" style="width: 100%;">

@@ -38,23 +38,7 @@
                                 </div>
                                 <!-- /.card-header -->
                                     <div class="card-body">
-                                        @if(auth()->user()->hasRole('admin|Super-Admin'))
-                                        <div class="form-group">
-                                            <label for="user_id" class="form-label">Nama Karyawan:</label>
-                                            <select class="form-control select2bs4" id="user_id" name="user_id"
-                                                style="width: 100%;">
-                                                @foreach ($users as $id => $name)
-                                                    <option value="{{ $id }}">{{ $name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('users')
-                                                <small>
-                                                    <p class="text-danger">{{ $message }}</p>
-                                                </small>
-                                            @enderror
-                                        </div>
                                         
-                                        @else
                                         <div class="form-group">
                                             <label for="name">Nama</label>
                                             <input type="hidden" class="form-control" id="name" name="user_id" value="{{ Auth::id() }}">
@@ -63,7 +47,6 @@
                                         </div>
                                         {{-- Hidden Approver --}}
                                         <input type="hidden" class="form-control" id="approver" name="approver_id" value="{{ Auth::user()->karyawan->jabatan->manager_id }}">
-                                        @endif
                                         
                                         <div class="form-group row">
                                             <div class="col">

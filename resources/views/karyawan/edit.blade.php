@@ -221,11 +221,11 @@
                                     <div class="form-group">
                                         <label for="status_ktp">Status Perkawinan</label>
                                         <div class="form-check" style="margin-left: 10px;">
-                                            <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="Menikah" {{ $karyawan->status_ktp == 'Menikah' ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" id="Menikah" name="status_ktp" value="menikah" {{ $karyawan->status_ktp == 'menikah' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="Menikah">Menikah</label>
-                                            <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="Belum Menikah" {{ $karyawan->status_ktp == 'Belum Menikah' ? 'checked' : '' }} style="margin-left: 6px;">
+                                            <input class="form-check-input" type="radio" id="Belum Menikah" name="status_ktp" value="belumdikah" {{ $karyawan->status_ktp == 'belumdikah' ? 'checked' : '' }} style="margin-left: 6px;">
                                             <label class="form-check-label" for="Belum Menikah" style="margin-left: 24px;">Belum Menikah</label>
-                                            <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="Cerai Hidup" {{ $karyawan->status_ktp == 'Cerai Hidup' ? 'checked' : '' }} style="margin-left: 6px;">
+                                            <input class="form-check-input" type="radio" id="Cerai Hidup" name="status_ktp" value="cerai hidup" {{ $karyawan->status_ktp == 'cerai hidup' ? 'checked' : '' }} style="margin-left: 6px;">
                                             <label class="form-check-label" for="Cerai Hidup" style="margin-left: 24px;">Cerai Hidup</label>    
                                         </div>
                                     </div>
@@ -316,7 +316,7 @@
                                 <div class="card-body" id="kontrak-container">
                                     <div class="form-group">
                                         <label for="status_karyawan">Status Karyawan</label>
-                                        <select class="form-control" name="status_karyawan" id="">
+                                        <select class="form-control" name="status_karyawan" id="status_karyawan">
                                             <option value="kontrak" {{ $karyawan->status_karyawan == 'kontrak' ? 'selected' : '' }}>
                                                 Kontrak
                                             </option>
@@ -331,6 +331,16 @@
                                             </option>
                                         </select>
                                         @error('status_karyawan')
+                                            <small>
+                                                <p class="text-danger">{{ $message }}</p>
+                                            </small>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group" id="tgl_kartap_group" style="display: {{ $karyawan->status_karyawan == 'kartap' ? 'block' : 'none' }};">
+                                        <label for="tgl_kartap" name="tgl_kartap">Tanggal Kartap</label>
+                                        <input type="date" class="form-control" id="tgl_kartap"
+                                            name="tgl_kartap" value="{{ $karyawan->tgl_kartap }}" required>
+                                        @error('tgl_kartap')
                                             <small>
                                                 <p class="text-danger">{{ $message }}</p>
                                             </small>
@@ -666,5 +676,29 @@
     });
 });
 
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusKaryawan = document.getElementById('status_karyawan');
+        const tglKartapGroup = document.getElementById('tgl_kartap_group');
+        const tglKartap = document.getElementById('tgl_kartap');
+
+        function toggleTanggalKartap() {
+            if (statusKaryawan.value === 'kartap') {
+                tglKartapGroup.style.display = 'block';
+                tglKartap.setAttribute('required', 'required'); // wajib diisi hanya kalau status = kartap
+            } else {
+                tglKartapGroup.style.display = 'none';
+                tglKartap.value = '';
+                tglKartap.removeAttribute('required'); // PENTING: lepas required saat disembunyikan
+            }
+        }
+
+        // Saat halaman pertama kali dibuka
+        toggleTanggalKartap();
+
+        // Saat status karyawan berubah
+        statusKaryawan.addEventListener('change', toggleTanggalKartap);
+    });
 </script>
 @endsection

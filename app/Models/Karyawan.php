@@ -31,6 +31,7 @@ class Karyawan extends Authenticatable
         'status_ktp',
         'telepon',
         'npwp',
+        'tgl_kartap',
     ];
 
     protected $hidden = [

@@ -5,23 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\BenefitKartap;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Services\BenefitKartapService;
 use Illuminate\Http\Request;
 
 class BenefitKartapController extends Controller
 {
-    public function index(Request $request)
+    public function __construct(private BenefitKartapService $benefitService)
     {
-        $user  = auth()->user();
-        $tahun = $request->input('tahun', now()->year);
-        $level = $user->karyawan->jabatan->level;
+    }
 
-        $benefitKartaps = BenefitKartap::orderBy('created_at', 'desc')
-            ->where('user_id', $user->id)
-            ->get();
-
-        $rekapPlafon = BenefitKartap::rekapSemuaBenefit($user->id, $level, $tahun);
-
-        return view('benefit-kartap.index', compact('benefitKartaps', 'rekapPlafon', 'tahun'));
+    public function index()
+    {
+        try{
+            $user = auth()->user();
+            $benefitKartaps = BenefitKartap::with([
+                    'user.karyawan',
+                    'approval1By.karyawan.jabatan',
+                    'approval2By.karyawan.jabatan',
+                    'approvedBy.karyawan.jabatan',
+                ])
+                ->where('user_id', $user->id)
+                ->latest()
+                ->get();
+    
+            $rekapPlafon = $this->benefitService->rekapPlafon($user);
+    
+            return view('benefit-kartap.index', compact('benefitKartaps', 'rekapPlafon'));
+        }
+        catch (\RuntimeException $e) {
+            return view('benefit-kartap.error', ['pesan' => $e->getMessage()]);
+        }
     }
 
     public function approvalIndex()
@@ -54,62 +67,77 @@ class BenefitKartapController extends Controller
 
     public function syarat()
     {
-        return view('benefit-kartap.syarat');
+        try{
+
+            $user = auth()->user();
+    
+            $tanggalBolehKlaim = $this->benefitService->tanggalEligibilitasPertama($user);
+            $sudahBolehKlaim = $this->benefitService->sudahEligible($user);
+            $rekapPlafon = $this->benefitService->rekapPlafon($user);
+            return view('benefit-kartap.syarat', compact('tanggalBolehKlaim', 'sudahBolehKlaim', 'rekapPlafon'));
+        }catch (\RuntimeException $e) {
+            return view('benefit-kartap.error', ['pesan' => $e->getMessage()]);
+        }
+        
     }
 
 
-    public function create()
+    public function create(Request $request)
     {
-        $user = auth()->user();
-        return view('benefit-kartap.create', compact('user'));
+        try {
+            $user = auth()->user()->load('karyawan.jabatan');
+ 
+            $ringkasan = $this->benefitService->ringkasan($user);
+            $selectedJenis = $request->query('jenis');
+            
+            return view('benefit-kartap.create', compact('user', 'ringkasan', 'selectedJenis'));
+        } catch (\RuntimeException $e) {
+            return view('benefit-kartap.error', ['pesan' => $e->getMessage()]);
+        }
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nominal' => 'required|numeric|min:0',
-            'jenis_benefit' => 'required|string|max:255',
+            'jenis_benefit' => 'required|string|in:Kacamata,MCU,Vitamin',
             'form_pengajuan' => 'required|file|mimes:pdf|max:2048',
             'resume' => 'required|file|mimes:pdf|max:2048',
             'bukti_pembayaran' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
+        $user = auth()->user();
+        $jenisBenefit = $request->jenis_benefit;
+
+        $validasi = $this->benefitService->validasiKlaim($user, $jenisBenefit, (float) $request->nominal);
+
+        if (!$validasi['boleh']) {
+            return redirect()->back()->with('error', $validasi['pesan']);
+        }
+
         $benefitKartap = new BenefitKartap();
-        $benefitKartap->user_id = auth()->id();
+        $benefitKartap->user_id = $user->id;
         $benefitKartap->nominal = $request->nominal;
-        $benefitKartap->jenis_benefit = $request->jenis_benefit;
-        
+        $benefitKartap->jenis_benefit = $jenisBenefit;
 
         if ($request->hasFile('form_pengajuan')) {
-            $formPengajuanPath = $request->file('form_pengajuan')->store('benefit_kartap_forms', 'public');
-            $benefitKartap->form_pengajuan = $formPengajuanPath;
+            $benefitKartap->form_pengajuan = $request->file('form_pengajuan')->store('benefit_kartap_forms', 'public');
         }
         if ($request->hasFile('resume')) {
-            $resumePath = $request->file('resume')->store('benefit_kartap_resumes', 'public');
-            $benefitKartap->resume = $resumePath;
+            $benefitKartap->resume = $request->file('resume')->store('benefit_kartap_resumes', 'public');
         }
         if ($request->hasFile('bukti_pembayaran')) {
-            $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('benefit_kartap_bukti', 'public');
-            $benefitKartap->bukti_pembayaran = $buktiPembayaranPath;
+            $benefitKartap->bukti_pembayaran = $request->file('bukti_pembayaran')->store('benefit_kartap_bukti', 'public');
         }
 
-       $spvSdm = User::whereHas('karyawan', function ($q) {
-            $q->where('jabatan_id', 112);
-        })->first();
-
-        $managerSdm = User::whereHas('karyawan', function ($q) {
-            $q->where('jabatan_id', 6);
-        })->first();
-
-        $managerKeuangan = User::whereHas('karyawan', function ($q) {
-            $q->where('jabatan_id', 50);
-        })->first();
+        $spvSdm = User::whereHas('karyawan', fn($q) => $q->where('jabatan_id', 112))->first();
+        $managerSdm = User::whereHas('karyawan', fn($q) => $q->where('jabatan_id', 6))->first();
+        $managerKeuangan = User::whereHas('karyawan', fn($q) => $q->where('jabatan_id', 50))->first();
 
         $benefitKartap->approval_1_by = $spvSdm?->id;
         $benefitKartap->approval_2_by = $managerSdm?->id;
         $benefitKartap->approved_by  = $managerKeuangan?->id;
         $benefitKartap->save();
-        
 
         return redirect()->route('benefit-kartap.index')->with('successAdd', 'Pengajuan Benefit Kartap berhasil dibuat.');
     }
@@ -128,8 +156,7 @@ class BenefitKartapController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nominal' => 'required|numeric|min:0',
-            'jenis_benefit' => 'required|string|max:255',
+            'nominal' => 'nullable|numeric|min:0',
             'form_pengajuan' => 'nullable|file|mimes:pdf|max:2048',
             'resume' => 'nullable|file|mimes:pdf|max:2048',
             'bukti_pembayaran' => 'nullable|file|mimes:pdf|max:2048',
@@ -137,7 +164,6 @@ class BenefitKartapController extends Controller
 
         $benefitKartap = BenefitKartap::findOrFail($id);
         $benefitKartap->nominal = $request->nominal;
-        $benefitKartap->jenis_benefit = $request->jenis_benefit;
 
         if ($request->hasFile('form_pengajuan')) {
             $formPengajuanPath = $request->file('form_pengajuan')->store('benefit_kartap_forms', 'public');

@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Benefit Kartap</h1>
+                        <h1 class="m-0">Riwayat Benefit Kartap</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -53,7 +53,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $benefitKartap->user->karyawan->name }}</td>
                                                     <td>{{ strtoupper($benefitKartap->jenis_benefit) }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($benefitKartap->created_at)->format('d/m/Y') }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($benefitKartap->created_at)->format('d/m/Y H:i') }}</td>
                                                     <td class="text-right">Rp {{ number_format($benefitKartap->nominal, 0, ',', '.') }}</td>
                                                     <td><a href="{{ asset('storage/' . $benefitKartap->form_pengajuan) }}" target="_blank">Lihat Form</a></td>
                                                     <td><a href="{{ asset('storage/' . $benefitKartap->resume) }}" target="_blank">Lihat Resume</a></td>
@@ -64,7 +64,13 @@
                                                         @elseif ($benefitKartap->status === 'rejected')
                                                             <span class="badge bg-danger">{{ $benefitKartap->status }}</span>
                                                         @else
-                                                            <span class="badge bg-success">{{ $benefitKartap->status }}</span>
+                                                            @if($benefitKartap->status === 'approval_1')
+                                                                <span class="badge bg-success">Approved by Spv SDM</span>
+                                                            @elseif($benefitKartap->status === 'approval_2')
+                                                                <span class="badge bg-success">Approved by Manager SDM</span>
+                                                            @elseif($benefitKartap->status === 'approved')
+                                                                <span class="badge bg-success">Approved by Manager Keuangan</span>
+                                                            @endif
                                                         @endif
                                                     </td>
                                                     <td class="text-nowrap">
@@ -185,7 +191,7 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
-                        
+
                         {{-- ============ CARD 2: SISA PLAFON BENEFIT (SEMUA JENIS) ============ --}}
                         <div class="card mt-4">
                             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
@@ -194,24 +200,6 @@
                                     Sisa Plafon Benefit Anda
                                 </h3>
 
-                                <form method="GET" action="{{ route('benefit-kartap.index') }}" class="d-flex align-items-center">
-                                    <label for="filterTahun" class="mr-2 mb-0 text-muted font-weight-normal">
-                                        <i class="far fa-calendar-alt mr-1"></i> Periode
-                                    </label>
-                                    <select
-                                        name="tahun"
-                                        id="filterTahun"
-                                        class="form-control custom-select form-control-sm"
-                                        style="min-width: 110px; font-weight: 600; cursor: pointer;"
-                                        onchange="this.form.submit()"
-                                    >
-                                        @for ($y = now()->year; $y >= now()->year - 3; $y--)
-                                            <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>
-                                                Tahun {{ $y }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                </form>
                             </div>
 
                             <div class="card-body p-0">
@@ -220,24 +208,30 @@
                                         <thead>
                                             <tr>
                                                 <th>Jenis Benefit</th>
-                                                <th>Jumlah Klaim</th>
+                                                {{-- <th>Jumlah Klaim</th> --}}
                                                 <th class="text-right">Total Terpakai</th>
                                                 <th class="text-right">Plafon</th>
                                                 <th class="text-right">Sisa Plafon</th>
+                                                <th class="text-center">Periode Berlaku</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-center" style="width: 130px;">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($rekapPlafon as $item)
+                                            @php
+                                                // Kacamata: cooldown per-klaim (pakai flag sudah_diajukan).
+                                                // MCU/Vitamin: akumulasi tahunan, tombol Ajukan tampil selama sisa plafon masih > 0.
+                                                $isKacamata = $item['jenis_benefit'] === 'kacamata';
+                                                $bisaAjukan = $isKacamata
+                                                    ? !$item['sudah_diajukan']
+                                                    : ($item['sisa_plafon'] ?? 0) > 0;
+                                            @endphp
                                             <tr class="{{ !$item['sudah_diajukan'] ? 'table-light' : '' }}">
                                                 <td>
-                                                    {{ $item['jenis_benefit'] }}
-                                                    @if(!$item['sudah_diajukan'])
-                                                        <span class="badge badge-secondary ml-1">Belum Diambil</span>
-                                                    @endif
+                                                    {{ strtoupper($item['jenis_benefit']) }}
                                                 </td>
-                                                <td>{{ $item['jumlah_klaim'] }}</td>
+                                                {{-- <td>{{ $item['jumlah_klaim'] }}</td> --}}
                                                 <td class="text-right">Rp {{ number_format($item['total_nominal'], 0, ',', '.') }}</td>
                                                 <td class="text-right">
                                                     {{ $item['plafon'] !== null ? 'Rp ' . number_format($item['plafon'], 0, ',', '.') : '-' }}
@@ -246,19 +240,29 @@
                                                     {{ $item['sisa_plafon'] !== null ? 'Rp ' . number_format($item['sisa_plafon'], 0, ',', '.') : '-' }}
                                                 </td>
                                                 <td class="text-center">
+                                                    <small>
+                                                        {{ $item['periode_mulai']->translatedFormat('d M Y') }}
+                                                        &ndash;
+                                                        {{ $item['periode_reset_berikutnya']->copy()->subDay()->translatedFormat('d M Y') }}
+                                                    </small><br>
+                                                    <span class="badge badge-light">
+                                                        Reset: {{ $item['periode_reset_berikutnya']->translatedFormat('d F Y') }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
                                                     @if(!$item['sudah_diajukan'])
                                                         <span class="badge badge-secondary">Belum Diambil</span>
                                                     @elseif($item['melebihi_plafon'] === true)
                                                         <span class="badge badge-danger">Melebihi Plafon</span>
                                                     @elseif($item['melebihi_plafon'] === false)
-                                                        <span class="badge badge-success">Aman</span>
+                                                        <span class="badge badge-success">Sudah diambil</span>
                                                     @else
                                                         <span class="badge badge-light">Tidak ada plafon</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @if(!$item['sudah_diajukan'])
-                                                        <a href="{{ route('benefit-kartap.create') }}" class="btn btn-sm btn-primary">
+                                                    @if($bisaAjukan)
+                                                         <a href="{{ route('benefit-kartap.create', ['jenis' => $item['jenis_key']]) }}" class="btn btn-sm btn-primary">
                                                             <i class="fas fa-plus"></i> Ajukan
                                                         </a>
                                                     @else

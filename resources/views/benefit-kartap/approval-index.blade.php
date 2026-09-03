@@ -51,7 +51,21 @@
                                                 <td><a href="{{ asset('storage/' . $benefitKartap->form_pengajuan) }}" target="_blank" >Lihat Form</a></td>
                                                 <td><a href="{{ asset('storage/' . $benefitKartap->resume) }}" target="_blank" >Lihat Resume</a></td>
                                                 <td><a href="{{ asset('storage/' . $benefitKartap->bukti_pembayaran) }}" target="_blank" >Lihat Bukti</a></td>
-                                                <td><span class="badge bg-secondary">{{ $benefitKartap->status }}</span></td>
+                                                <td><span class="badge bg-secondary">
+                                                    @if ($benefitKartap->status === 'pending')
+                                                        Pending
+                                                    @elseif ($benefitKartap->status === 'approval_1')
+                                                        Approved by Spv SDM
+                                                    @elseif ($benefitKartap->status === 'approval_2')
+                                                        Approved by Manager SDM
+                                                    @elseif ($benefitKartap->status === 'approved')
+                                                        Approved by Manager Keuangan
+                                                    @elseif ($benefitKartap->status === 'rejected')
+                                                        Rejected
+                                                    @else
+                                                        {{ $benefitKartap->status }}
+                                                    @endif
+                                                </span></td>
                                                 <td class="project-actions text-right">
                                                     @can('approve benefit-kartap')
                                                     <button type="button" class="btn btn-success btn-sm approveBtn" data-benefitKartap-id="{{ $benefitKartap->id }}" data-toggle="modal" data-target="#modal-ap{{ $benefitKartap->id }}"><i class="fas fa-check"></i> Approve</button>
