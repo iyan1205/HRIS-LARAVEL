@@ -21,7 +21,7 @@ use App\Http\Requests\LeaveSearchRequest;
 use App\Traits\ApprovalCountTrait;
 use App\Notifications\LeaveNotification;
 use App\Models\LeaveApprovalHistory;
-
+use App\Http\Requests\StoreLeaveApplicationRequest;
 class LeaveApplicationController extends Controller
 {
     use ApprovalCountTrait;
@@ -51,25 +51,9 @@ class LeaveApplicationController extends Controller
     public function approval(){
 
         $users = Auth::user();
-
-       $subordinateManagerIds = $users->karyawan
-            ->jabatan
-            ->subordinates                  // relasi: jabatan yang melapor ke jabatan ini
-            ->pluck('manager_id')           // ambil manager_id tiap bawahan
-            ->push($users->id)               // sertakan ID user sendiri (approval langsung)
-            ->unique()
-            ->filter()                      // buang null
-            ->values();
-
-        $leaveApplications = LeaveApplication::with([
-                'user.karyawan.jabatan',    // eager load agar tidak N+1
-                'leaveType',
-            ])
-            ->whereIn('manager_id', $subordinateManagerIds)
-            ->where('status', 'pending')
-            ->latest()
-            ->get();
-
+        
+        $subordinateIds = $users->karyawan->jabatan->subordinates->pluck('manager_id');
+        $leaveApplications = LeaveApplication::whereIn('manager_id', $subordinateIds)->where('status', 'pending')->get();
         return view('cuti.approval-cuti', compact('leaveApplications'));   
         
     }
@@ -115,22 +99,9 @@ class LeaveApplicationController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        /* ── Validasi Dasar ── */
-        $validator = Validator::make($request->all(), [
-            'user_id'       => 'required|exists:users,id',
-            'leave_type_id' => 'required|exists:leave_types,id',
-            'start_date'    => 'required|date',
-            'end_date'      => 'required|date|after_or_equal:start_date',
-            'manager_id'    => 'nullable',
-            'level_approve' => 'nullable|integer',
-            'file_upload'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+    public function store(StoreLeaveApplicationRequest $request){
+        // Validasi sudah otomatis dijalankan oleh StoreLeaveApplicationRequest
+        // Jika gagal → otomatis redirect back() dengan errors + old input
 
         /* ── Cek Pending ── */
         if (LeaveApplication::where('user_id', $request->user_id)->where('status', 'pending')->exists()) {
@@ -191,8 +162,7 @@ class LeaveApplicationController extends Controller
         ]);
 
         /* ── Notifikasi → Manager ── */
-        // ✅ Cast ke int: $request->manager_id / jabatan->manager_id bisa bertipe string
-        //    notifyManager(int $managerId) → TypeError jika tidak di-cast → notif gagal
+        // ✅ Cast ke int: manager_id bisa bertipe string dari input/relasi
         $this->notifyManager($leaveApplication, (int) $managerId);
 
         return redirect()->route('pengajuan-cuti')->with('successAdd', 'Pengajuan cuti berhasil dibuat.');
@@ -201,7 +171,7 @@ class LeaveApplicationController extends Controller
     
     /* ══════════════════════════════════════════════════
      |  APPROVE
-     ══════════════════════════════════════════════════ */
+     ════════════════════════════════════════════════ */
     public function approve(Request $request, $id)
     {
         $user             = Auth::user();

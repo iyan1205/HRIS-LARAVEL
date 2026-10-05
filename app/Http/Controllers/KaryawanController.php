@@ -47,7 +47,7 @@ class KaryawanController extends Controller
 
     public function create()
     {
-        $users = User::pluck('name', 'id');
+        $users = User::orderBy('created_at', 'desc')->pluck('name', 'id');
         $departemens = Departemen::pluck('name', 'id');
         $units = Unit::pluck('name', 'id');
         $jabatans = Jabatan::pluck('name', 'id');
@@ -75,7 +75,7 @@ class KaryawanController extends Controller
             'tahun_lulus' => 'nullable',
             'status_ktp' => 'required',
             'telepon' => 'required',
-            'npwp' => 'required',
+            'npwp' => 'nullable',
             'status_karyawan' => 'required', //kontrak_atau_tetap
             'kontrak.*.tanggal_mulai' => 'required|date', // Validasi array kontrak
             'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
@@ -202,6 +202,7 @@ public function update(Request $request, $id)
         'new_file.*' => 'nullable|file|mimes:pdf|max:2048',
         'file.*' => 'nullable|file|mimes:pdf|max:2048',
 
+        'tgl_kartap' => 'nullable|date', // Validasi untuk tanggal kartap
         'kontrak.*.id' => 'nullable|exists:kontrak_karyawan,id',
         'kontrak.*.tanggal_mulai' => 'required|date',
         'kontrak.*.tanggal_selesai' => [
@@ -240,7 +241,8 @@ public function update(Request $request, $id)
     $karyawan->update($request->only([
         'user_id', 'name', 'nik', 'status_karyawan', 'status', 'tgl_resign', 'resign_id',
         'nomer_ktp', 'tempat_lahir', 'tanggal_lahir', 'alamat_ktp', 'gender',
-        'status_ktp', 'telepon', 'npwp', 'departemen_id', 'jabatan_id', 'unit_id'
+        'status_ktp', 'telepon', 'npwp', 'departemen_id', 'jabatan_id', 'unit_id',
+        'tgl_kartap' // Perbarui tanggal kartap
     ]));
 
     // Perbarui data pendidikan karyawan jika ada

@@ -124,28 +124,27 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Jabatan</label>
+                                  <label class="col-sm-2 col-form-label">Jabatan</label>
                                   <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->jabatan->name }}" readonly>
+                                    <input type="text" class="form-control" value="{{ $user->karyawan->jabatan->name }}" readonly>
                                   </div>
                                 </div>
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Departemen</label>
+                                  <label class="col-sm-2 col-form-label">Departemen</label>
                                   <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->departemen->name }}" readonly>
+                                    <input type="text" class="form-control" value="{{ $user->karyawan->departemen->name }}" readonly>
                                   </div>
                                 </div>
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Instalasi/Divisi</label>
+                                  <label class="col-sm-2 col-form-label">Instalasi/Divisi</label>
                                   <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="{{ $user->karyawan->unit->name }}" readonly>
+                                    <input type="text" class="form-control" value="{{ $user->karyawan->unit->name }}" readonly>
                                   </div>
                                 </div>
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Status Karyawan</label>
+                                  <label class="col-sm-2 col-form-label">Status Karyawan</label>
                                   <div class="col-sm-5">
-                                    <input type="email" class="form-control" name="email" value="@if($user->karyawan->status_karyawan == 'kartap')
-                                    Karyawan Tetap
+                                    <input type="text" class="form-control" value="@if($user->karyawan->status_karyawan == 'kartap') Karyawan Tetap
                                 @else
                                     {{ ucwords($user->karyawan->status_karyawan) }}
                                 @endif" readonly>
@@ -178,9 +177,9 @@
                                 @endforeach
 
                                 <div class="form-group row">
-                                  <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                  <label class="col-sm-2 col-form-label">Email</label>
                                   <div class="col-sm-5">
-                                      <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email" value="{{ old('email', $user->email) }}" readonly>
+                                      <input type="text" class="form-control" id="inputEmail" placeholder="Email" value="{{ old('email', $user->email) }}" readonly>
                                   </div>
                                 </div>
 
@@ -232,33 +231,33 @@
                         <div class="tab-pane" id="kontak">
                           <!-- The kontak -->
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">NIK KTP</label>
+                            <label class="col-sm-2 col-form-label">NIK KTP</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->nomer_ktp }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->nomer_ktp }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer NPWP</label>
+                            <label class="col-sm-2 col-form-label">Nomer NPWP</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->npwp }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->npwp }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Telepon</label>
+                            <label class="col-sm-2 col-form-label">Telepon</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->telepon }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->telepon }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Alamat</label>
+                            <label class="col-sm-2 col-form-label">Alamat</label>
                             <div class="col-sm-5">
                                 <textarea class="form-control" rows="3" readonly>{{ $user->karyawan->alamat_ktp }}</textarea>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Tempat, Tanggal Lahir</label>
+                            <label class="col-sm-2 col-form-label">Tempat, Tanggal Lahir</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->tempat_lahir }} , {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tanggal_lahir)->format('d/m/Y') }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->tempat_lahir }} , {{ \Carbon\Carbon::parse(Auth::user()->karyawan->tanggal_lahir)->format('d/m/Y') }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
@@ -280,27 +279,27 @@
                         <div class="tab-pane" id="pendidikan">
                           <!-- The pendidikan -->
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nama Institusi</label>
+                            <label class="col-sm-2 col-form-label">Nama Institusi</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->institusi }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->institusi }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Pendidikan Terakhir</label>
+                            <label class="col-sm-2 col-form-label">Pendidikan Terakhir</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->pendidikan_terakhir }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->pendidikan_terakhir }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Tahun Lulus</label>
+                            <label class="col-sm-2 col-form-label">Tahun Lulus</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->tahun_lulus }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->tahun_lulus }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer Ijazah</label>
+                            <label class="col-sm-2 col-form-label">Nomer Ijazah</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_ijazah }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->nomer_ijazah }}" readonly>
                             </div>
                           </div>
                         </div>
@@ -308,45 +307,45 @@
                         <div class="tab-pane" id="paramedis">
                           <!-- The paramedis -->
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer STR</label>
+                            <label class="col-sm-2 col-form-label">Nomer STR</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_str }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->nomer_str }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Masa Berlaku STR</label>
+                            <label class="col-sm-2 col-form-label">Masa Berlaku STR</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->exp_str }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->exp_str }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Profesi</label>
+                            <label class="col-sm-2 col-form-label">Profesi</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->profesi }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->profesi }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Sertifikat Profesi</label>
+                            <label class="col-sm-2 col-form-label">Sertifikat Profesi</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->cert_profesi }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->cert_profesi }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Nomer SIP</label>
+                            <label class="col-sm-2 col-form-label">Nomer SIP</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->nomer_sip }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->nomer_sip }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Tanggal Terbit SIP</label>
+                            <label class="col-sm-2 col-form-label">Tanggal Terbit SIP</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->tgl_terbit_sip }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->tgl_terbit_sip }}" readonly>
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Masa Berlaku SIP</label>
+                            <label class="col-sm-2 col-form-label">Masa Berlaku SIP</label>
                             <div class="col-sm-5">
-                              <input type="email" class="form-control" name="email" value="{{ $user->karyawan->pendidikan->exp_sip }}" readonly>
+                              <input type="text" class="form-control" value="{{ $user->karyawan->pendidikan->exp_sip }}" readonly>
                             </div>
                           </div>
 

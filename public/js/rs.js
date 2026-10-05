@@ -285,60 +285,73 @@ $(document).ready(function() {
     //Laporan
     var today = new Date().toISOString().slice(0, 10); // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
     
-            $("#laporan").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": [
-                    {
-                        extend: 'excel',
-                        filename: function() {
-                            return 'Laporan_Cuti_' + today; // Menetapkan nama file sebagai "Laporan_Cuti_tanggal_hari_ini"
-                        }
-                    }
-                ]
-            }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
-    
-            $("#laporan_lembur").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": [
-                    {
-                        extend: 'excel',
-                        filename: function() {
-                            return 'Laporan_Lembur_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
-                        }
-                    }
-                ]
-            }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
-            
-            $("#laporan_oncall").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": [
-                    {
-                        extend: 'excel',
-                        filename: function() {
-                            return 'Laporan_Oncall_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
-                        }
-                    }
-                ]
-            }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
-
-            $("#lap_absensi").DataTable({
+        $("#laporan").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
             "buttons": [
                 {
-                    extend: 'excelHtml5',
-                    text: 'Export to Excel',
-                    filename: 'Laporan_Absensi_' + today, // Nama file ekspor
+                    extend: 'excel',
+                    filename: function() {
+                        return 'Laporan_Cuti_' + today; // Menetapkan nama file sebagai "Laporan_Cuti_tanggal_hari_ini"
+                    }
                 }
             ]
+        }).buttons().container().appendTo('#laporan_wrapper .col-md-6:eq(0)');
+
+        $("#laporan_lembur").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'excel',
+                    filename: function() {
+                        return 'Laporan_Lembur_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                    }
+                }
+            ]
+        }).buttons().container().appendTo('#laporan_lembur_wrapper .col-md-6:eq(0)');
+        
+        $("#laporan_oncall").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'excel',
+                    filename: function() {
+                        return 'Laporan_Oncall_' + today; // Menetapkan nama file sebagai "Laporan_Lembur_tanggal_hari_ini"
+                    }
+                }
+            ]
+        }).buttons().container().appendTo('#laporan_oncall_wrapper .col-md-6:eq(0)');
+
+        $("#lap_absensi").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "buttons": [
+            {
+                extend: 'excelHtml5',
+                text: 'Export to Excel',
+                filename: 'Laporan_Absensi_' + today, // Nama file ekspor
+            }
+            ]
         }).buttons().container().appendTo('#lap_absensi_wrapper .col-md-6:eq(0)');
+
+        $("#lap_benefit_kartap").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "buttons": [
+            {
+                extend: 'excelHtml5',
+                text: 'Export to Excel',
+                filename: 'Laporan_Benefit_Kartap_' + today, // Nama file ekspor
+            }
+            ]
+        }).buttons().container().appendTo('#lap_benefit_kartap_wrapper .col-md-6:eq(0)');
 
         // Menampilkan kalkulasi waktu Initialize datetime pickers
         $('#start_dateover').datetimepicker({
@@ -583,4 +596,35 @@ $(document).ready(function() {
             theme: 'bootstrap4'
         });
     });
+    $(document).on('change', '#form_pengajuan, #resume, #bukti_pembayaran', function () {
+    let file = this.files[0];
+
+    if (file) {
+        // Validasi tipe file (harus PDF)
+        if (file.type !== 'application/pdf') {
+            alert('File harus berformat PDF!');
+            $(this).val('');
+            $(this).next('.custom-file-label').text('Choose file');
+            return;
+        }
+
+        // Validasi ukuran maksimal 2MB
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran file melebihi 2MB!');
+            $(this).val('');
+            $(this).next('.custom-file-label').text('Choose file');
+            return;
+        }
+
+        // Hitung ukuran file untuk ditampilkan
+        let sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        let sizeKB = (file.size / 1024).toFixed(1);
+        let displaySize = file.size >= 1048576 ? sizeMB + ' MB' : sizeKB + ' KB';
+
+        // Tampilkan nama file + ukuran di label
+        $(this).next('.custom-file-label').text(file.name + ' (' + displaySize + ')');
+    } else {
+        $(this).next('.custom-file-label').text('Choose file');
+    }
+});
 });

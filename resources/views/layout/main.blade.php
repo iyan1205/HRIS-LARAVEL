@@ -320,7 +320,7 @@
     @endif
     @if (session('error'))
         <script>
-            Swal.fire({ position: "top", icon: "error", title: "{{ session('error') }}", showConfirmButton: false, timer: 3500 });
+            Swal.fire({ position: "top", icon: "error", title: "{{ session('error') }}", showConfirmButton: false, timer: 4000 });
         </script>
     @endif
 
@@ -574,6 +574,6 @@
         })();
     
     </script>
-
+    @stack('scripts')
 </body>
 </html>
