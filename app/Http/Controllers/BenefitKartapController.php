@@ -224,5 +224,27 @@ class BenefitKartapController extends Controller
         return redirect()->back()->with('successAdd', 'Pengajuan Benefit Kartap berhasil ditolak.');
     }
 
+    function laporan() {
+        return view('benefit-kartap.laporan');
+    }
+
+    public function benefit_report(Request $request){
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        // Ambil data berdasarkan rentang tanggal
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $benefitKartaps = BenefitKartap::with('user.karyawan.jabatan') // Eager load relasi
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+        // Tampilkan view dengan hasil pencarian
+        return view('benefit-kartap.list-laporan', compact('benefitKartaps', 'startDate', 'endDate'));
+    }
 
 }

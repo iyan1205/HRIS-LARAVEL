@@ -119,7 +119,14 @@
                                             <small><p class="text-danger">{{ $message }}</p></small>
                                         @enderror
                                     </div>
-
+                                    <div class="alert alert-info">
+                                        Karyawan mengajukan klaim, maksimal 7
+                                        hari kalendar terhitung dari tanggal
+                                        kuitansi pembayaran. Batas maksimal
+                                        klaim disetujui sampai dengan approval
+                                        terakhir yaitu 60 hari kerja terhitung dari
+                                        tanggal kuitansi pembayaran. 
+                                    </div>
                                     <div class="form-group">
                                         <label for="form_pengajuan">Form Pengajuan <span class="red-star">*</span>
                                             <small class="form-text text-danger">Format PDF. Maksimal ukuran file 2MB.</small>

@@ -391,6 +391,14 @@
                 </p>
             </a>
         </li>
+        <li class="nav-item {{ request()->is('klaim-benefit/laporan*') ? 'menu-open' : '' }}">
+            <a href="{{ route('benefit-kartap.laporan') }}" class="nav-link {{ request()->is('klaim-benefit/laporan*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Laporan Benefit Kartap
+                </p>
+            </a>
+        </li>
         @endcan
 
         @role('Super-Admin')

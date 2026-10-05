@@ -99,8 +99,7 @@ class LeaveApplicationController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(StoreLeaveApplicationRequest $request)
-    {
+    public function store(StoreLeaveApplicationRequest $request){
         // Validasi sudah otomatis dijalankan oleh StoreLeaveApplicationRequest
         // Jika gagal → otomatis redirect back() dengan errors + old input
 
@@ -172,7 +171,7 @@ class LeaveApplicationController extends Controller
     
     /* ══════════════════════════════════════════════════
      |  APPROVE
-     ══════════════════════════════════════════════════ */
+     ════════════════════════════════════════════════ */
     public function approve(Request $request, $id)
     {
         $user             = Auth::user();

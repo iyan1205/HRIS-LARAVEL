@@ -268,6 +268,8 @@ Route::group(['middleware' => ['auth','isAdmin','verified']], function() {
         Route::put('benefit-kartap/{id}/approve',  [BenefitKartapController::class, 'approve'])->name('benefit-kartap.approve');
         Route::put('benefit-kartap/{id}/reject',  [BenefitKartapController::class, 'reject'])->name('benefit-kartap.reject');
         Route::get('appoval',  [BenefitKartapController::class, 'approvalIndex'])->name('benefit-kartap.approval');
+        Route::get('laporan',  [BenefitKartapController::class, 'laporan'])->name('benefit-kartap.laporan');
+        Route::get('laporan/search',  [BenefitKartapController::class, 'benefit_report'])->name('benefit-kartap.benefit_report');
         Route::resource('benefit-kartap', BenefitKartapController::class);
     });
 });

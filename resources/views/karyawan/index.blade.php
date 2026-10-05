@@ -46,6 +46,7 @@
                                         <th>Email</th>
                                         <th>Jabatan</th>
                                         <th>Departemen</th>
+                                        <th>Instalasi/Divisi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -58,6 +59,7 @@
                                         <td>{{ $karyawan->user->email }}</td>
                                         <td>{{ $karyawan->jabatan->name }}</td>
                                         <td>{{ $karyawan->departemen->name }}</td>
+                                        <td>{{ $karyawan->unit->name }}</td>
                                         <td class="project-actions text-right">
                                             <a href="{{ route('mobilitas.jabatan', ['id' => $karyawan->id]) }}" class="btn btn-info btn-sm" title="Mobilitas Jabatan"><i class="fas fa-arrows-alt"></i></a>
                                             <a href="{{ route('karyawan.edit', ['id' => $karyawan->id]) }}" class="btn btn-success btn-sm" title="Edit"><i class="fas fa-edit"></i></a>

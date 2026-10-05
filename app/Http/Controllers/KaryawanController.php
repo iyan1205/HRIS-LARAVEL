@@ -47,7 +47,7 @@ class KaryawanController extends Controller
 
     public function create()
     {
-        $users = User::pluck('name', 'id');
+        $users = User::orderBy('created_at', 'desc')->pluck('name', 'id');
         $departemens = Departemen::pluck('name', 'id');
         $units = Unit::pluck('name', 'id');
         $jabatans = Jabatan::pluck('name', 'id');
@@ -75,7 +75,7 @@ class KaryawanController extends Controller
             'tahun_lulus' => 'nullable',
             'status_ktp' => 'required',
             'telepon' => 'required',
-            'npwp' => 'required',
+            'npwp' => 'nullable',
             'status_karyawan' => 'required', //kontrak_atau_tetap
             'kontrak.*.tanggal_mulai' => 'required|date', // Validasi array kontrak
             'kontrak.*.tanggal_selesai' => 'required|date|after_or_equal:kontrak.*.tanggal_mulai',
